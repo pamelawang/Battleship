@@ -17,7 +17,7 @@ public class Boat {
  //private int endX; 
  //private int endY; //currently commented out because we're starting with single-cell boats
  private int length;
- //private int numHits; //will count how many shots have been taken
+ private int numHits; //will count how many shots have been taken
  private boolean sunk;
  
  public Boat(String name, int x1, int y1, int length) {
@@ -26,52 +26,100 @@ public class Boat {
    startY = y1;
    this.length = length;
    sunk = false;
-   //endX = x2, endY = y2, hits = 0;
+   //endX = x2, endY = y2
+   numHits = 0;
  }
    
  public Boat(int x1, int y1) { //future implementation has int x2, int y2 too
-   new Boat(x1, y1, 1);
+   new Boat("", x1, y1, 1);
  }
  
  //METHODS
- 
- //the following 4 methods are for interaction between the coordinate and 
+ /******************************************************************
+    * Returns the starting x-coordinate of boat.
+    * 
+    * @return  int     starting x-coordinate of boat
+    *****************************************************************/
  public int getStartX(){
   return startX; 
  }
  
+ /******************************************************************
+    * Returns the starting y-coordinate of boat.
+    * 
+    * @return  int     starting y-coordinate of boat
+    *****************************************************************/
  public int getStartY(){
   return startY; 
  }
 
+ /******************************************************************
+    * Returns the last ('ending') x-coordinate of boat.
+    * 
+    * @return  int     last ('ending') x-coordinate of boat
+    *****************************************************************/
 // public int getEndX() {
 //   return endX;
 // }
 // 
+ /******************************************************************
+    * Returns the last ('ending') y-coordinate of boat.
+    * 
+    * @return  int     last ('ending') y-coordinate of boat
+    *****************************************************************/
 // public int getEndY() {
 //   return endY;
 // }
  
- //no setters for start/end coordinates because, once created, cannot be changed. (future stuff?)
- 
+ /******************************************************************
+    * Gets the length of the boat
+    * 
+    * @return  int     boat length
+    *****************************************************************/
  public int getLength() {
    return length;
  }
- //no setter
  
+ /******************************************************************
+    * Gets the numbers of times the boat has been hit.
+    * 
+    * @return  int     number of hits the boat has taken
+    *****************************************************************/
  public int getNumHits() {
    return numHits;
  }
  
- //when the boat has been hit
+ /******************************************************************
+    * Occurs when boat has been hit. Increments numHits and returns
+    * the current state of boat (whether it has been sunk or not).
+    * 
+    * @return  boolean current state of boat (sunk or swimming)
+    *****************************************************************/
  public boolean mayday() {
    numHits++;
    if (numHits == length) {
      sunk = true;
-   } else { 
-     //do nothing
-   }
+   } //do nothing in else case
    return sunk;
+ }
+ 
+ /******************************************************************
+    * UNSUPPORTED OPERATIONS
+    *****************************************************************/
+ public void setStartX() {
+   throw new UnsupportedOperationException("Boat starting x-coordinate cannot be changed.");
+ }
+ 
+ public void setStartY() {
+   throw new UnsupportedOperationException("Boat starting y-coordinate cannot be changed.");
+ }
+ 
+ public void setLength() {
+   throw new UnsupportedOperationException("Boat length cannot be changed.");
+ }
+ 
+ public void setNumHits() {
+   throw new UnsupportedOperationException("The number of times a boat has been hit cannot be changed.");
  }
  
 }
