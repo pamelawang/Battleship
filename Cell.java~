@@ -8,6 +8,7 @@
  * @author Meera Hejmadi
  * @author Pamela Wang
  */
+
 import java.awt.*;
 
 public class Cell {
@@ -21,9 +22,6 @@ public class Cell {
   
   /******************************************************************
   * Constructor
-  * 
-  * @param  boolean  states whether there is a boat on this coordinate
-  * @return          current hasBoat state of this Cell
   *****************************************************************/
   public Cell() {
     hasBoat = false; //negates a need for a setter, since we only need to do this upon creation?
@@ -75,19 +73,30 @@ public class Cell {
   }
   
   /******************************************************************
-  * Sets the background of the coordinate, dependent on whether the coordinate
-  * has been shot at yet (!getShotAt) and whether there is a boat here.
-  *****************************************************************/
+    * Sets the background of the coordinate, dependent on whether the coordinate
+    * has been shot at yet (!getShotAt) and whether there is a boat here.
+    *****************************************************************/
   public void setBackground() {
     if (!getShotAt()) {
-    if (getHasBoat()) {
-      background = hit;
-      setShotAt(true);
-    } else {
-      background = miss;
-      setShotAt(true);
+      if (getHasBoat()) {
+        background = hit;
+        setShotAt(true);
+      } else {
+        background = miss;
+        setShotAt(true);
+      }
     }
-  }
-} 
+  } 
+  
+  /******************************************************************
+    * Returns the current colour of the cell, indicating whether there is a boat and
+    * whether this area has been shot at yet.
+    * 
+    * @return  Color   current colour of cell
+    *****************************************************************/
+  //getColor isn't a method yet - don't know if we'll need it. In case we do:
+  /*public Color getBackground() {
+    return background;
+  }*/ 
   
 }

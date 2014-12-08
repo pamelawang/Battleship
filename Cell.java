@@ -19,12 +19,11 @@ public class Cell {
   private Color miss = Color.white;
   private Color sea = Color.blue.darker();
   
-  
   /******************************************************************
   * Constructor
   *****************************************************************/
   public Cell() {
-    hasBoat = false; //negates a need for a setter, since we only need to do this upon creation?
+    hasBoat = false;
     shotAt = false;
     background = sea;
   }
@@ -86,6 +85,7 @@ public class Cell {
         setShotAt(true);
       }
     }
+    //System.out.println("Color is " + background);
   } 
   
   /******************************************************************
@@ -94,9 +94,37 @@ public class Cell {
     * 
     * @return  Color   current colour of cell
     *****************************************************************/
-  //getColor isn't a method yet - don't know if we'll need it. In case we do:
-  /*public Color getBackground() {
+  //getColor isn't a method yet - don't know if we'll need it. In case we do: - could use for bombed animation (.lighter())
+  public Color getBackground() {
     return background;
-  }*/ 
+  } 
+  
+  /******************TESTER CODE***************************************
+  public static void main (String[] args) {
+    Cell c = new Cell();
+    System.out.println("SCENARIO: no boat, no hits");
+    System.out.println("Does c have a boat? (false) " + c.getHasBoat());
+    System.out.println("What colour is c now? (dark blue) <" + c.getBackground() + ">");
+    c.setBackground();
+    System.out.println("What colour is c now? (white) <" + c.getBackground() + ">");
+    System.out.println("--------------------------");
+    
+    System.out.println("SCENARIO: boat, no hits");
+    c.setShotAt(false); //shotAt was set to true by the earlier setBackground() method
+    System.out.println("--->Adding a boat to c");
+    c.setHasBoat(true);
+    System.out.println("Does c have a boat? (true) " + c.getHasBoat());
+    c.setBackground();
+    System.out.println("Has c been shot at? (true) " + c.getShotAt()); //set to true after setBackground()
+    System.out.println("What colour is c now? (red) <" + c.getBackground() + ">");
+    System.out.println("--------------------------");
+    
+    System.out.println("SCENARIO: boat, has been hit");
+    System.out.println("--->c is being shot at");
+    c.setShotAt(true);
+    System.out.println("Has c been shot at? (true) " + c.getShotAt());
+    c.setBackground();
+    System.out.println("What colour is c now? (red) <" + c.getBackground() + ">");
+  }*/
   
 }
