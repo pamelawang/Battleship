@@ -20,7 +20,8 @@ public class Cell {
   private Color sea = Color.blue.darker();
   
   /******************************************************************
-  * Constructor
+  * Constructor: The default cell has no boat, and has not been shot at;
+  * its background is navy blue. 
   *****************************************************************/
   public Cell() {
     hasBoat = false;
@@ -33,7 +34,7 @@ public class Cell {
   * Returns the current hasBoat state. hasBoat shows whether this coordinate
   * has a boat on top of it.
   * 
-  * @return          current hasBoat state of this Cell
+  * @return          current hasBoat state of this Cell.
   *****************************************************************/
   public boolean getHasBoat() {
     return hasBoat;
@@ -43,7 +44,8 @@ public class Cell {
   * Returns the current shotAt state. shotAt shows whether the Player has 
   * already aimed at this coordinate on the Computer's board.
   * 
-  * @return          current shotAt state of this CellComp. True means that the Player has already aimed at this coordinate, and false otherwise
+  * @return          current shotAt state of this Cell. If true, 
+  * then this cell has been shot at.
   *****************************************************************/
   public boolean getShotAt() {
     return shotAt;
@@ -54,7 +56,7 @@ public class Cell {
   * upon once when the grid is first created, and afterwards shouldn't be
   * able to change hasBoat. (HOW TO DO THIS???)
   * 
-  * @param  boolean  state to set hasBoat to
+  * @param  b  boolean that hasBoat will be set to
   *****************************************************************/
   public void setHasBoat(boolean b) {
     hasBoat = b;
@@ -65,16 +67,16 @@ public class Cell {
   * upon once when the computer aims for this coordinate, and afterwards
   * it can't be changed. (HOW TO DO THIS???)
   * 
-  * @param  boolean  state to set shotAt to, true meaning the Player has aimed here false otherwise
+  * @param  b  boolean that shotAt will be set to 
   *****************************************************************/
   public void setShotAt(boolean b) {
     shotAt = b;
   }
   
   /******************************************************************
-    * Sets the background of the coordinate, dependent on whether the coordinate
-    * has been shot at yet (!getShotAt) and whether there is a boat here.
-    *****************************************************************/
+  * Sets the background of the coordinate, dependent on the current hasBoat and 
+  * shotAt values. Void method that takes in no parameters.
+  ******************************************************************/
   public void setBackground() {
     if (!getShotAt()) {
       if (getHasBoat()) {
@@ -99,7 +101,7 @@ public class Cell {
     return background;
   } 
   
-  /******************TESTER CODE***************************************
+  //******************TESTER CODE***************************************
   public static void main (String[] args) {
     Cell c = new Cell();
     System.out.println("SCENARIO: no boat, no hits");
@@ -125,6 +127,6 @@ public class Cell {
     System.out.println("Has c been shot at? (true) " + c.getShotAt());
     c.setBackground();
     System.out.println("What colour is c now? (red) <" + c.getBackground() + ">");
-  }*/
+  }
   
 }
