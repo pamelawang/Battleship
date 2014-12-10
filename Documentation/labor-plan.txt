@@ -5,6 +5,6 @@ CS 230 Final Project: Battleship
 7 Dec 2014
 
 TASKS ALLOCATION
-Pam: Cell.java, Boat.java, StatsPanel.java, ComputerPlayer.java
+Pam: Cell.java, Boat.java, StatsPanel.java, 
 Meera: Stats.java, AllStats.java, GamePanel.java
-Together: Player.java, Game.java, WelcomePanel.java, BattleGridGUI.java, Documentation, (if there's time) formatting/beautifying the GUI
+Together: Player.java, ComputerPlayer.java, Game.java, WelcomePanel.java, BattleGridGUI.java, Documentation, (if there's time) formatting/beautifying the GUI

@@ -3,7 +3,8 @@
  * Date created: 6 Dec 2014
  * CS 230 Project: Battleship
  * 
- * Purpose: 
+ * Purpose: Creates a player. Each player has their own fleet of boats and 
+ * a grid on which to place them.
  * 
  * Notes:
  * 1. Completely changed the "shoot" idea. Explanation below, before 
@@ -20,6 +21,7 @@
  */
 
 import java.awt.*;
+import java.util.*;
 
 public class Player { 
 //  private final String username;
@@ -30,6 +32,10 @@ public class Player {
   private final int MISS = 0;
   private final int HIT_NOT_SUNK = 1;
   private final int HIT_AND_SUNK = 2;
+  //dk if this is a good idea or not, but..
+  private LinkedList<Boat> shipsSunk;
+  private final int NOT_OVER = -1;
+  private final int I_LOSE = 0;
   
   /******************************************************************
     * Constructor: Creates a Player that has a username, grid to place their
@@ -49,6 +55,7 @@ public class Player {
     for (int i = 0; i < NUM_BOATS; i++) {
       fleet[i] = new Boat(); //for stage 1
     }
+    shipsSunk = new LinkedList<Boat>();
   }
   
   /* assumption: program will give the user one boat at a time from
@@ -95,9 +102,10 @@ public class Player {
     * 
     * @param     x     x-coordinate of opponent's guess
     * @param     y     y-coordinate of opponent's guess
-    * @return   int    true if opponent scored hit, else false
+    * @return   int    0 if opponent missed, 1 if opponent scored hit, 
+    * 2 if boat is sunk
     ***********************************************************************/
-  public int gotShot(int x, int y) throws InvalidShotException {
+  public int gotShot(int x, int y) { //throws InvalidShotException {
     int hit = 0;
     if (!grid[x][y].getShotAt()) {
     //look at your grid, check that cell. hit or miss?
@@ -108,7 +116,7 @@ public class Player {
       hit = didMyShipSink(x,y) ? HIT_AND_SUNK : hit;
     }
     } else {
-      throw new InvalidShotException("You've already guessed ("+x+", "+y+")!");
+      System.out.println("You've already guessed ("+x+", "+y+")!");
     }
     switch (hit) {
       case 1: 
@@ -146,12 +154,17 @@ public class Player {
         //do the needful with the boat
         sunk = fleet[i].hitAndMaybeSunk(); 
         System.out.println("didMyShipSink(): " + fleet[i].getIsSunk());
+        if (sunk) { shipsSunk.add(fleet[i]); }
       }
     }
     return sunk;
   }
   
-  //not sure if this will work. we'll see.
+  public boolean didILose() {
+    return (shipsSunk.size() == NUM_BOATS);
+  } //will be used in game? to see when the game's over.
+  
+  //not sure if this will work. we'll see. it works.
   public void gotBombed(int x, int y) {
     int left = (x-1 >= 0) ? x-1 : 0;
     int right = (x+1 <= DIMENSIONS) ? x+1 : DIMENSIONS;
@@ -161,11 +174,11 @@ public class Player {
     //going through all 9 cells that have been affected
     for (int i = left; i <= right; i++) {
       for (int j = top; j <= bottom; j++) {
-        try {
+//        try {
         gotShot(i, j);
-        } catch (InvalidShotException oops) {
+//        } catch (InvalidShotException oops) {
           //do nothing - hopefully the for loops will keep going..
-        }
+//        }
       }
     }
 
@@ -252,12 +265,13 @@ public class Player {
     novice.placeBoat(1, 2, 2);
     novice.placeBoat(2, 1, 2);
     
-    computer.gotShot(2, 1);
-    novice.gotShot(0, 0);
-    computer.gotShot(1, 1);
-    novice.gotShot(2, 2);
-    computer.gotShot(1, 0);
-    novice.gotShot(1,1);
+//    computer.gotShot(2, 1);
+//    novice.gotShot(0, 0);
+//    computer.gotShot(1, 1);
+//    novice.gotShot(2, 2);
+//    computer.gotShot(1, 0);
+//    novice.gotShot(1,1); //all works
+    novice.gotBombed(1,1); //bomb works
     
     System.out.println("Fleets:");
     System.out.println("Novice: " + novice.findMyFleet());
