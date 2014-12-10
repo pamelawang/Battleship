@@ -3,14 +3,15 @@
  * Date created: 6 Dec 2014
  * CS 230 Project: Battleship
  * 
- * Purpose: 
+ * Purpose: Creates a player. Each player has their own fleet of boats and 
+ * a grid on which to place them.
  * 
  * Notes:
  * 1. Completely changed the "shoot" idea. Explanation below, before 
- * opponentShot method.
+ * gotShot method.
  * 2. Got rid of "getCell", because the grid is a 2D array - we don't need 
  * the method.
- * 3. Deleted "hasBoat()" because we're checking that in the opponentShot(), and
+ * 3. Deleted "hasBoat()" because we're checking that in the gotShot(), and
  * using Cell's getHasBoat() method.
  * 4. Will have to redo "fireBomb()" because it's no longer us firing, but us 
  * being fired upon.
@@ -20,30 +21,41 @@
  */
 
 import java.awt.*;
+import java.util.*;
 
 public class Player { 
-  private final String username;
+//  private final String username;
   private Cell[][] grid;
   private Boat[] fleet; //fleet will have a default in the final version of the game
-  private final int NUM_BOATS = 1;
+  private final int NUM_BOATS = 3;
   private final int DIMENSIONS = 3; //testing size
   private final int MISS = 0;
   private final int HIT_NOT_SUNK = 1;
   private final int HIT_AND_SUNK = 2;
+  //dk if this is a good idea or not, but..
+  private LinkedList<Boat> shipsSunk;
+  private final int NOT_OVER = -1;
+  private final int I_LOSE = 0;
   
   /******************************************************************
     * Constructor: Creates a Player that has a username, grid to place their
     * boats on, and a fleet of boats to place. 
     * 
-    * @param     name     username
+    *
     *****************************************************************/
-  public Player(String name) {
-    username = name;
+  public Player() { //took out the username & the @param thing
+//    username = name;
     grid = new Cell[DIMENSIONS][DIMENSIONS]; //size of grid
+    for (int i = 0; i < DIMENSIONS; i++ ) {
+      for (int j = 0; j < DIMENSIONS; j++) {
+        grid[i][j] = new Cell();
+      }
+    }      
     fleet = new Boat[NUM_BOATS]; //number of boats in fleet
     for (int i = 0; i < NUM_BOATS; i++) {
       fleet[i] = new Boat(); //for stage 1
     }
+    shipsSunk = new LinkedList<Boat>();
   }
   
   /* assumption: program will give the user one boat at a time from
@@ -57,17 +69,31 @@ public class Player {
     * @param   startY      y-coordinate of boat (single-cell)
     *****************************************************************/
   public void placeBoat(int boatIndex, int startX, int startY) {
+    System.out.println("placeBoat(): x = " + startX + " and y = " + startY);
     fleet[boatIndex].setStartX(startX);
+    System.out.println("placeBoat(): set boat's x-coordinate");
     fleet[boatIndex].setStartY(startY);
+    System.out.println("placeBoat(): set boat's y-coordinate");
+    grid[startX][startY].setHasBoat(true); //(x-1) because 0 indexing.
+    System.out.println("placeBoat(): set cell's hasBoat state to true.");
   }
   
+  public String findMyFleet() {
+    String boatLocations = "Your fleet consists of " + NUM_BOATS + " boat(s):\n";
+    for (int i = 0; i < NUM_BOATS; i++) {
+      boatLocations += "Boat " + (i+1) + " is " + fleet[i].getLength() + " units long and "
+        + "is at (" + fleet[i].getStartX() + ", " + fleet[i].getStartY() + "). ";
+      boatLocations += (fleet[i].getIsSunk()) ? "It has been sunk.\n" : "It has not been sunk.\n";
+    }
+    return boatLocations;
+  }
   
   /* cuz we're dealing with only one player's side of things. the grid
    * we're working with is the grid that our boats are on. we can't shoot
    * and see if we hit/miss, because that's the other player's business.
    * the only thing we can do with our grid is take in a guess and tell
    * the other person if they hit a boat or not.
-   * our 'shoot' becomes the other player's opponentShot
+   * our 'shoot' becomes the other player's gotShot
    */
   /***********************************************************************
     * Returns whether or not the opponent's guess was a hit or miss. If it 
@@ -76,9 +102,10 @@ public class Player {
     * 
     * @param     x     x-coordinate of opponent's guess
     * @param     y     y-coordinate of opponent's guess
-    * @return     int     true if opponent scored hit, else false
+    * @return   int    0 if opponent missed, 1 if opponent scored hit, 
+    * 2 if boat is sunk
     ***********************************************************************/
-  public int opponentShot(int x, int y) throws InvalidShotException {
+  public int gotShot(int x, int y) { //throws InvalidShotException {
     int hit = 0;
     if (!grid[x][y].getShotAt()) {
     //look at your grid, check that cell. hit or miss?
@@ -89,9 +116,18 @@ public class Player {
       hit = didMyShipSink(x,y) ? HIT_AND_SUNK : hit;
     }
     } else {
-      throw new InvalidShotException("You've already guessed ("+x+", "+y+")!");
+      System.out.println("You've already guessed ("+x+", "+y+")!");
     }
-    //return true
+    switch (hit) {
+      case 1: 
+        System.out.println("hit: " + hit + " Hit!");
+        break;
+      case 2: 
+        System.out.println("hit: " + hit + " Hit and sunk!");
+        break;
+      default:
+        System.out.println("hit: " + hit + " Miss!");
+    }
     return hit;
   }
   
@@ -104,7 +140,7 @@ public class Player {
 //  }
   
   
-  /* called within opponentShot if opponent gets a hit
+  /* called within gotShot if opponent gets a hit
    * updates cells and boats, returns if boat is sunk.
    * 
    * DUAL FUNCTION: (i) updates cell and boat that got hit
@@ -117,12 +153,18 @@ public class Player {
       if (fleet[i].getStartX() == x && fleet[i].getStartY() == y)  {
         //do the needful with the boat
         sunk = fleet[i].hitAndMaybeSunk(); 
+        System.out.println("didMyShipSink(): " + fleet[i].getIsSunk());
+        if (sunk) { shipsSunk.add(fleet[i]); }
       }
     }
     return sunk;
   }
   
-  //not sure if this will work. we'll see.
+  public boolean didILose() {
+    return (shipsSunk.size() == NUM_BOATS);
+  } //will be used in game? to see when the game's over.
+  
+  //not sure if this will work. we'll see. it works.
   public void gotBombed(int x, int y) {
     int left = (x-1 >= 0) ? x-1 : 0;
     int right = (x+1 <= DIMENSIONS) ? x+1 : DIMENSIONS;
@@ -132,11 +174,11 @@ public class Player {
     //going through all 9 cells that have been affected
     for (int i = left; i <= right; i++) {
       for (int j = top; j <= bottom; j++) {
-        try {
-        opponentShot(i, j);
-        } catch (InvalidShotException oops) {
+//        try {
+        gotShot(i, j);
+//        } catch (InvalidShotException oops) {
           //do nothing - hopefully the for loops will keep going..
-        }
+//        }
       }
     }
 
@@ -203,6 +245,38 @@ public class Player {
 //Deleted getCell()
   
 //deleted hasBoat()
+  
+  public static void main (String[] args) throws InvalidShotException {
+//    Player human = new Player();
+//    human.placeBoat(0, 2, 2);
+//    System.out.println(human.findMyFleet());
+//    human.gotShot(1,2);
+//    human.gotShot(2,2);
+//    human.placeBoat(1, 2, 1);
+//    human.gotShot(1, 2);
+//    human.gotShot(2, 1);
+    
+    Player computer = new Player();
+    Player novice = new Player();
+    computer.placeBoat(0, 1, 0);
+    computer.placeBoat(1, 0, 2);
+    computer.placeBoat(2, 2, 2);
+    novice.placeBoat(0, 0, 0);
+    novice.placeBoat(1, 2, 2);
+    novice.placeBoat(2, 1, 2);
+    
+//    computer.gotShot(2, 1);
+//    novice.gotShot(0, 0);
+//    computer.gotShot(1, 1);
+//    novice.gotShot(2, 2);
+//    computer.gotShot(1, 0);
+//    novice.gotShot(1,1); //all works
+    novice.gotBombed(1,1); //bomb works
+    
+    System.out.println("Fleets:");
+    System.out.println("Novice: " + novice.findMyFleet());
+    System.out.println("Computer: " + computer.findMyFleet());
+  }
   
 }
 

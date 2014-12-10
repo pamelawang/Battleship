@@ -26,41 +26,40 @@ import java.util.*;
 public class Player { 
 //  private final String username;
   private Cell[][] grid;
-  private Boat[] fleet; //fleet will have a default in the final version of the game
+  private Boat[] fleet; //fleet will have a default size in the final version of the game
   private final int NUM_BOATS = 3;
-  private final int DIMENSIONS = 3; //testing size
+  private final int GRID_DIMENSIONS = 3; //testing size of the grid
   private final int MISS = 0;
   private final int HIT_NOT_SUNK = 1;
   private final int HIT_AND_SUNK = 2;
   //dk if this is a good idea or not, but..
   private LinkedList<Boat> shipsSunk;
   private final int NOT_OVER = -1;
-  private final int I_LOSE = 0;
+  private final int GAME_OVER = 0;
   
   /******************************************************************
     * Constructor: Creates a Player that has a username, grid to place their
     * boats on, and a fleet of boats to place. 
-    * 
-    *
     *****************************************************************/
   public Player() { //took out the username & the @param thing
 //    username = name;
-    grid = new Cell[DIMENSIONS][DIMENSIONS]; //size of grid
-    for (int i = 0; i < DIMENSIONS; i++ ) {
-      for (int j = 0; j < DIMENSIONS; j++) {
+    grid = new Cell[GRID_DIMENSIONS][GRID_DIMENSIONS]; //size of grid
+    for (int i = 0; i < GRID_DIMENSIONS; i++ ) { //creating all Cells for a new grid
+      for (int j = 0; j < GRID_DIMENSIONS; j++) {
         grid[i][j] = new Cell();
       }
-    }      
+    }
     fleet = new Boat[NUM_BOATS]; //number of boats in fleet
     for (int i = 0; i < NUM_BOATS; i++) {
-      fleet[i] = new Boat(); //for stage 1
+      fleet[i] = new Boat(); //for stage 1: single cell boats
     }
     shipsSunk = new LinkedList<Boat>();
   }
   
   /* assumption: program will give the user one boat at a time from
    * the fleet, starting from index 0 to the end. user will then put
-   * boat (single-cell in stage 1) wherever they want. */
+   * boat (single-cell in stage 1) wherever they want.
+   * To be used in conjunction with the clickable cells feature.*/
   /*****************************************************************
     * Allows user to choose where to put their boat.
     * 
@@ -78,6 +77,11 @@ public class Player {
     System.out.println("placeBoat(): set cell's hasBoat state to true.");
   }
   
+  /*****************************************************************
+    * States the user's fleet by showing all of their boats, boat lengths and boat states (sunk or not sunk).
+    * 
+    * @return   String   a String that specifices all of the user's boats, boat lengths and boat state (sunk or not sunk).
+    *****************************************************************/
   public String findMyFleet() {
     String boatLocations = "Your fleet consists of " + NUM_BOATS + " boat(s):\n";
     for (int i = 0; i < NUM_BOATS; i++) {
@@ -102,19 +106,17 @@ public class Player {
     * 
     * @param     x     x-coordinate of opponent's guess
     * @param     y     y-coordinate of opponent's guess
-    * @return   int    0 if opponent missed, 1 if opponent scored hit, 
-    * 2 if boat is sunk
+    * @return   int    0 if opponent missed, 1 if opponent scored hit, 2 if boat is sunk
     ***********************************************************************/
   public int gotShot(int x, int y) { //throws InvalidShotException {
     int hit = 0;
-    if (!grid[x][y].getShotAt()) {
-    //look at your grid, check that cell. hit or miss?
+    if (!grid[x][y].getShotAt()) { //look at your grid, check that cell. hit or miss?
       hit = (grid[x][y].getHasBoat()) ? HIT_NOT_SUNK : MISS; //if it has a boat, then hit = true.
-    //if hit, what boat?
-    if (hit == HIT_NOT_SUNK) {
-      //youShotMe(x, y);
-      hit = didMyShipSink(x,y) ? HIT_AND_SUNK : hit;
-    }
+      //if hit, what boat?    PAM: shouldn't indicate what boat has been hit, should just say HIT or MISS
+      if (hit == HIT_NOT_SUNK) {
+        //youShotMe(x, y);
+        hit = didMyShipSink(x,y) ? HIT_AND_SUNK : hit;
+      }
     } else {
       System.out.println("You've already guessed ("+x+", "+y+")!");
     }
@@ -140,12 +142,14 @@ public class Player {
 //  }
   
   
-  /* called within gotShot if opponent gets a hit
-   * updates cells and boats, returns if boat is sunk.
-   * 
-   * DUAL FUNCTION: (i) updates cell and boat that got hit
-   * (ii) tells you if boat is sunk
-   */
+  /***********************************************************************
+    * Private. Called within getShot() if opponent is hit. Updates Cells and
+    * Boats to 'hit' state, and returns if Boat has been sunk.
+    * 
+    * @param     x     x-coordinate of opponent's guess
+    * @param     y     y-coordinate of opponent's guess
+    * @return   boolean    if boat has been sunk
+    ***********************************************************************/
   private boolean didMyShipSink(int x, int y) {
     boolean sunk = false; //assumes ship hasn't sunk
     grid[x][y].setShotAt(true); //updates cell that was shot at
@@ -167,9 +171,9 @@ public class Player {
   //not sure if this will work. we'll see. it works.
   public void gotBombed(int x, int y) {
     int left = (x-1 >= 0) ? x-1 : 0;
-    int right = (x+1 <= DIMENSIONS) ? x+1 : DIMENSIONS;
+    int right = (x+1 <= GRID_DIMENSIONS) ? x+1 : GRID_DIMENSIONS;
     int top = (y-1 >= 0) ? y-1 : 0;
-    int bottom = (y+1 <= DIMENSIONS) ? y+1: DIMENSIONS;
+    int bottom = (y+1 <= GRID_DIMENSIONS) ? y+1: GRID_DIMENSIONS;
     
     //going through all 9 cells that have been affected
     for (int i = left; i <= right; i++) {
@@ -211,7 +215,7 @@ public class Player {
       shoot(other, middleX, up); //middle column top
     }
     
-    if (down < DIMENSIONS) {
+    if (down < GRID_DIMENSIONS) {
       shoot(other, middleX, down); //middle column bottom
     }
     
@@ -223,20 +227,20 @@ public class Player {
         shoot(other, left, up); //left column top
       }
       
-      if (down < DIMENSIONS) {
+      if (down < GRID_DIMENSIONS) {
         shoot(other, left, down); //left column bottom
       }
     }
     
     //RIGHT COLUMN
-    if (right < DIMENSIONS) { //if x-coordinate isn't at the rightmost wall (at coordinate DIMENSIONS)
+    if (right < GRID_DIMENSIONS) { //if x-coordinate isn't at the rightmost wall (at coordinate GRID_DIMENSIONS)
       shoot(other, right, middleY); //right column middle
       
       if (up > -1) {
         shoot(other, right, up); //right column top
       }
       
-      if (down < DIMENSIONS) {
+      if (down < GRID_DIMENSIONS) {
         shoot(other, right, down); //right column bottom
       }
     }
