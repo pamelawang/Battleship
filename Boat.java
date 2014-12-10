@@ -43,7 +43,7 @@ public class Boat {
    * @param     length     length of boat (>0)
   ******************************************************************/
   public Boat() {
-    new Boat ("tester", DEFAULT_LENGTH);
+    this("tester", 1);
   }
   
   //METHODS
