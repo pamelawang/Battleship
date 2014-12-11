@@ -9,7 +9,7 @@
  * @author Pamela Wang
  */
 
-public class Game {
+  public class Game {
   
   //instance variables:
   private String username; //for the Stats class to use?
@@ -43,6 +43,7 @@ public class Game {
   public void turn(int x, int y) {
     if (humanTurn) {
       computer.gotShot(x, y);
+      score++; //user has taken another shot
       humanTurn = false;
       if (computer.didILose()) {
         gameOver = HUMAN_WIN;
@@ -57,10 +58,37 @@ public class Game {
       }
     }
   }
+  
+  public String getUsername() {
+    return username;
+  }  
+  
+  public boolean getHumanTurn () {
+    return humanTurn;
+  }
+  
+  public int getGameOver() {
+    return gameOver;
+  }
       
-      
+  public int getScore() {
+    return (gameOver != COMP_WIN) ? score : 0; 
+    //because you want to be able to see the user's score during the game.
+    //If they win, then their score is important. if they lose (comp wins)
+    //then their score defaults back to zero.
+  }
   
+  public String toString() {
+    String s = "This game is " + username + " vs. Computer.";
+    s += "\nThe current score is " + getScore() + ", and it is";
+    s += (getHumanTurn()) ? username + "'s turn." : "the computer's turn.";
+    return s;
+  }
   
-  
-  
+  //testing main:
+  public static void main (String[] args) {
+    Game bringIt = new Game("meera");
+    bringIt.turn(2, 2);
+  } 
+ 
 }
