@@ -106,7 +106,7 @@ public class Player {
     * @param     y     y-coordinate of opponent's guess
     * @return   int    0 if opponent missed, 1 if opponent scored hit, 2 if boat is sunk
     ***********************************************************************/
-  public int gotShot(int x, int y) { //throws InvalidShotException {
+  public int gotShot(int x, int y) throws InvalidShotException {
     int hit = 0; //miss 
     int indexX = x-1;
     int indexY = y-1;
@@ -120,7 +120,8 @@ public class Player {
         hit = didMyShipSink(indexX, indexY) ? HIT_AND_SUNK : hit;
       } 
     } else {
-      hit = INVALID_SHOT; //coordinate has already been shot, cannot shoot again
+      throw new InvalidShotException("You've already aimed at this coordinate!");
+//      hit = INVALID_SHOT; //coordinate has already been shot, cannot shoot again
     }
     System.out.println("After: " + grid[indexX][indexY]);
     switch (hit) {
@@ -188,15 +189,15 @@ public class Player {
     int right = (x+1 <= GRID_DIMENSIONS) ? x+1 : GRID_DIMENSIONS;
     int top = (y-1 >= 0) ? y-1 : 0;
     int bottom = (y+1 <= GRID_DIMENSIONS) ? y+1: GRID_DIMENSIONS;
-    
+   
     //going through all 9 cells that have been affected
     for (int i = left; i <= right; i++) {
       for (int j = top; j <= bottom; j++) {
-//        try {
+        try {
         gotShot(i, j);
-//        } catch (InvalidShotException oops) {
+        } catch (InvalidShotException oops) {
           //do nothing - hopefully the for loops will keep going..
-//        }
+        }
       }
     }
 
