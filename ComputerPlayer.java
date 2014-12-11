@@ -15,6 +15,7 @@ public class ComputerPlayer extends Player {
 //  private BinaryTree
   private int aimAtX;
   private int aimAtY;
+//  private boolean lastShotWasHit; //will be used when we're using boats longer than a cell
   private final int INVALID = -1;
   
   public ComputerPlayer() {
@@ -29,12 +30,14 @@ public class ComputerPlayer extends Player {
     aimAtX = makeValidCoord(randomX);
     int randomY = (int) (Math.random()*10);
     aimAtY = makeValidCoord(randomY);
-    } while (!previouslyShotAt(aimAtX, aimAtY));
+    System.out.println("pickAPoint() used x = " + aimAtX + " and y = " + aimAtY);
+    } while (previouslyShotAt(aimAtX-1, aimAtY-1));
   }
   
   private int makeValidCoord (int coordinate) {
     int valid = (coordinate >= 1) ? coordinate : 1;
-    valid = (valid <= 10) ? valid : 10;
+    valid = (valid <= getGridDimensions()) ? valid : getGridDimensions();
+    System.out.println("makeValidCoord: coordinate = " + coordinate + " and valid = " + valid);
     return valid;
   }
   
@@ -46,6 +49,7 @@ public class ComputerPlayer extends Player {
   public boolean shoot(Player other) { //Computer shooting at user
     pickAPoint();    
     other.gotShot(aimAtX, aimAtY);
+    System.out.println("Computer shooting (Y)");
     return false;
   }
   

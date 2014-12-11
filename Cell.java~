@@ -101,6 +101,23 @@ public class Cell {
     return background;
   } 
   
+  /******************************************************************
+    * Cell's toString
+    * 
+    * @return  String   current states (hasBoat, shotAt, background) of cell
+    *****************************************************************/
+  public String toString() {
+    String s = "This cell ";
+    s += (hasBoat) ? "has a boat " : "doesn't have a boat ";
+    s += "and ";
+    s += (shotAt) ? "has been shot at. " : "hasn't been shot at. ";
+    s += "Its colour is ";
+    s += (background.equals(hit)) ? "red." : "";
+    s += (background.equals(miss)) ? "white." : "";
+    s += (background.equals(sea)) ? "blue." : "";
+    return s;
+  }
+  
   //******************TESTER CODE***************************************
   public static void main (String[] args) {
     Cell c = new Cell();
@@ -111,14 +128,25 @@ public class Cell {
     System.out.println("What colour is c now? (white) <" + c.getBackground() + ">");
     System.out.println("--------------------------");
     
+    System.out.println("SCENARIO: no boat, has been hit");
+    System.out.println("Has c been shot at? (true) " + c.getShotAt()); //set to true after setBackground()
+    System.out.println("TESTING TOSTRING()");
+    System.out.println(c);
+    System.out.println("--------------------------");
+    
     System.out.println("SCENARIO: boat, no hits");
     c.setShotAt(false); //shotAt was set to true by the earlier setBackground() method
     System.out.println("--->Adding a boat to c");
     c.setHasBoat(true);
     System.out.println("Does c have a boat? (true) " + c.getHasBoat());
+    System.out.println("--------------------------");
+    
+    System.out.println("SCENARIO: boat, has been hit");
     c.setBackground();
     System.out.println("Has c been shot at? (true) " + c.getShotAt()); //set to true after setBackground()
     System.out.println("What colour is c now? (red) <" + c.getBackground() + ">");
+    System.out.println("TESTING TOSTRING()");
+    System.out.println(c);
     System.out.println("--------------------------");
     
     System.out.println("SCENARIO: boat, has been hit");
@@ -127,6 +155,8 @@ public class Cell {
     System.out.println("Has c been shot at? (true) " + c.getShotAt());
     c.setBackground();
     System.out.println("What colour is c now? (red) <" + c.getBackground() + ">");
+    System.out.println("TESTING TOSTRING()");
+    System.out.println(c);
   }
   
 }

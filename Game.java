@@ -14,7 +14,7 @@
   //instance variables:
   private String username; //for the Stats class to use?
   private Player human;
-  private Player computer; //will be changed to ComputerPlayer later
+  private ComputerPlayer computer; //will be changed to ComputerPlayer later
   private int score;
   private boolean humanTurn;
   private int gameOver; // -1 if not true, 0 for comp, 1 for human
@@ -31,7 +31,7 @@
   public Game (String name) {
     username = name;
     human = new Player();
-    computer = new Player();
+    computer = new ComputerPlayer();
     score = 0;
     humanTurn = true; //human goes first
     gameOver = NOT_OVER;
@@ -44,22 +44,29 @@
     * @param   x   x-coordinate indicating where 'this' Player is shooting at the other PLayer
     * @param   y   y-coordinate indicating where 'this' Player is shooting at the other Player
     *****************************************************************/
+  /* QUESTIONS FOR PROFS: So, for our player, the turn receives an (x,y) coordinate
+   * when they click on a button. BUT for the computer, when it's its turn then
+   * it generates the coordinates. And the turn method requires the x and y in 
+   * the parameters.. So how does this work?
+   */
+  //TURN IS PLAYER GOES THEN COMPUTER GOES - THAT'S A TURN. NICE AND SIMPLE.
   public void turn(int x, int y) {
     if (humanTurn) {
+      System.out.println("HUMAN");
       computer.gotShot(x, y); //Computer is the one being shot at
       score++; //user has taken another shot
-      humanTurn = false; //for next round
+      humanTurn = false;
       if (computer.didILose()) { //checking if game is over
         gameOver = HUMAN_WIN;
         System.out.println("Game over. Human won.");
       }
-    } else {
-      human.gotShot(x,y);
-      humanTurn = true;
-      if (human.didILose()) {
-        gameOver = COMP_WIN;
-        System.out.println("Game over. Computer won.");
-      }
+    }
+    System.out.println("COMPUTER");
+    computer.shoot(human);
+    humanTurn = true;
+    if (human.didILose()) {
+      gameOver = COMP_WIN;
+      System.out.println("Game over. Computer won.");
     }
   }
   
@@ -88,6 +95,7 @@
     s += (getHumanTurn()) ? username + "'s turn." : "the computer's turn.";
     return s;
   }
+  
   
   //testing main:
   public static void main (String[] args) {
