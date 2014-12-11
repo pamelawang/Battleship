@@ -26,9 +26,10 @@ import java.util.*;
 public class Player { 
 //  private final String username;
   private Cell[][] grid;
-  private Boat[] fleet; //fleet will have a default size in the final version of the game
+  private LinkedList<Boat> fleet; //fleet will have a default size in the final version of the game
   private final int NUM_BOATS = 3;
-  private final int GRID_DIMENSIONS = 3; //testing size of the grid, MEERA I CHANGED THE NAME OF THIS
+  private final int GRID_DIMENSIONS = 3; //testing size of the grid
+  private final int INVALID_SHOT = -1;
   private final int MISS = 0;
   private final int HIT_NOT_SUNK = 1;
   private final int HIT_AND_SUNK = 2;
@@ -49,9 +50,10 @@ public class Player {
         grid[i][j] = new Cell();
       }
     }
-    fleet = new Boat[NUM_BOATS]; //number of boats in fleet
+    fleet = new LinkedList<Boat>(); //number of boats in fleet
     for (int i = 0; i < NUM_BOATS; i++) {
-      fleet[i] = new Boat(); //for stage 1: single cell boats
+      Boat temp = new Boat(); //for stage 1: single cell boats
+      fleet.add(temp);
     }
     shipsSunk = new LinkedList<Boat>();
   }
@@ -69,9 +71,9 @@ public class Player {
     *****************************************************************/
   public void placeBoat(int boatIndex, int startX, int startY) {
     System.out.println("placeBoat(): x = " + startX + " and y = " + startY);
-    fleet[boatIndex].setStartX(startX);
+    fleet.get(boatIndex).setStartX(startX);
     System.out.println("placeBoat(): set boat's x-coordinate");
-    fleet[boatIndex].setStartY(startY);
+    fleet.get(boatIndex).setStartY(startY);
     System.out.println("placeBoat(): set boat's y-coordinate");
     grid[startX][startY].setHasBoat(true); //(x-1) because 0 indexing.
     System.out.println("placeBoat(): set cell's hasBoat state to true.");
@@ -85,9 +87,9 @@ public class Player {
   public String findMyFleet() {
     String boatLocations = "Your fleet consists of " + NUM_BOATS + " boat(s):\n";
     for (int i = 0; i < NUM_BOATS; i++) {
-      boatLocations += "Boat " + (i+1) + " is " + fleet[i].getLength() + " units long and "
-        + "is at (" + fleet[i].getStartX() + ", " + fleet[i].getStartY() + "). ";
-      boatLocations += (fleet[i].getIsSunk()) ? "It has been sunk.\n" : "It has not been sunk.\n";
+      boatLocations += "Boat " + (i+1) + " is " + fleet.get(i).getLength() + " units long and "
+        + "is at (" + fleet.get(i).getStartX() + ", " + fleet.get(i).getStartY() + "). ";
+      boatLocations += (fleet.get(i).getIsSunk()) ? "It has been sunk.\n" : "It has not been sunk.\n";
     }
     return boatLocations;
   }
@@ -109,18 +111,20 @@ public class Player {
     * @return   int    0 if opponent missed, 1 if opponent scored hit, 2 if boat is sunk
     ***********************************************************************/
   public int gotShot(int x, int y) { //throws InvalidShotException {
-    int hit = 0;
+    int hit = 0; //miss 
     if (!grid[x][y].getShotAt()) { //look at your grid, check that cell. hit or miss?
       hit = (grid[x][y].getHasBoat()) ? HIT_NOT_SUNK : MISS; //if it has a boat, then hit = true.
       //if hit, what boat?    PAM: shouldn't indicate what boat has been hit, should just say HIT or MISS
       if (hit == HIT_NOT_SUNK) {
-        //youShotMe(x, y);
         hit = didMyShipSink(x,y) ? HIT_AND_SUNK : hit;
       }
     } else {
-      System.out.println("You've already guessed ("+x+", "+y+")!");
+      hit = INVALID_SHOT; //coordinate has already been shot
     }
     switch (hit) {
+      case -1: 
+        System.out.println("hit: " + hit + " Already been shot!");
+        break;
       case 1: 
         System.out.println("hit: " + hit + " Hit!");
         break;
@@ -135,9 +139,9 @@ public class Player {
   
 //  for when we use multi-cell ships.
 //  for (int i = 0; i < NUM_BOATS; i++) {
-//    if (fleet[i].getStartX <= x && fleet[i].getEndX >= x && 
-//        fleet[i].getStartY <= y && fleet[i].getEndY >= y) {
-//      fleet[i].hitAndMaybeSunk();
+//    if (fleet.get(i).getStartX <= x && fleet.get(i).getEndX >= x && 
+//        fleet.get(i).getStartY <= y && fleet.get(i).getEndY >= y) {
+//      fleet.get(i).hitAndMaybeSunk();
 //    }
 //  }
   
@@ -154,11 +158,14 @@ public class Player {
     boolean sunk = false; //assumes ship hasn't sunk
     grid[x][y].setShotAt(true); //updates cell that was shot at
     for (int i = 0; i < NUM_BOATS; i++) { //going through fleet to find boat
-      if (fleet[i].getStartX() == x && fleet[i].getStartY() == y)  {
+      if (fleet.get(i).getStartX() == x && fleet.get(i).getStartY() == y)  {
         //do the needful with the boat
-        sunk = fleet[i].hitAndMaybeSunk(); 
-        System.out.println("didMyShipSink(): " + fleet[i].getIsSunk());
-        if (sunk) { shipsSunk.add(fleet[i]); } //MEERA want to remove in fleet to show which boats are leftover?
+        sunk = fleet.get(i).hitAndMaybeSunk(); 
+        System.out.println("didMyShipSink(): " + fleet.get(i).getIsSunk());
+        if (sunk) { 
+          shipsSunk.add(fleet.get(i)); 
+          fleet.remove(i);
+        }
       }
     }
     return sunk;
@@ -251,10 +258,6 @@ public class Player {
       }
     }
   } */
-  
-//Deleted getCell()
-  
-//deleted hasBoat()
   
   public static void main (String[] args) throws InvalidShotException {
 //    Player human = new Player();

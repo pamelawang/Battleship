@@ -170,20 +170,6 @@ public class Boat {
     return s;
   }
   
-// /******************************************************************
-//  * Unsupported operation.
-//  *****************************************************************/
-// public void setStartX() {
-//   throw new UnsupportedOperationException("Boat starting x-coordinate cannot be changed.");
-// }
-// 
-// /******************************************************************
-//  * Unsupported operation.
-//  *****************************************************************/
-// public void setStartY() {
-//   throw new UnsupportedOperationException("Boat starting y-coordinate cannot be changed.");
-// }
-  
   /******************************************************************
     * Unsupported operation.
     *****************************************************************/
@@ -212,18 +198,4 @@ public class Boat {
     System.out.println(sub);
   }
 }
-
-// public Boat(String name, int x1, int y1, int length) {
-//   boatType = name;
-//   startX = x1;
-//   startY = y1;
-//   this.length = length;
-//   isSunk = false;
-//   //endX = x2, endY = y2
-//   numHits = 0;
-// }
-//   
-// public Boat(int x1, int y1) { //future implementation has int x2, int y2 too
-//   new Boat("", x1, y1, 1);
-// }
   
