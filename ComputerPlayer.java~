@@ -46,7 +46,7 @@ public class ComputerPlayer extends Player {
   }
     
   
-  public boolean shoot(Player other) throws InvalidShotException { //Computer shooting at user
+  public boolean shoot(Player other) { //Computer shooting at user
     pickAPoint();    
     other.gotShot(aimAtX, aimAtY);
     System.out.println("Computer shooting (Y)");
