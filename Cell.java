@@ -60,6 +60,7 @@ public class Cell {
   *****************************************************************/
   public void setHasBoat(boolean b) {
     hasBoat = b;
+    setBackground(); //unnecessary. hi.
   }
   
   /******************************************************************
@@ -71,6 +72,7 @@ public class Cell {
   *****************************************************************/
   public void setShotAt(boolean b) {
     shotAt = b;
+    setBackground();
   }
   
   /******************************************************************
@@ -78,14 +80,14 @@ public class Cell {
   * shotAt values. Void method that takes in no parameters.
   ******************************************************************/
   public void setBackground() {
-    if (!getShotAt()) {
+    if (getShotAt()) {
       if (getHasBoat()) {
         background = hit;
-        setShotAt(true);
       } else {
         background = miss;
-        setShotAt(true);
       }
+    } else {
+      background = sea;
     }
     //System.out.println("Color is " + background);
   } 
