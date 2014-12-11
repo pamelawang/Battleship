@@ -34,7 +34,7 @@ public class Cell {
   * Returns the current hasBoat state. hasBoat shows whether this coordinate
   * has a boat on top of it.
   * 
-  * @return          current hasBoat state of this Cell.
+  * @return   boolean   current hasBoat state of this Cell.
   *****************************************************************/
   public boolean getHasBoat() {
     return hasBoat;
@@ -44,7 +44,7 @@ public class Cell {
   * Returns the current shotAt state. shotAt shows whether the Player has 
   * already aimed at this coordinate on the Computer's board.
   * 
-  * @return          current shotAt state of this Cell. If true, 
+  * @return   boolean   current shotAt state of this Cell. If true, 
   * then this cell has been shot at.
   *****************************************************************/
   public boolean getShotAt() {
@@ -56,7 +56,7 @@ public class Cell {
   * upon once when the grid is first created, and afterwards shouldn't be
   * able to change hasBoat. (HOW TO DO THIS???)
   * 
-  * @param  b  boolean that hasBoat will be set to
+  * @param  boolean   boolean that hasBoat will be set to
   *****************************************************************/
   public void setHasBoat(boolean b) {
     hasBoat = b;
@@ -67,7 +67,7 @@ public class Cell {
   * upon once when the computer aims for this coordinate, and afterwards
   * it can't be changed. (HOW TO DO THIS???)
   * 
-  * @param  b  boolean that shotAt will be set to 
+  * @param  boolean  boolean that shotAt will be set to 
   *****************************************************************/
   public void setShotAt(boolean b) {
     shotAt = b;
