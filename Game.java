@@ -37,24 +37,28 @@
     gameOver = NOT_OVER;
   }
   
-  //WHAT ARE OUR METHODS?!
-  
-  //I don't know what to do once the game is over...
+  /*****************************************************************
+    * Main method in game. Creates a round to be played for both Computer
+    * and the user.
+    * 
+    * @param   x   x-coordinate indicating where 'this' Player is shooting at the other PLayer
+    * @param   y   y-coordinate indicating where 'this' Player is shooting at the other Player
+    *****************************************************************/
   public void turn(int x, int y) {
     if (humanTurn) {
-      computer.gotShot(x, y);
+      computer.gotShot(x, y); //Computer is the one being shot at
       score++; //user has taken another shot
-      humanTurn = false;
-      if (computer.didILose()) {
+      humanTurn = false; //for next round
+      if (computer.didILose()) { //checking if game is over
         gameOver = HUMAN_WIN;
-        System.out.println("Game over. Computer lost.");
+        System.out.println("Game over. Human won.");
       }
     } else {
       human.gotShot(x,y);
       humanTurn = true;
       if (human.didILose()) {
         gameOver = COMP_WIN;
-        System.out.println("Game over. Computer lost.");
+        System.out.println("Game over. Computer won.");
       }
     }
   }
@@ -63,14 +67,14 @@
     return username;
   }  
   
-  public boolean getHumanTurn () {
+  public boolean getHumanTurn() {
     return humanTurn;
   }
   
   public int getGameOver() {
     return gameOver;
   }
-      
+  
   public int getScore() {
     return (gameOver != COMP_WIN) ? score : 0; 
     //because you want to be able to see the user's score during the game.
@@ -80,7 +84,7 @@
   
   public String toString() {
     String s = "This game is " + username + " vs. Computer.";
-    s += "\nThe current score is " + getScore() + ", and it is";
+    s += "\nThe current score is " + getScore() + ", and it is ";
     s += (getHumanTurn()) ? username + "'s turn." : "the computer's turn.";
     return s;
   }

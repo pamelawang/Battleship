@@ -119,7 +119,7 @@ public class Player {
         hit = didMyShipSink(x,y) ? HIT_AND_SUNK : hit;
       }
     } else {
-      hit = INVALID_SHOT; //coordinate has already been shot
+      hit = INVALID_SHOT; //coordinate has already been shot, cannot shoot again
     }
     switch (hit) {
       case -1: 
@@ -258,6 +258,14 @@ public class Player {
       }
     }
   } */
+  
+  public int getGridDimensions() {
+    return GRID_DIMENSIONS;
+  }
+  
+  public Cell getCellAt(int x, int y) {
+    return grid[x][y];
+  }
   
   public static void main (String[] args) throws InvalidShotException {
 //    Player human = new Player();
