@@ -28,7 +28,7 @@ public class Player {
   private Cell[][] grid;
   private Boat[] fleet; //fleet will have a default size in the final version of the game
   private final int NUM_BOATS = 3;
-  private final int GRID_DIMENSIONS = 3; //testing size of the grid
+  private final int GRID_DIMENSIONS = 3; //testing size of the grid, MEERA I CHANGED THE NAME OF THIS
   private final int MISS = 0;
   private final int HIT_NOT_SUNK = 1;
   private final int HIT_AND_SUNK = 2;
@@ -158,12 +158,18 @@ public class Player {
         //do the needful with the boat
         sunk = fleet[i].hitAndMaybeSunk(); 
         System.out.println("didMyShipSink(): " + fleet[i].getIsSunk());
-        if (sunk) { shipsSunk.add(fleet[i]); }
+        if (sunk) { shipsSunk.add(fleet[i]); } //MEERA want to remove in fleet to show which boats are leftover?
       }
     }
     return sunk;
   }
   
+  /***********************************************************************
+    * Returns how many ships have been sunk in a user's fleet, indicating
+    * whether the game is over or not.
+    * 
+    * @return   boolean    returns true if the player's ships have all sunk (aka game over)
+    ***********************************************************************/
   public boolean didILose() {
     return (shipsSunk.size() == NUM_BOATS);
   } //will be used in game? to see when the game's over.
