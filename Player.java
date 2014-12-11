@@ -263,8 +263,8 @@ public class Player {
     return GRID_DIMENSIONS;
   }
   
-  public Cell[][] getGrid() {
-    return grid;
+  public Cell getCellAt(int x, int y) {
+    return grid[x][y];
   }
   
   public static void main (String[] args) throws InvalidShotException {
