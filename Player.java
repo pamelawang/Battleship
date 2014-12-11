@@ -263,6 +263,10 @@ public class Player {
     return GRID_DIMENSIONS;
   }
   
+  public Cell[][] getGrid() {
+    return grid;
+  }
+  
   public static void main (String[] args) throws InvalidShotException {
 //    Player human = new Player();
 //    human.placeBoat(0, 2, 2);
