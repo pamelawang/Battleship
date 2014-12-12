@@ -52,8 +52,8 @@ public class Boat {
     * 
     * @param     xStart      starting x-coordinate of boat
     *****************************************************************/
-  public void setStartX (int xStart) {
-    startX = xStart; 
+  public void setStartIndexX (int xStart) {
+    startX = xStart - 1; //adjusting for 0 indexing
   }
   
   /******************************************************************
@@ -61,8 +61,8 @@ public class Boat {
     * 
     * @param     yStart     starting y-coordinate of boat
     *****************************************************************/
-  public void setStartY (int yStart) {
-    startY = yStart; 
+  public void setStartIndexY (int yStart) {
+    startY = yStart - 1; //adjusting for 0 indexing
   }
   
   /******************************************************************
@@ -70,7 +70,7 @@ public class Boat {
     * 
     * @return  int     starting x-coordinate of boat
     *****************************************************************/
-  public int getStartX () {
+  public int getStartIndexX () {
     return startX; 
   }
   
@@ -79,7 +79,7 @@ public class Boat {
     * 
     * @return  int     starting y-coordinate of boat
     *****************************************************************/
-  public int getStartY () {
+  public int getStartIndexY () {
     return startY; 
   }
   
@@ -88,7 +88,7 @@ public class Boat {
     * 
     * @param  xEnd     last ('ending') x-coordinate of boat
     *****************************************************************/
-// public void setEndX (int xEnd) {
+// public void setEndIndexX (int xEnd) {
 //   endX = xEnd;
 // }
 // 
@@ -97,7 +97,7 @@ public class Boat {
     * 
     * @param  yEnd     last ('ending') y-coordinate of boat
     *****************************************************************/
-// public void setEndY (int yEnd) {
+// public void setEndIndexY (int yEnd) {
 //   endY = yEnd;
 // }
   
@@ -187,8 +187,8 @@ public class Boat {
   //Testing main:
   public static void main (String[] args) {
     Boat sub = new Boat("submarine", 3);
-    sub.setStartX(2);
-    sub.setStartY(3);
+    sub.setStartIndexX(2);
+    sub.setStartIndexY(3);
     System.out.println(sub);
     sub.hitAndMaybeSunk();
     System.out.println(sub);
