@@ -5,11 +5,17 @@
  * 
  * Purpose: Creates a single game instance, with two players.
  * 
+ * NOTES:
+ * 1. Have to make the game ask for the players to place their boats when
+ * it starts!
+ * 
  * @author Meera Hejmadi
  * @author Pamela Wang
  */
+import java.io.*;
+import java.util.*;
 
-  public class Game {
+public class Game {
   
   //instance variables:
   private String username; //for the Stats class to use?
@@ -18,16 +24,16 @@
   private int score;
   private boolean humanTurn;
   private int gameOver; // -1 if not true, 0 for comp, 1 for human
-  private final int NOT_OVER = -1;
-  private final int COMP_WIN = 0;
-  private final int HUMAN_WIN = 1;
+  private static int NOT_OVER = -1;
+  private static int COMP_WIN = 0;
+  private static int HUMAN_WIN = 1;
 //  private CircularArrayStack last3Human;
 //  private CircularArrayStack last3Comp; //undo stuff
   
   /***********************************************************************
-   * Constructor: Creates a game. Each game has two players - human and 
-   * computer - and a score.
-   ***********************************************************************/
+    * Constructor: Creates a game. Each game has two players - human and 
+    * computer - and a score.
+    ***********************************************************************/
   public Game (String name) {
     username = name;
     human = new Player();
@@ -50,7 +56,7 @@
    * the parameters.. So how does this work?
    */
   //TURN IS PLAYER GOES THEN COMPUTER GOES - THAT'S A TURN. NICE AND SIMPLE.
-  public void turn(int x, int y) {
+  public void turn(int x, int y) throws InvalidShotException {
     if (humanTurn) {
       System.out.println("HUMAN");
       computer.gotShot(x, y); //Computer is the one being shot at
@@ -100,7 +106,21 @@
   //testing main:
   public static void main (String[] args) {
     Game bringIt = new Game("meera");
-    bringIt.turn(2, 2);
+    Scanner scan = new Scanner(System.in);
+    int currentX, currentY;
+    System.out.println("Welcome to Battleship! Please enter coordinates in the form" 
+                         + "\"x y\". Ex. (2,3) should be entered as \"2 3\".");
+    while (bringIt.getGameOver() == NOT_OVER) {
+      try {
+        System.out.println("It's your turn! Please enter a set of coordinates you'd"
+                             + "like to shoot at.");
+        currentX = scan.nextInt();
+        currentY = scan.nextInt();
+        bringIt.turn(currentX, currentY);
+      } catch (InvalidShotException oops) {
+        //prompts user for a different set of coordinates by going back through loop
+      }
+    }
   } 
- 
+  
 }

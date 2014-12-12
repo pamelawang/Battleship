@@ -76,6 +76,18 @@ public class Game {
     }
   }
   
+  public Player getHumanPlayer() {
+    return human;
+  }
+  
+  public ComputerPlayer getCompPlayer() {
+    return computer;
+  }
+  
+  public int getGridSize() {
+    return getHumanPlayer().getGridDimensions();
+  }
+  
   public String getUsername() {
     return username;
   }  
@@ -109,7 +121,24 @@ public class Game {
     Scanner scan = new Scanner(System.in);
     int currentX, currentY;
     System.out.println("Welcome to Battleship! Please enter coordinates in the form" 
-                         + "\"x y\". Ex. (2,3) should be entered as \"2 3\".");
+                         + "\"x y\". Ex. (2,3) should be entered as \"2 3\".\nRemember"
+                         + "that your grid is " + bringIt.getGridSize() + "square units.");
+    System.out.println("Time to place your boats.");
+    int boatX, boatY;
+    System.out.println("Human:");
+    for (int i = 0; i < bringIt.getHumanPlayer().getNumBoats(); i++) {
+      System.out.println("Where do you want to put boat 1?");
+      boatX = scan.nextInt();
+      boatY = scan.nextInt();
+      bringIt.getHumanPlayer().placeBoat(i, boatX, boatY);
+    }
+    System.out.println("Computer:");
+     for (int i = 0; i < bringIt.getCompPlayer().getNumBoats(); i++) {
+      System.out.println("Where do you want to put boat " + i+1 + "?");
+      boatX = scan.nextInt();
+      boatY = scan.nextInt();
+      bringIt.getCompPlayer().placeBoat(i, boatX, boatY);
+    }
     while (bringIt.getGameOver() == NOT_OVER) {
       try {
         System.out.println("It's your turn! Please enter a set of coordinates you'd"

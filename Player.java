@@ -24,7 +24,7 @@ public class Player {
   private Cell[][] grid;
   private LinkedList<Boat> fleet; //fleet will have a default size in the final version of the game
   private final int NUM_BOATS = 3;
-  private final int GRID_DIMENSIONS = 3; //testing size of the grid
+  protected final int GRID_DIMENSIONS = 3; //testing size of the grid
   private final int INVALID_SHOT = -1;
   private final int MISS = 0;
   private final int HIT_NOT_SUNK = 1;
@@ -66,13 +66,11 @@ public class Player {
     * @param   startY      y-coordinate of boat (single-cell)
     *****************************************************************/
   public void placeBoat(int boatIndex, int startX, int startY) {
-    //System.out.println("placeBoat(): x = " + startX + " and y = " + startY);
-    fleet.get(boatIndex).setStartIndexX(startX);
-    //System.out.println("placeBoat(): set boat's x-coordinate");
-    fleet.get(boatIndex).setStartIndexY(startY);
-    //System.out.println("placeBoat(): set boat's y-coordinate");
-    grid[startX][startY].setHasBoat(true); //(x-1) because 0 indexing.
-    //System.out.println("placeBoat(): set cell's hasBoat state to true.");
+    int adjustedX = startX-1; //(x-1) because 0 indexing.
+    int adjustedY = startY-1;
+    fleet.get(boatIndex).setStartIndexX(adjustedX);
+    fleet.get(boatIndex).setStartIndexY(adjustedY);
+    grid[adjustedX][adjustedY].setHasBoat(true); 
   }
   
   /*****************************************************************
@@ -121,7 +119,6 @@ public class Player {
       } 
     } else {
       throw new InvalidShotException("You've already shot this coordinate!");
-//      hit = INVALID_SHOT; //coordinate has already been shot, cannot shoot again
     }
     System.out.println("After: " + grid[indexX][indexY]);
     switch (hit) {
@@ -260,6 +257,10 @@ public class Player {
       }
     }
   } */
+  
+  public int getNumBoats() {
+    return NUM_BOATS;
+  }
   
   public int getGridDimensions() {
     return GRID_DIMENSIONS;
