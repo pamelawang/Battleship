@@ -15,18 +15,17 @@ public class ComputerPlayer extends Player {
 //  private BinaryTree
   private int aimAtX;
   private int aimAtY;
-//  private boolean lastShotWasHit; //will be used when we're using boats longer than a cell
   private final int INVALID = -1;
-  private Cell[][] shotSoFar;
+  private Cell[][] shotSoFarGrid;
   
   public ComputerPlayer() {
     super();
     aimAtX = INVALID;
     aimAtY = INVALID;
-    shotSoFar = new Cell[GRID_DIMENSIONS][GRID_DIMENSIONS];
+    shotSoFarGrid = new Cell[GRID_DIMENSIONS][GRID_DIMENSIONS];
     for (int i = 0; i < GRID_DIMENSIONS; i++) {
       for (int j = 0; j < GRID_DIMENSIONS; j++) {
-        shotSoFar[i][j] = new Cell();
+        shotSoFarGrid[i][j] = new Cell();
       }
     }
   }
@@ -38,10 +37,10 @@ public class ComputerPlayer extends Player {
     int randomY = (int) (Math.random()*10);
     aimAtY = makeValidCoord(randomY);
     System.out.println("pickAPoint() used x = " + aimAtX + " and y = " + aimAtY);
-    } while (previouslyShotAt(aimAtX-1, aimAtY-1));
+    } while (previouslyShotAt(aimAtX, aimAtY));
   }
   
-  private int makeValidCoord (int coordinate) {
+  private int makeValidCoord (int coordinate) { //checks if coordinate is within grid dimensions
     int valid = (coordinate >= 1) ? coordinate : 1;
     valid = (valid <= getGridDimensions()) ? valid : getGridDimensions();
     System.out.println("makeValidCoord: coordinate = " + coordinate + " and valid = " + valid);
@@ -49,14 +48,14 @@ public class ComputerPlayer extends Player {
   }
   
   private boolean previouslyShotAt (int xCoord, int yCoord) {
-    return shotSoFar[xCoord-1][yCoord-1].getShotAt();
+    return shotSoFarGrid[xCoord-1][yCoord-1].getShotAt();
   }
     
   
   public boolean shoot(Player other) throws InvalidShotException { //Computer shooting at user
     pickAPoint();    
     other.gotShot(aimAtX, aimAtY);
-    shotSoFar[aimAtX] [aimAtY].setShotAt(true);
+    shotSoFarGrid[aimAtX-1][aimAtY-1].setShotAt(true);
     System.out.println("Computer shooting (Y)");
     return false;
   }
