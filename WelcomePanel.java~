@@ -1,0 +1,37 @@
+/* Meera Hejmadi and Pamela Wang
+ * Final Project - Battleship
+ * WelcomePanel.java
+ * Dec 12th, 2014
+ * 
+ * Purpose: Creates a panel detailing the rules of Battleship
+ */
+
+import java.awt.*;
+import javax.swing.*;
+
+public class WelcomePanel extends JPanel {
+  
+  private JLabel title, instructions, authors;
+  
+  public WelcomePanel() {
+    
+    setBackground(Color.orange);
+    setLayout (new BoxLayout (this, BoxLayout.Y_AXIS)); //writing goes until end of screen
+    hook = new JLabel ("Choose the Grad School that fits you best!");
+    hook.setAlignmentX (Component.CENTER_ALIGNMENT);
+    this.add(hook);
+    
+    title = new JLabel ("Battleship");
+    title.setAlignmentX (Component.CENTER_ALIGNMENT);
+    this.add(title);
+    
+    instructions = new JLabel ("How to play");
+    simple.setAlignmentX (Component.CENTER_ALIGNMENT);
+    this.add(instructions);
+    
+    authors = new JLabel ("\u00A9 2014 Meera Hejmadi and Pamela Wang");
+    authors.setAlignmentX (Component.CENTER_ALIGNMENT);
+    this.add(authors);
+  } 
+ 
+}//ends AboutPanel

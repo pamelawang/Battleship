@@ -1,0 +1,43 @@
+/* Meera Hejmadi and Pamela Wang
+ * Final Project - Battleship
+ * BattleshipGUI.java
+ * Dec 12th, 2014
+ * 
+ * Purpose: Visual representation of all Battleship games
+ */
+
+import javax.swing.*;
+import java.awt.*; //to use Dimension
+
+public class BattleshipGUI {
+  
+  //private Color c1, c2, c3;
+  
+  public static void main (String[] args) {
+    JFrame frame = new JFrame ("Battleship");
+    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    
+    //GradSchools grad = new GradSchools();
+    JTabbedPane tp = new JTabbedPane();
+
+    
+    tp.addTab("Instructions", new WelcomePanel());
+    //tp.addTab("Add School", new GradSchoolsPanel());
+    //tp.addTab("Evaluate", new EvalSchoolsPanel());
+    /*Idea for color coordination: have each panel take in a color parameter so the colors can
+     *   be changed quickly and coordinated.
+     *   Didn't implement because wasn't sure how to get GradSchoolsGUI to access variable Color */
+    
+    frame.getContentPane().add(tp);
+    frame.setPreferredSize(new Dimension(900, 210));
+    //fixed dimensions; size wide enough for all sliders in Evaluate to work
+    
+    frame.pack();
+    frame.setVisible(true);
+  } // ends main
+  
+  
+  
+  
+  
+} //ends GUI
