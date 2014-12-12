@@ -5,10 +5,13 @@
  * 
  * Purpose: Creates a single game instance, with two players.
  * 
+ * NOTES:
+ * 1. Have to make the game ask for the players to place their boats when
+ * it starts!
+ * 
  * @author Meera Hejmadi
  * @author Pamela Wang
  */
-
 import java.io.*;
 import java.util.*;
 
@@ -53,7 +56,8 @@ public class Game {
    * the parameters.. So how does this work?
    */
   //TURN IS PLAYER GOES THEN COMPUTER GOES - THAT'S A TURN. NICE AND SIMPLE.
-  public void turn(int x, int y) throws InvalidShotException{
+
+  public void turn(int x, int y) throws InvalidShotException {
     if (humanTurn) {
       System.out.println("HUMAN");
       computer.gotShot(x, y); //Computer is the one being shot at
@@ -71,6 +75,18 @@ public class Game {
       gameOver = COMP_WIN;
       System.out.println("Game over. Computer won.");
     }
+  }
+  
+  public Player getHumanPlayer() {
+    return human;
+  }
+  
+  public ComputerPlayer getCompPlayer() {
+    return computer;
+  }
+  
+  public int getGridSize() {
+    return getHumanPlayer().getGridDimensions();
   }
   
   public String getUsername() {
@@ -103,18 +119,36 @@ public class Game {
   //testing main:
   public static void main (String[] args) {
     Game bringIt = new Game("meera");
-    Scanner scan = new Scanner (System.in);
+    Scanner scan = new Scanner(System.in);
     int currentX, currentY;
-    System.out.println("Please enter coordinates in the form \"x y\'" 
-                         + ". ex. (2,3) should be 2 3");
+    System.out.println("Welcome to Battleship! Please enter coordinates in the form" 
+                         + "\"x y\". Ex. (2,3) should be entered as \"2 3\".\nRemember"
+                         + "that your grid is " + bringIt.getGridSize() + "square units.");
+    System.out.println("Time to place your boats.");
+    int boatX, boatY;
+    System.out.println("Human:");
+    for (int i = 0; i < bringIt.getHumanPlayer().getNumBoats(); i++) {
+      System.out.println("Where do you want to put boat 1?");
+      boatX = scan.nextInt();
+      boatY = scan.nextInt();
+      bringIt.getHumanPlayer().placeBoat(i, boatX, boatY);
+    }
+    System.out.println("Computer:");
+     for (int i = 0; i < bringIt.getCompPlayer().getNumBoats(); i++) {
+      System.out.println("Where do you want to put boat " + i+1 + "?");
+      boatX = scan.nextInt();
+      boatY = scan.nextInt();
+      bringIt.getCompPlayer().placeBoat(i, boatX, boatY);
+    }
     while (bringIt.getGameOver() == NOT_OVER) {
-      System.out.println("Your turn! Where would you like to shoot?");
-      currentX = scan.nextInt();
-      currentY = scan.nextInt();
       try {
+        System.out.println("It's your turn! Please enter a set of coordinates you'd"
+                             + "like to shoot at.");
+        currentX = scan.nextInt();
+        currentY = scan.nextInt();
         bringIt.turn(currentX, currentY);
       } catch (InvalidShotException oops) {
-        //nada. loop around again.
+        //prompts user for a different set of coordinates by going back through loop
       }
     }
   } 

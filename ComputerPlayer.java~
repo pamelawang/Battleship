@@ -17,18 +17,11 @@ public class ComputerPlayer extends Player {
   private int aimAtY;
 //  private boolean lastShotWasHit; //will be used when we're using boats longer than a cell
   private final int INVALID = -1;
-  private Cell[][] shotSoFar;
   
   public ComputerPlayer() {
     super();
     aimAtX = INVALID;
     aimAtY = INVALID;
-    shotSoFar = new Cell[GRID_DIMENSIONS][GRID_DIMENSIONS];
-    for (int i = 0; i < GRID_DIMENSIONS; i++) {
-      for (int j = 0; j < GRID_DIMENSIONS; j++) {
-        shotSoFar[i][j] = new Cell();
-      }
-    }
   }
   
   private void pickAPoint() { //randomiser
@@ -48,15 +41,14 @@ public class ComputerPlayer extends Player {
     return valid;
   }
   
-  private boolean previouslyShotAt (int xCoord, int yCoord) {
-    return shotSoFar[xCoord-1][yCoord-1].getShotAt();
+  private boolean previouslyShotAt (int x, int y) {
+    return getCellAt(x,y).getShotAt();
   }
     
   
   public boolean shoot(Player other) throws InvalidShotException { //Computer shooting at user
     pickAPoint();    
     other.gotShot(aimAtX, aimAtY);
-    shotSoFar[aimAtX] [aimAtY].setShotAt(true);
     System.out.println("Computer shooting (Y)");
     return false;
   }
