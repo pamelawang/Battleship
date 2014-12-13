@@ -38,9 +38,6 @@ public class Boat {
   /******************************************************************
    * Constructor: Creates a Boat object of type "tester" and length 
    * default. Start/end x,y coordinates will be set later.
-   * 
-   * @param     name     name of boat
-   * @param     length     length of boat (>0)
   ******************************************************************/
   public Boat() {
     this("tester", 1);
@@ -106,7 +103,7 @@ public class Boat {
     * 
     * @return  int     last ('ending') x-coordinate of boat
     *****************************************************************/
-// public int getEndX() {
+// public int getEndIndexX() {
 //   return endX;
 // }
 // 
@@ -115,16 +112,17 @@ public class Boat {
     * 
     * @return  int     last ('ending') y-coordinate of boat
     *****************************************************************/
-// public int getEndY() {
+// public int getEndIndexY() {
 //   return endY;
 // }
   
   /******************************************************************
-    * Gets the length of the boat
+    * Gets the length of the boat.
     * 
     * @return  int     boat length
     *****************************************************************/
   public int getLength() {
+    System.out.println("LRNGTH IS " + length);
     return length;
   }
   
@@ -186,16 +184,39 @@ public class Boat {
   
   //Testing main:
   public static void main (String[] args) {
+    System.out.println("Creating a new boat with 1st constructor");
     Boat sub = new Boat("submarine", 3);
     sub.setStartIndexX(2);
     sub.setStartIndexY(3);
     System.out.println(sub);
+    
+    System.out.println("Hit and checking if it's sunk");
+    sub.hitAndMaybeSunk(); //hits and checks if it's sunk
+    System.out.println(sub);
+    
+    System.out.println("Hit and checking if it's sunk");
     sub.hitAndMaybeSunk();
     System.out.println(sub);
+    
+    System.out.println("Hit and checking if it's sunk");
     sub.hitAndMaybeSunk();
     System.out.println(sub);
-    sub.hitAndMaybeSunk();
-    System.out.println(sub);
+    
+    System.out.println("Checking getNumHits() and getIsSunk(): " + sub.getNumHits() + ",\t" + sub.getIsSunk());
+    System.out.println("getLength() " + sub.getLength());
+    
+    System.out.println("-------------------------");
+    
+    System.out.println("Creating a new boat with 2nd constructor");
+    Boat boat = new Boat();
+    boat.setStartIndexX(3);
+    boat.setStartIndexY(3);
+    System.out.println(boat);
+    
+    System.out.println("Checking getStartIndexX() and getStartIndexY(): " + sub.getStartIndexX()
+                         + ",\t" + sub.getStartIndexY());
+    System.out.println("Checking getLength(): " + sub.getLength());
+    System.out.println("-------Can't check End getters and setters--------");
   }
 }
   

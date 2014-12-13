@@ -20,7 +20,7 @@ public class BattleshipGUI {
     //Game battle = new Game();
     //AllStats scores = new AllStats()
     JTabbedPane tp = new JTabbedPane();
-
+    
     
     tp.addTab("Instructions", new WelcomePanel());
     //tp.addTab("Game", new GamePanel());
