@@ -7,7 +7,7 @@
  */
 
 import javax.swing.*;
-import java.awt.*; //to use Dimension
+import java.awt.*; 
 
 public class BattleshipGUI {
   
@@ -17,14 +17,14 @@ public class BattleshipGUI {
     JFrame frame = new JFrame ("Battleship");
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     
-    //Game battle = new Game();
+    Game battle = new Game("testing");
     //AllStats scores = new AllStats()
     JTabbedPane tp = new JTabbedPane();
     
     
     tp.addTab("Instructions", new WelcomePanel());
-    //tp.addTab("Game", new GamePanel());
-    //tp.addTab("Top Scores", new StatsPanel());
+    tp.addTab("Game", new GamePanel(battle));
+    tp.addTab("Top Scores", new StatsPanel());
     
     frame.getContentPane().add(tp);
     frame.setPreferredSize(new Dimension(1000, 700)); //fixed dimensions
