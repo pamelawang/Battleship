@@ -7,6 +7,8 @@
  * 
  * @author Meera Hejmadi
  * @author Pamela Wang
+ * 
+ * GETLENGTH/LENGTH ISN'T WORKINGGGGG
  */
 
 public class Boat {
