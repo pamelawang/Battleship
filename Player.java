@@ -66,11 +66,11 @@ public class Player {
     * @param   startY      y-coordinate of boat (single-cell)
     *****************************************************************/
   public void placeBoat(int boatIndex, int startX, int startY) {
-    int adjustedX = startX-1; //(x-1) because 0 indexing.
-    int adjustedY = startY-1;
-    fleet.get(boatIndex).setStartIndexX(adjustedX);
-    fleet.get(boatIndex).setStartIndexY(adjustedY);
-    grid[adjustedX][adjustedY].setHasBoat(true); 
+    int gridX = startX - 1;
+    int gridY = startY - 1;
+    fleet.get(boatIndex).setStartX(startX);
+    fleet.get(boatIndex).setStartY(startY);
+    grid[gridX][gridY].setHasBoat(true); 
   }
   
   /*****************************************************************
@@ -82,7 +82,7 @@ public class Player {
     String boatLocations = "Your fleet consists of " + NUM_BOATS + " boat(s):\n";
     for (int i = 0; i < NUM_BOATS; i++) {
       boatLocations += "Boat " + (i+1) + " is " + fleet.get(i).getLength() + " units long and "
-        + "is at (" + fleet.get(i).getStartIndexX() + ", " + fleet.get(i).getStartIndexY() + "). ";
+        + "is at (" + fleet.get(i).getStartX() + ", " + fleet.get(i).getStartY() + "). ";
       boatLocations += (fleet.get(i).getIsSunk()) ? "It has been sunk.\n" : "It has not been sunk.\n";
     }
     return boatLocations;
@@ -106,21 +106,21 @@ public class Player {
     ***********************************************************************/
   public int gotShot(int x, int y) throws InvalidShotException {
     int hit = 0; //miss 
-    int indexX = x-1;
-    int indexY = y-1;
 //    System.out.println("didMyShipSink: grid[" + indexX + "][" + indexY + "]'s current shotAt state is: (true)"
 //                         + grid[indexX][indexY].getShotAt());
-    System.out.println("Before: " + grid[indexX][indexY]);
-    if (!grid[indexX][indexY].getShotAt()) { //look at your grid, check that cell. hit or miss?
-      grid[indexX][indexY].setShotAt(true);
-      hit = (grid[indexX][indexY].getHasBoat()) ? HIT_NOT_SUNK : MISS; //if it has a boat, then hit = true.
+    int gridX = x - 1; //0-indexing
+    int gridY = y - 1;
+    System.out.println("Before: " + grid[gridX][gridY]);
+    if (!grid[gridX][gridY].getShotAt()) { //look at your grid, check that cell. hit or miss?
+      grid[gridX][gridY].setShotAt(true);
+      hit = (grid[gridX][gridY].getHasBoat()) ? HIT_NOT_SUNK : MISS; //if it has a boat, then hit = true.
       if (hit == HIT_NOT_SUNK) {
-        hit = didMyShipSink(indexX, indexY) ? HIT_AND_SUNK : hit;
+        hit = didMyShipSink(x, y) ? HIT_AND_SUNK : hit;
       } 
     } else {
       throw new InvalidShotException("You've already shot this coordinate!");
     }
-    System.out.println("After: " + grid[indexX][indexY]);
+    System.out.println("After: " + grid[gridX][gridY]);
     switch (hit) {
       case -1: 
         System.out.println("hit: " + hit + " Already been shot!");
@@ -154,10 +154,10 @@ public class Player {
     * @param     indexY     y-coordinate of opponent's guess (already adjusted to arrays' first element index being 0)
     * @return   boolean    if boat has been sunk
     ***********************************************************************/
-  private boolean didMyShipSink(int indexX, int indexY) {
+  private boolean didMyShipSink(int x, int y) {
     boolean sunk = false; //assumes ship hasn't sunk
     for (int i = 0; i < fleet.size(); i++) { //going through fleet to find boat
-      if (fleet.get(i).getStartIndexX() == indexX && fleet.get(i).getStartIndexY() == indexY)  {
+      if (fleet.get(i).getStartX() == x && fleet.get(i).getStartY() == y)  {
         //do the needful with the boat
         sunk = fleet.get(i).hitAndMaybeSunk(); 
         //System.out.println("didMyShipSink(): " + fleet.get(i).getIsSunk());
@@ -262,6 +262,10 @@ public class Player {
     return NUM_BOATS;
   }
   
+  public int getFleetSize() {
+    return fleet.size();
+  }
+  
   public int getGridDimensions() {
     return GRID_DIMENSIONS;
   }
@@ -270,8 +274,8 @@ public class Player {
     return grid[x][y];
   }
   
-  public Cell[][] getGrid(Player playa) {
-    return playa.grid;
+  public Cell[][] getGrid() {
+    return grid;
   }
   
   public String printGrid() {

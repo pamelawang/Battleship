@@ -5,6 +5,9 @@
  * 
  * Purpose: One instance of one of the grid coordinates on the battleship screen
  * 
+ * Note: 
+ * Haven't commented on the allInfo stuff.
+ * 
  * @author Meera Hejmadi
  * @author Pamela Wang
  */
@@ -14,6 +17,11 @@ import java.awt.*;
 public class Cell {
   private boolean hasBoat;
   private boolean shotAt;
+  private int allInfo;
+  private static int NADA = 0;
+  private static int BOAT_ONLY = 1;
+  private static int SHOT_ONLY = 2;
+  private static int BOAT_SHOT = 3;
   private Color background; //background of coordinate square; uses the colours below
   private Color hit = Color.red;
   private Color miss = Color.white;
@@ -26,6 +34,7 @@ public class Cell {
   public Cell() {
     hasBoat = false;
     shotAt = false;
+    allInfo = NADA;
     background = sea;
   }
   
@@ -60,6 +69,7 @@ public class Cell {
   *****************************************************************/
   public void setHasBoat(boolean b) {
     hasBoat = b;
+    allInfo = BOAT_ONLY;
     setBackground(); //unnecessary. hi.
   }
   
@@ -72,6 +82,7 @@ public class Cell {
   *****************************************************************/
   public void setShotAt(boolean b) {
     shotAt = b;
+    allInfo = (getHasBoat()) ? BOAT_SHOT : SHOT_ONLY;
     setBackground();
   }
   
@@ -102,6 +113,10 @@ public class Cell {
   public Color getBackground() {
     return background;
   } 
+  
+  public int getAllInfo() {
+    return allInfo;
+  }
   
   /******************************************************************
     * Cell's toString

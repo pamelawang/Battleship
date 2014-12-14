@@ -128,14 +128,14 @@ public class Game {
     int boatX, boatY;
     System.out.println("Human:");
     for (int i = 0; i < bringIt.getHumanPlayer().getNumBoats(); i++) {
-      System.out.println("Where do you want to put boat 1?");
+      System.out.println("Where do you want to put boat " + (i+1) + "?");
       boatX = scan.nextInt();
       boatY = scan.nextInt();
       bringIt.getHumanPlayer().placeBoat(i, boatX, boatY);
     }
     System.out.println("Computer:");
      for (int i = 0; i < bringIt.getCompPlayer().getNumBoats(); i++) {
-      System.out.println("Where do you want to put boat " + i+1 + "?");
+      System.out.println("Where do you want to put boat " + (i+1) + "?");
       boatX = scan.nextInt();
       boatY = scan.nextInt();
       bringIt.getCompPlayer().placeBoat(i, boatX, boatY);

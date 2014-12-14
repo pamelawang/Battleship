@@ -38,7 +38,7 @@ public class ComputerPlayer extends Player {
     int randomY = (int) (Math.random()*10);
     aimAtY = makeValidCoord(randomY);
     System.out.println("pickAPoint() used x = " + aimAtX + " and y = " + aimAtY);
-    } while (previouslyShotAt(aimAtX-1, aimAtY-1));
+    } while (previouslyShotAt(aimAtX, aimAtY));
   }
   
   private int makeValidCoord (int coordinate) {
@@ -49,15 +49,19 @@ public class ComputerPlayer extends Player {
   }
   
   private boolean previouslyShotAt (int xCoord, int yCoord) {
-    return shotSoFar[xCoord-1][yCoord-1].getShotAt();
+    int gridX = xCoord-1;
+    int gridY = yCoord-1;
+    return shotSoFar[gridX][gridY].getShotAt();
   }
     
   
   public boolean shoot(Player other) throws InvalidShotException { //Computer shooting at user
     pickAPoint();    
     other.gotShot(aimAtX, aimAtY);
-    shotSoFar[aimAtX] [aimAtY].setShotAt(true);
-    System.out.println("Computer shooting (Y)");
+    int gridX = aimAtX - 1;
+    int gridY = aimAtY - 1;
+    shotSoFar[gridX] [gridY].setShotAt(true);
+    System.out.println("Computer shoot()");
     return false;
   }
   
