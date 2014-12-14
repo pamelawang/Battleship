@@ -150,18 +150,18 @@ public class ComputerPlayer extends Player {
     //
     if (boatOrientation == VERTICAL) { //coordinate = endIndexY
       if (direction == UP) {
-        index = ship.getStartY() - 1 - ship.getLength();
+        index = ship.getStartY() - ship.getLength();
         index = (index < 0) ? findEndIndex(ship, DOWN, tries++) : index;
       } else { //direction == DOWN
-        index = ship.getStartY() - 1 + ship.getLength();
+        index = ship.getStartY() + ship.getLength();
         index = (index >= GRID_DIMENSIONS) ? findEndIndex(ship, UP, tries++) : index;
       }
     } else { //boatOrientation == HORIZONTAL; coordinate = endIndexX
       if (direction == LEFT) {
-        index = ship.getStartX() - 1 - ship.getLength();
+        index = ship.getStartX() - ship.getLength();
         index = (index < 0) ? findEndIndex(ship, RIGHT, tries++) : index;
       } else { //direction == DOWN
-        index = ship.getStartX() - 1 + ship.getLength();
+        index = ship.getStartX() + ship.getLength();
         index = (index >= GRID_DIMENSIONS) ? findEndIndex(ship, LEFT, tries++) : index;
       }
     }

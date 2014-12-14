@@ -21,8 +21,8 @@ import java.util.*;
 
 public class Player { 
 //  private final String username;
-  private Cell[][] grid;
-  private LinkedList<Boat> fleet; //fleet will have a default size in the final version of the game
+  protected Cell[][] grid;
+  protected LinkedList<Boat> fleet; //fleet will have a default size in the final version of the game
   private final int NUM_BOATS = 3;
   protected final int GRID_DIMENSIONS = 3; //testing size of the grid
   private final int INVALID_SHOT = -1;
@@ -33,6 +33,7 @@ public class Player {
   private LinkedList<Boat> shipsSunk;
   private final int NOT_OVER = -1;
   private final int GAME_OVER = 0;
+  protected int[] BOAT_LENGTHS = {2, 3, 3, 4, 5}; //also used in ComputerPlayer
   
   /******************************************************************
     * Constructor: Creates a Player that has a grid to place their

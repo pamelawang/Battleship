@@ -5,8 +5,6 @@
  * 
  * Purpose: One instance of one of the grid coordinates on the battleship screen
  * 
- * Note: 
- * Haven't commented on the allInfo stuff.
  * 
  * @author Meera Hejmadi
  * @author Pamela Wang
@@ -22,10 +20,6 @@ public class Cell {
   private static int BOAT_ONLY = 1;
   private static int SHOT_ONLY = 2;
   private static int BOAT_SHOT = 3;
-  private Color background; //background of coordinate square; uses the colours below
-  private Color hit = Color.red;
-  private Color miss = Color.white;
-  private Color sea = Color.blue.darker();
   
   /******************************************************************
   * Constructor: The default cell has no boat, and has not been shot at;
@@ -35,7 +29,6 @@ public class Cell {
     hasBoat = false;
     shotAt = false;
     allInfo = NADA;
-    background = sea;
   }
   
   //Methods
@@ -70,7 +63,6 @@ public class Cell {
   public void setHasBoat(boolean b) {
     hasBoat = b;
     allInfo = BOAT_ONLY;
-    setBackground(); //unnecessary. hi.
   }
   
   /******************************************************************
@@ -83,34 +75,13 @@ public class Cell {
   public void setShotAt(boolean b) {
     shotAt = b;
     allInfo = (getHasBoat()) ? BOAT_SHOT : SHOT_ONLY;
-    setBackground();
   }
   
   /******************************************************************
-  * Sets the background of the coordinate, dependent on the current hasBoat and 
-  * shotAt values. Void method that takes in no parameters.
-  ******************************************************************/
-  public void setBackground() {
-    if (getShotAt()) {
-      if (getHasBoat()) {
-        background = hit;
-      } else {
-        background = miss;
-      }
-    } else {
-      background = sea;
-    }
-  } 
-  
-  /******************************************************************
-    * Returns the current colour of the cell, indicating whether there is a boat and
-    * whether this area has been shot at yet.
+    * Returns an int representing the cell state.
     * 
-    * @return  Color   current colour of cell
+    * @return  int   current state of cell
     *****************************************************************/
-  public Color getBackground() {
-    return background;
-  } 
   
   public int getAllInfo() {
     return allInfo;
@@ -126,10 +97,6 @@ public class Cell {
     s += (hasBoat) ? "has a boat " : "doesn't have a boat ";
     s += "and ";
     s += (shotAt) ? "has been shot at. " : "hasn't been shot at. ";
-    s += "Its colour is ";
-    s += (background.equals(hit)) ? "red." : "";
-    s += (background.equals(miss)) ? "white." : "";
-    s += (background.equals(sea)) ? "blue." : "";
     return s;
   }
   
@@ -138,9 +105,8 @@ public class Cell {
     Cell c = new Cell();
     System.out.println("SCENARIO: no boat, no hits");
     System.out.println("Does c have a boat? (false) " + c.getHasBoat());
-    System.out.println("What colour is c now? (dark blue) <" + c.getBackground() + ">");
-    c.setBackground();
-    System.out.println("What colour is c now? (white) <" + c.getBackground() + ">");
+
+
     System.out.println("--------------------------");
     
     System.out.println("SCENARIO: no boat, has been hit");
@@ -157,9 +123,7 @@ public class Cell {
     System.out.println("--------------------------");
     
     System.out.println("SCENARIO: boat, has been hit");
-    c.setBackground();
     System.out.println("Has c been shot at? (true) " + c.getShotAt()); //set to true after setBackground()
-    System.out.println("What colour is c now? (red) <" + c.getBackground() + ">");
     System.out.println("TESTING TOSTRING()");
     System.out.println(c);
     System.out.println("--------------------------");
@@ -168,8 +132,6 @@ public class Cell {
     System.out.println("--->c is being shot at");
     c.setShotAt(true);
     System.out.println("Has c been shot at? (true) " + c.getShotAt());
-    c.setBackground();
-    System.out.println("What colour is c now? (red) <" + c.getBackground() + ">");
     System.out.println("TESTING TOSTRING()");
     System.out.println(c);
   }

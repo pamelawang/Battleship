@@ -22,7 +22,7 @@ public class BattleshipGUI {
     JTabbedPane tp = new JTabbedPane();
     
     tp.addTab("Instructions", new WelcomePanel());
-    tp.addTab("Game", new PlaceBoatPanel(battle.getHumanPlayer()));
+    tp.addTab("Place Your Boats!", new PlaceBoatPanel(battle.getHumanPlayer()));
     tp.addTab("Game", new GamePanel(battle));
     tp.addTab("Top Scores", new StatsPanel());
     
