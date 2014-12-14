@@ -77,13 +77,13 @@ public class Player {
 //    grid[gridX][gridY].setHasBoat(true); 
     int adjustedX = startX-1; //(x-1) because 0 indexing.
     int adjustedY = startY-1;
-      fleet.get(boatIndex).setStartX(adjustedX);
-      fleet.get(boatIndex).setStartY(adjustedY);
-      grid[adjustedX][adjustedY].setHasBoat(true); 
+    fleet.get(boatIndex).setStartX(adjustedX);
+    fleet.get(boatIndex).setStartY(adjustedY);
+    grid[adjustedX][adjustedY].setHasBoat(true); 
     /*MAKE CHECK LENGTH METHOD
      * } catch (InvalidCoordinateException e) { //from Boat
-      System.out.println("Starting coordinates are incorrect, please enter coordinates again.");
-    }*/
+     System.out.println("Starting coordinates are incorrect, please enter coordinates again.");
+     }*/
   }
   
   /*****************************************************************

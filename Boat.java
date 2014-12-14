@@ -201,8 +201,8 @@ public class Boat {
     *****************************************************************/
   public String toString() {
     String s = boatType + "'s current status is:\n";
-    s += "Starting position: (" + (startX+1) + ", " + (startY+1) + ").\n";
-    s += "Ending position: (" + (endX+1) + ", " + (endY+1) + ").\n";
+    s += "Starting position: (" + (startX) + ", " + (startY) + ").\n";
+    s += "Ending position: (" + (endX) + ", " + (endY) + ").\n";
     s += "Length: " + length + "\tnumHits: " + numHits + "\t\tisSunk: " + isSunk;
     return s;
   }
