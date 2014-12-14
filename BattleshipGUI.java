@@ -21,13 +21,9 @@ public class BattleshipGUI {
     //AllStats scores = new AllStats()
     JTabbedPane tp = new JTabbedPane();
     
-    
     tp.addTab("Instructions", new WelcomePanel());
-    tp.addTab("Place Boats", new PlaceBoatPanel(battle.getHumanPlayer()));
-//    if (battle.getHumanPlayer().getFleetSize() == battle.getHumanPlayer().getNumBoats()){
-//      tp.remove(1);
-      tp.addTab("Play!", new GamePanel(battle));
-//    }
+    tp.addTab("Game", new PlaceBoatPanel(battle.getHumanPlayer()));
+    tp.addTab("Game", new GamePanel(battle));
     tp.addTab("Top Scores", new StatsPanel());
     
     frame.getContentPane().add(tp);

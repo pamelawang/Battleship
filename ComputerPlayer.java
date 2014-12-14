@@ -15,18 +15,17 @@ public class ComputerPlayer extends Player {
 //  private BinaryTree
   private int aimAtX;
   private int aimAtY;
-//  private boolean lastShotWasHit; //will be used when we're using boats longer than a cell
   private final int INVALID = -1;
-  private Cell[][] shotSoFar;
+  private Cell[][] shotSoFarGrid;
   
   public ComputerPlayer() {
     super();
     aimAtX = INVALID;
     aimAtY = INVALID;
-    shotSoFar = new Cell[GRID_DIMENSIONS][GRID_DIMENSIONS];
+    shotSoFarGrid = new Cell[GRID_DIMENSIONS][GRID_DIMENSIONS];
     for (int i = 0; i < GRID_DIMENSIONS; i++) {
       for (int j = 0; j < GRID_DIMENSIONS; j++) {
-        shotSoFar[i][j] = new Cell();
+        shotSoFarGrid[i][j] = new Cell();
       }
     }
   }
@@ -41,7 +40,7 @@ public class ComputerPlayer extends Player {
     } while (previouslyShotAt(aimAtX, aimAtY));
   }
   
-  private int makeValidCoord (int coordinate) {
+  private int makeValidCoord (int coordinate) { //checks if coordinate is within grid dimensions
     int valid = (coordinate >= 1) ? coordinate : 1;
     valid = (valid <= getGridDimensions()) ? valid : getGridDimensions();
     System.out.println("makeValidCoord: coordinate = " + coordinate + " and valid = " + valid);
@@ -50,8 +49,8 @@ public class ComputerPlayer extends Player {
   
   private boolean previouslyShotAt (int xCoord, int yCoord) {
     int gridX = xCoord-1;
-    int gridY = yCoord-1;
-    return shotSoFar[gridX][gridY].getShotAt();
+    int gridY = yCoord-1; //unconcise for clarity reasons
+    return shotSoFarGrid[gridX][gridY].getShotAt();
   }
     
   
@@ -60,9 +59,17 @@ public class ComputerPlayer extends Player {
     other.gotShot(aimAtX, aimAtY);
     int gridX = aimAtX - 1;
     int gridY = aimAtY - 1;
-    shotSoFar[gridX] [gridY].setShotAt(true);
+    shotSoFarGrid[gridX] [gridY].setShotAt(true);
     System.out.println("Computer shoot()");
     return false;
+  }
+  
+  public void placeAllBoats() {
+    //just for now:
+    placeBoat(0, 1, 1);
+    placeBoat(1, 2, 2);
+    placeBoat(2, 3, 3);
+    //TO COME BACKT O, use Player's placeBoat() method
   }
   
   public static void main (String[] args) {

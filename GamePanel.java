@@ -13,14 +13,11 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.BorderFactory;
 
-
 public class GamePanel extends JPanel {
   
-  private JButton letsPlay = new JButton();
   private JPanel centerPiece; //will contain banner, humanGrid, and shootAtGrid
   private JLabel banner;
   private JPanel humanGrid;
-  private Cell[][] humanRefGrid;
   private JPanel shootAtGrid;
   private JPanel boatsLeft; //goes on the left of the center panel
   private int numBoatsLeftComp;
@@ -32,6 +29,8 @@ public class GamePanel extends JPanel {
   private Game currentGame;
   private final Color SEA = new Color (0, 0, 128);
 //  private static Border CELL_BORDER = BorderFactory.createBevelBorder(BevelBorder.RAISED);
+  private Cell[][] humanRefGrid;
+  private JButton letsPlay;
   
   public GamePanel(Game battleship) {
     
@@ -50,6 +49,7 @@ public class GamePanel extends JPanel {
     numBombsLeftHuman = 0;
     currentGame = battleship;
     humanRefGrid = currentGame.getHumanPlayer().getGrid();
+
     
     boatsLeft = createBoatsLeft();
     bombsLeft = createBombsLeft();
@@ -67,6 +67,7 @@ public class GamePanel extends JPanel {
     center.setBackground(Color.black);
     
     JPanel emptySpace = new JPanel();
+
     emptySpace.setLayout(new GridLayout(3,6));
     emptySpace.setBackground(Color.black);
     JPanel moreEmpty = new JPanel();
@@ -75,19 +76,10 @@ public class GamePanel extends JPanel {
     playButton.add(letsPlay);
     letsPlay.setText("Play game!");
     
-//    for (int i = 0; i < 3; i++) {
-//      for (int j = 0; j < 3; j++) {
-//        if (i == 1 && j == 1) {
-//          System.out.println("playButton: i = " + i + " j = " + j);
-//          emptySpace.add(playButton);
-//        } else {
-//          System.out.println("playButton: i = " + i + " j = " + j);
-//          emptySpace.add(moreEmpty);
-//        }
-//      }
-//    }
     emptySpace.add(letsPlay);
     
+
+    emptySpace.setBackground(Color.black);
     shootAtGrid = createShootAtGrid();
     humanGrid = createHumanGrid();
     
@@ -145,7 +137,6 @@ public class GamePanel extends JPanel {
         GridButton temp = new GridButton(i, j);
         temp.addActionListener(new GridButtonListener());
         grid.add(temp);
-        
       }      
     }
     
@@ -206,5 +197,7 @@ public class GamePanel extends JPanel {
       }
     }
   }
+    
+  
     
   }

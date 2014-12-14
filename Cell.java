@@ -63,7 +63,7 @@ public class Cell {
   /******************************************************************
   * Sets the hasBoat state of this coordinate. Ideally should only be called
   * upon once when the grid is first created, and afterwards shouldn't be
-  * able to change hasBoat. (HOW TO DO THIS???)
+  * able to change hasBoat.
   * 
   * @param  boolean   boolean that hasBoat will be set to
   *****************************************************************/
@@ -76,7 +76,7 @@ public class Cell {
   /******************************************************************
   * Sets the shotAt state of this coordinate. Ideally should only be called
   * upon once when the computer aims for this coordinate, and afterwards
-  * it can't be changed. (HOW TO DO THIS???)
+  * it can't be changed.
   * 
   * @param  boolean  boolean that shotAt will be set to 
   *****************************************************************/
@@ -100,7 +100,6 @@ public class Cell {
     } else {
       background = sea;
     }
-    //System.out.println("Color is " + background);
   } 
   
   /******************************************************************
@@ -109,7 +108,6 @@ public class Cell {
     * 
     * @return  Color   current colour of cell
     *****************************************************************/
-  //getColor isn't a method yet - don't know if we'll need it. In case we do: - could use for bombed animation (.lighter())
   public Color getBackground() {
     return background;
   } 
@@ -119,7 +117,7 @@ public class Cell {
   }
   
   /******************************************************************
-    * Cell's toString
+    * Returns a String representation of Cell.
     * 
     * @return  String   current states (hasBoat, shotAt, background) of cell
     *****************************************************************/
@@ -135,7 +133,7 @@ public class Cell {
     return s;
   }
   
-  //******************TESTER CODE***************************************
+  /******************TESTER CODE***************************************/
   public static void main (String[] args) {
     Cell c = new Cell();
     System.out.println("SCENARIO: no boat, no hits");

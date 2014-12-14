@@ -22,7 +22,6 @@ public class Game {
   private Player human;
   private ComputerPlayer computer; //will be changed to ComputerPlayer later
   private int score;
-  private boolean humanTurn;
   private int gameOver; // -1 if not true, 0 for comp, 1 for human
   private static int NOT_OVER = -1;
   private static int COMP_WIN = 0;
@@ -39,13 +38,12 @@ public class Game {
     human = new Player();
     computer = new ComputerPlayer();
     score = 0;
-    humanTurn = true; //human goes first
     gameOver = NOT_OVER;
   }
   
   /*****************************************************************
-    * Main method in game. Creates a round to be played for both Computer
-    * and the user.
+    * Primary method in game. Creates a round to be played for both Computer
+    * and the user, since the Computer would always go after the user's turn.
     * 
     * @param   x   x-coordinate indicating where 'this' Player is shooting at the other PLayer
     * @param   y   y-coordinate indicating where 'this' Player is shooting at the other Player
@@ -56,65 +54,106 @@ public class Game {
    * the parameters.. So how does this work?
    */
   //TURN IS PLAYER GOES THEN COMPUTER GOES - THAT'S A TURN. NICE AND SIMPLE.
-
   public void turn(int x, int y) throws InvalidShotException {
-    if (humanTurn) {
-      System.out.println("HUMAN");
-      computer.gotShot(x, y); //Computer is the one being shot at
-      score++; //user has taken another shot
-      humanTurn = false;
-      if (computer.didILose()) { //checking if game is over
-        gameOver = HUMAN_WIN;
-        System.out.println("Game over. Human won.");
-      }
+    //HUMAN TURN
+    System.out.println("turn(): HUMAN");
+    computer.gotShot(x, y); //Computer is the one being shot at
+    score++; //user has taken another shot
+    if (computer.didILose()) { //checking if game is over
+      gameOver = HUMAN_WIN;
+      System.out.println("Game over. Human won.");
     }
-    System.out.println("COMPUTER");
+    
+    //COMPUTER'S TURN
+    System.out.println("turn(): COMPUTER");
     computer.shoot(human);
-    humanTurn = true;
-    if (human.didILose()) {
+    if (human.didILose()) { //checking if the game is over
       gameOver = COMP_WIN;
       System.out.println("Game over. Computer won.");
     }
   }
   
+  /*****************************************************************
+    * Returns the user's account (Player) along with their fleet and grid.
+    * 
+    * @return  Player   the user's account
+    *****************************************************************/
   public Player getHumanPlayer() {
     return human;
   }
   
+  /*****************************************************************
+    * Returns the Computer's account (ComputerPlayer) along with its
+    * fleet and grid.
+    * 
+    * @return  ComputerPlayer   the Computer's account
+    *****************************************************************/
   public ComputerPlayer getCompPlayer() {
     return computer;
   }
   
+  /*****************************************************************
+    * Returns the user's grid size (extension of the Player class'
+    * getGridDimensions() method). Assume that the Computer has the 
+    * same size grid as the user.
+    * 
+    * @return  int   size of the user's grid
+    *****************************************************************/
   public int getGridSize() {
     return getHumanPlayer().getGridDimensions();
   }
   
+  /*****************************************************************
+    * Returns the user's number of boats (extension of the Player class'
+    * getNumBoats() method). Assume that the Computer has the 
+    * same number of boats as the user.
+    * 
+    * @return  int   number of boats
+    *****************************************************************/
+  public int getNumBoats() {
+    return getHumanPlayer().getNumBoats();
+  }
+  
+  /*****************************************************************
+    * Returns the user's username.
+    * 
+    * @return  String   current player's username
+    *****************************************************************/
   public String getUsername() {
     return username;
   }  
   
-  public boolean getHumanTurn() {
-    return humanTurn;
-  }
-  
+  /*****************************************************************
+    * Returns whether the game isn't over (-1), the Computer won (0) or
+    * the user won (1) in int form.
+    * 
+    * @return  int   if the game isn't over (-1), the Computer won (0) or the user won (1)
+    *****************************************************************/
   public int getGameOver() {
     return gameOver;
   }
   
+  /*****************************************************************
+    * Returns the user's score if they won, or 0 if the user lost.
+    * (Score is only important if the user won.)
+    * 
+    * @return  int   user's score (0 if the user lost)
+    *****************************************************************/
   public int getScore() {
-    return (gameOver != COMP_WIN) ? score : 0; 
-    //because you want to be able to see the user's score during the game.
-    //If they win, then their score is important. if they lose (comp wins)
-    //then their score defaults back to zero.
+    return (gameOver != COMP_WIN) ? score : 0;
   }
   
+  /*****************************************************************
+    * Returns a String representation of Game.java, with the user's username.
+    * their current score and who's turn it is.
+    * 
+    * @return  int   user's score (0 if the user lost)
+    *****************************************************************/
   public String toString() {
     String s = "This game is " + username + " vs. Computer.";
-    s += "\nThe current score is " + getScore() + ", and it is ";
-    s += (getHumanTurn()) ? username + "'s turn." : "the computer's turn.";
+    s += "\nThe current score is " + getScore() + ",";
     return s;
   }
-  
   
   //testing main:
   public static void main (String[] args) {

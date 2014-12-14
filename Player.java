@@ -35,17 +35,17 @@ public class Player {
   private final int GAME_OVER = 0;
   
   /******************************************************************
-    * Constructor: Creates a Player that has a username, grid to place their
+    * Constructor: Creates a Player that has a grid to place their
     * boats on, and a fleet of boats to place. 
     *****************************************************************/
-  public Player() { //took out the username & the @param thing
-//    username = name;
+  public Player() {
     grid = new Cell[GRID_DIMENSIONS][GRID_DIMENSIONS]; //size of grid
     for (int i = 0; i < GRID_DIMENSIONS; i++ ) { //creating all Cells for a new grid
       for (int j = 0; j < GRID_DIMENSIONS; j++) {
         grid[i][j] = new Cell();
       }
     }
+    
     fleet = new LinkedList<Boat>(); //number of boats in fleet
     for (int i = 0; i < NUM_BOATS; i++) {
       Boat temp = new Boat(); //for stage 1: single cell boats
@@ -66,11 +66,20 @@ public class Player {
     * @param   startY      y-coordinate of boat (single-cell)
     *****************************************************************/
   public void placeBoat(int boatIndex, int startX, int startY) {
-    int gridX = startX - 1;
-    int gridY = startY - 1;
-    fleet.get(boatIndex).setStartX(startX);
-    fleet.get(boatIndex).setStartY(startY);
-    grid[gridX][gridY].setHasBoat(true); 
+//    int gridX = startX - 1;
+//    int gridY = startY - 1;
+//    fleet.get(boatIndex).setStartX(startX);
+//    fleet.get(boatIndex).setStartY(startY);
+//    grid[gridX][gridY].setHasBoat(true); 
+    int adjustedX = startX-1; //(x-1) because 0 indexing.
+    int adjustedY = startY-1;
+    try {
+      fleet.get(boatIndex).setStartIndexX(adjustedX);
+      fleet.get(boatIndex).setStartIndexY(adjustedY);
+      grid[adjustedX][adjustedY].setHasBoat(true); 
+    } catch (InvalidCoordinateException e) { //from Boat
+      System.out.println("Starting coordinates are incorrect, please enter coordinates again.");
+    }
   }
   
   /*****************************************************************
@@ -108,6 +117,7 @@ public class Player {
     int hit = 0; //miss 
 //    System.out.println("didMyShipSink: grid[" + indexX + "][" + indexY + "]'s current shotAt state is: (true)"
 //                         + grid[indexX][indexY].getShotAt());
+
     int gridX = x - 1; //0-indexing
     int gridY = y - 1;
     System.out.println("Before: " + grid[gridX][gridY]);
@@ -178,86 +188,99 @@ public class Player {
     ***********************************************************************/
   public boolean didILose() {
     return (shipsSunk.size() == NUM_BOATS);
-  } //will be used in game? to see when the game's over.
+  }
   
   //not sure if this will work. we'll see. it works.
+  /***********************************************************************
+    * Sets off a 3x3 cell bomb, the equivalent of 9 shots simultaenously.
+    * Takes in the centre coordinate of the bomb, and the immediate surrounding
+    * cells are shot through this method.
+    * 
+    * @param     x     centre x-coordinate of opponent's guess
+    * @param     y     centre y-coordinate of opponent's guess
+    ***********************************************************************/
   public void gotBombed(int x, int y) {
     int left = (x-1 >= 0) ? x-1 : 0;
     int right = (x+1 <= GRID_DIMENSIONS) ? x+1 : GRID_DIMENSIONS;
     int top = (y-1 >= 0) ? y-1 : 0;
     int bottom = (y+1 <= GRID_DIMENSIONS) ? y+1: GRID_DIMENSIONS;
-   
+    
     //going through all 9 cells that have been affected
     for (int i = left; i <= right; i++) {
       for (int j = top; j <= bottom; j++) {
         try {
-        gotShot(i, j);
+          gotShot(i, j);
         } catch (InvalidShotException oops) {
           //do nothing - hopefully the for loops will keep going..
         }
       }
     }
-
+    
+    
+  }
+  
+  /* 
+   public int shoot(Player other, int x, int y) {
+   if (other.get(x,y).getShotAt()) { return 1; } //(x,y) not shot at
+   if (other.get(x,y).getHasBoat) {
+   other.get(x,y).setBackground("red");
+   return 2;
+   } else { //shot at & has boat
+   other.get(x,y).setBackground("blue");
+   return 3;
+   }
+   return -1;
+   }
    
-  }
+   public void fireBomb(Player other, int middleX, int middleY) { //3x3 area
+   int left = middleX - 1;
+   int right = middleX + 1;
+   int up = middleY - 1;
+   int down = middleY + 1;
+   
+   //MIDDLE COLUMN
+   shoot(other, middleX, middleY); //centre coordinate
+   
+   if (up > -1) {
+   shoot(other, middleX, up); //middle column top
+   }
+   
+   if (down < GRID_DIMENSIONS) {
+   shoot(other, middleX, down); //middle column bottom
+   }
+   
+   //LEFT COLUMN
+   if (left > -1) { //if the x coordinate isn't at the leftmost wall (coordinate 0)
+   shoot(other, left, middleY); //left column middle
+   
+   if (up > -1) {
+   shoot(other, left, up); //left column top
+   }
+   
+   if (down < GRID_DIMENSIONS) {
+   shoot(other, left, down); //left column bottom
+   }
+   }
+   
+   //RIGHT COLUMN
+   if (right < GRID_DIMENSIONS) { //if x-coordinate isn't at the rightmost wall (at coordinate GRID_DIMENSIONS)
+   shoot(other, right, middleY); //right column middle
+   
+   if (up > -1) {
+   shoot(other, right, up); //right column top
+   }
+   
+   if (down < GRID_DIMENSIONS) {
+   shoot(other, right, down); //right column bottom
+   }
+   }
+   } */
   
- /* 
-  public int shoot(Player other, int x, int y) {
-    if (other.get(x,y).getShotAt()) { return 1; } //(x,y) not shot at
-     if (other.get(x,y).getHasBoat) {
-     other.get(x,y).setBackground("red");
-     return 2;
-     } else { //shot at & has boat
-     other.get(x,y).setBackground("blue");
-     return 3;
-     }
-    return -1;
-  }
-  
-  public void fireBomb(Player other, int middleX, int middleY) { //3x3 area
-    int left = middleX - 1;
-    int right = middleX + 1;
-    int up = middleY - 1;
-    int down = middleY + 1;
-    
-    //MIDDLE COLUMN
-    shoot(other, middleX, middleY); //centre coordinate
-    
-    if (up > -1) {
-      shoot(other, middleX, up); //middle column top
-    }
-    
-    if (down < GRID_DIMENSIONS) {
-      shoot(other, middleX, down); //middle column bottom
-    }
-    
-    //LEFT COLUMN
-    if (left > -1) { //if the x coordinate isn't at the leftmost wall (coordinate 0)
-      shoot(other, left, middleY); //left column middle
-      
-      if (up > -1) {
-        shoot(other, left, up); //left column top
-      }
-      
-      if (down < GRID_DIMENSIONS) {
-        shoot(other, left, down); //left column bottom
-      }
-    }
-    
-    //RIGHT COLUMN
-    if (right < GRID_DIMENSIONS) { //if x-coordinate isn't at the rightmost wall (at coordinate GRID_DIMENSIONS)
-      shoot(other, right, middleY); //right column middle
-      
-      if (up > -1) {
-        shoot(other, right, up); //right column top
-      }
-      
-      if (down < GRID_DIMENSIONS) {
-        shoot(other, right, down); //right column bottom
-      }
-    }
-  } */
-  
+  /***********************************************************************
+    * Returns the number of boats for this Player.
+    * 
+    * @return   int    Player's number of boats
+    ***********************************************************************/
   public int getNumBoats() {
     return NUM_BOATS;
   }
@@ -265,19 +288,41 @@ public class Player {
   public int getFleetSize() {
     return fleet.size();
   }
-  
+  /***********************************************************************
+    * Returns the size of side of the grid dimensions.
+    * 
+    * @return   int    length (number of cells) of one side of Player's grid
+    ***********************************************************************/
   public int getGridDimensions() {
     return GRID_DIMENSIONS;
   }
   
+  /***********************************************************************
+    * Returns cell referenced at a specific coordinates. - DO WE EVER USE THIS?
+    * 
+    * @param     x     x-coordinate
+    * @param     y     y-coordinate
+    * @return   Cell    Player's number of boats
+    ***********************************************************************/
   public Cell getCellAt(int x, int y) {
     return grid[x][y];
   }
-  
+
+  /***********************************************************************
+    * Returns grid of the current player. - DO WE EVER USE THIS?
+    * 
+    * @return   Cell[][]    Player's grid
+    ***********************************************************************/
+
   public Cell[][] getGrid() {
     return grid;
   }
   
+  /***********************************************************************
+    * Returns a String representation of Player's grid.
+    * 
+    * @return   String    String representation of grid
+    ***********************************************************************/
   public String printGrid() {
     String s = "KEY: \nS (sea) = no boat not shot"
       + "\nM (miss) = no boat SHOT "
@@ -292,6 +337,13 @@ public class Player {
     return s;
   }
   
+  /***********************************************************************
+    * Private, used in printGrid(). Determines if the current cell is one of
+    * the 4 states: S (sea), M (miss), B (boat) or H (hit).
+    * 
+    * @param     c        current Cell we're examining
+    * @return   String    whether the Cell is S (sea), M (miss), B (boat) or H (hit)
+    ***********************************************************************/
   private String decideLetter(Cell c) {
     String s = "";
     if (!c.getHasBoat() && !c.getShotAt()) {
@@ -306,6 +358,7 @@ public class Player {
     return s;
   }
   
+  /******************TESTER CODE***************************************/
   public static void main (String[] args) throws InvalidShotException {
 //    Player human = new Player();
 //    human.placeBoat(0, 2, 2);
@@ -348,15 +401,18 @@ public class Player {
 //    novice.gotShot(1,1); //all works
     //novice.gotBombed(1,1); //bomb works
     
-   /* System.out.println("Fleets:");
-    System.out.println("Novice: " + novice.findMyFleet());
-    System.out.println("Computer: " + computer.findMyFleet());*/
+    /* System.out.println("Fleets:");
+     System.out.println("Novice: " + novice.findMyFleet());
+     System.out.println("Computer: " + computer.findMyFleet());*/
   }
   
-}
+} //closes Player
 
+ /***********************************************************************
+   * Exception used in gotShot() method for when the Cell currently being
+   * aimed at has already been shot at.
+   ***********************************************************************/
 class InvalidShotException extends Exception {
-  
   public InvalidShotException(String problem) {
     System.out.println(problem);
   }

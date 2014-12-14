@@ -23,8 +23,17 @@ public class BattleshipGUI {
     
     
     tp.addTab("Instructions", new WelcomePanel());
+<<<<<<< HEAD
     tp.addTab("Game", new PlaceBoatPanel(battle.getHumanPlayer()));
     tp.addTab("Game", new GamePanel(battle));
+=======
+<<<<<<< HEAD
+    //tp.addTab("Game", new GamePanel());
+=======
+    tp.addTab("Game", new PlaceBoatPanel(battle.getHumanPlayer()));
+    tp.addTab("Game", new GamePanel(battle));
+>>>>>>> master
+>>>>>>> bfe53d32bb7fd9405c2f8cb7bf29590b28d04cfe
     tp.addTab("Top Scores", new StatsPanel());
     
     frame.getContentPane().add(tp);
