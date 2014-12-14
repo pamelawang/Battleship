@@ -3,7 +3,9 @@
  * StatsPanel.java
  * Dec 12th, 2014
  * 
- * Purpose: Creates a visual representation of AllStats.java (the user's
+ * Purpose: Creates a visual representation of AllStats.java (the user's stats)
+ * 
+ * @author Pamela Wang
  */
 
 import java.awt.*;

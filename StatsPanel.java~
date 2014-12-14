@@ -33,4 +33,4 @@ public class StatsPanel extends JPanel {
     //this.add(new JLabel(new ImageIcon("IMAGE NAME HERE"));
   } 
  
-}//ends WelcomePanel
+}//ends StatsPanel

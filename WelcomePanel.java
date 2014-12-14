@@ -4,6 +4,8 @@
  * Dec 12th, 2014
  * 
  * Purpose: Creates a panel detailing the rules of Battleship and authors
+ * 
+ * @author Pamela Wang
  */
 
 import java.awt.*;
