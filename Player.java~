@@ -66,13 +66,11 @@ public class Player {
     * @param   startY      y-coordinate of boat (single-cell)
     *****************************************************************/
   public void placeBoat(int boatIndex, int startX, int startY) {
-<<<<<<< HEAD
-    int gridX = startX - 1;
-    int gridY = startY - 1;
-    fleet.get(boatIndex).setStartX(startX);
-    fleet.get(boatIndex).setStartY(startY);
-    grid[gridX][gridY].setHasBoat(true); 
-=======
+//    int gridX = startX - 1;
+//    int gridY = startY - 1;
+//    fleet.get(boatIndex).setStartX(startX);
+//    fleet.get(boatIndex).setStartY(startY);
+//    grid[gridX][gridY].setHasBoat(true); 
     int adjustedX = startX-1; //(x-1) because 0 indexing.
     int adjustedY = startY-1;
     try {
@@ -82,7 +80,6 @@ public class Player {
     } catch (InvalidCoordinateException e) { //from Boat
       System.out.println("Starting coordinates are incorrect, please enter coordinates again.");
     }
->>>>>>> bfe53d32bb7fd9405c2f8cb7bf29590b28d04cfe
   }
   
   /*****************************************************************
@@ -120,19 +117,13 @@ public class Player {
     int hit = 0; //miss 
 //    System.out.println("didMyShipSink: grid[" + indexX + "][" + indexY + "]'s current shotAt state is: (true)"
 //                         + grid[indexX][indexY].getShotAt());
-<<<<<<< HEAD
+
     int gridX = x - 1; //0-indexing
     int gridY = y - 1;
     System.out.println("Before: " + grid[gridX][gridY]);
     if (!grid[gridX][gridY].getShotAt()) { //look at your grid, check that cell. hit or miss?
       grid[gridX][gridY].setShotAt(true);
       hit = (grid[gridX][gridY].getHasBoat()) ? HIT_NOT_SUNK : MISS; //if it has a boat, then hit = true.
-=======
-    System.out.println("Before: " + grid[indexX][indexY]);
-    if (!grid[indexX][indexY].getShotAt()) { //checks a specific cell to see if it's a hit or miss
-      grid[indexX][indexY].setShotAt(true);
-      hit = (grid[indexX][indexY].getHasBoat()) ? HIT_NOT_SUNK : MISS; //if it has a boat, then hit = true.
->>>>>>> bfe53d32bb7fd9405c2f8cb7bf29590b28d04cfe
       if (hit == HIT_NOT_SUNK) {
         hit = didMyShipSink(x, y) ? HIT_AND_SUNK : hit;
       } 
@@ -294,18 +285,14 @@ public class Player {
     return NUM_BOATS;
   }
   
-<<<<<<< HEAD
   public int getFleetSize() {
     return fleet.size();
   }
-  
-=======
   /***********************************************************************
     * Returns the size of side of the grid dimensions.
     * 
     * @return   int    length (number of cells) of one side of Player's grid
     ***********************************************************************/
->>>>>>> bfe53d32bb7fd9405c2f8cb7bf29590b28d04cfe
   public int getGridDimensions() {
     return GRID_DIMENSIONS;
   }
@@ -320,15 +307,13 @@ public class Player {
   public Cell getCellAt(int x, int y) {
     return grid[x][y];
   }
-  
-<<<<<<< HEAD
-=======
+
   /***********************************************************************
     * Returns grid of the current player. - DO WE EVER USE THIS?
     * 
     * @return   Cell[][]    Player's grid
     ***********************************************************************/
->>>>>>> bfe53d32bb7fd9405c2f8cb7bf29590b28d04cfe
+
   public Cell[][] getGrid() {
     return grid;
   }

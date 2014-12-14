@@ -74,8 +74,8 @@ public class Player {
     int adjustedX = startX-1; //(x-1) because 0 indexing.
     int adjustedY = startY-1;
     try {
-      fleet.get(boatIndex).setStartIndexX(adjustedX);
-      fleet.get(boatIndex).setStartIndexY(adjustedY);
+      fleet.get(boatIndex).setStartX(adjustedX);
+      fleet.get(boatIndex).setStartY(adjustedY);
       grid[adjustedX][adjustedY].setHasBoat(true); 
     } catch (InvalidCoordinateException e) { //from Boat
       System.out.println("Starting coordinates are incorrect, please enter coordinates again.");
@@ -149,8 +149,8 @@ public class Player {
   
 //  for when we use multi-cell ships.
 //  for (int i = 0; i < NUM_BOATS; i++) {
-//    if (fleet.get(i).getStartIndexX <= x && fleet.get(i).getEndX >= x && 
-//        fleet.get(i).getStartIndexY <= y && fleet.get(i).getEndY >= y) {
+//    if (fleet.get(i).getStartX <= x && fleet.get(i).getEndX >= x && 
+//        fleet.get(i).getStartY <= y && fleet.get(i).getEndY >= y) {
 //      fleet.get(i).hitAndMaybeSunk();
 //    }
 //  }

@@ -6,34 +6,18 @@
  * Purpose: 
  * 
  * @author Meera Hejmadi
-<<<<<<< HEAD
-=======
- * @author Pamela Wang
->>>>>>> bfe53d32bb7fd9405c2f8cb7bf29590b28d04cfe
  */
 
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-<<<<<<< HEAD
 import javax.swing.BorderFactory;
 
-
-public class GamePanel extends JPanel {
-  
-  private JButton letsPlay = new JButton();
-  private JPanel centerPiece; //will contain banner, humanGrid, and shootAtGrid
-  private JLabel banner;
-  private JPanel humanGrid;
-  private Cell[][] humanRefGrid;
-=======
-
 public class GamePanel extends JPanel {
   
   private JPanel centerPiece; //will contain banner, humanGrid, and shootAtGrid
   private JLabel banner;
   private JPanel humanGrid;
->>>>>>> bfe53d32bb7fd9405c2f8cb7bf29590b28d04cfe
   private JPanel shootAtGrid;
   private JPanel boatsLeft; //goes on the left of the center panel
   private int numBoatsLeftComp;
@@ -43,11 +27,10 @@ public class GamePanel extends JPanel {
   private JPanel bombsLeft; //goes on right of center panel
   private int gridSize;
   private Game currentGame;
-<<<<<<< HEAD
   private final Color SEA = new Color (0, 0, 128);
 //  private static Border CELL_BORDER = BorderFactory.createBevelBorder(BevelBorder.RAISED);
-=======
->>>>>>> bfe53d32bb7fd9405c2f8cb7bf29590b28d04cfe
+  private Cell[][] humanRefGrid;
+  private JButton letsPlay;
   
   public GamePanel(Game battleship) {
     
@@ -65,10 +48,8 @@ public class GamePanel extends JPanel {
     numBombsLeftComp = 0;
     numBombsLeftHuman = 0;
     currentGame = battleship;
-<<<<<<< HEAD
     humanRefGrid = currentGame.getHumanPlayer().getGrid();
-=======
->>>>>>> bfe53d32bb7fd9405c2f8cb7bf29590b28d04cfe
+
     
     boatsLeft = createBoatsLeft();
     bombsLeft = createBombsLeft();
@@ -86,7 +67,7 @@ public class GamePanel extends JPanel {
     center.setBackground(Color.black);
     
     JPanel emptySpace = new JPanel();
-<<<<<<< HEAD
+
     emptySpace.setLayout(new GridLayout(3,6));
     emptySpace.setBackground(Color.black);
     JPanel moreEmpty = new JPanel();
@@ -95,22 +76,10 @@ public class GamePanel extends JPanel {
     playButton.add(letsPlay);
     letsPlay.setText("Play game!");
     
-//    for (int i = 0; i < 3; i++) {
-//      for (int j = 0; j < 3; j++) {
-//        if (i == 1 && j == 1) {
-//          System.out.println("playButton: i = " + i + " j = " + j);
-//          emptySpace.add(playButton);
-//        } else {
-//          System.out.println("playButton: i = " + i + " j = " + j);
-//          emptySpace.add(moreEmpty);
-//        }
-//      }
-//    }
     emptySpace.add(letsPlay);
     
-=======
+
     emptySpace.setBackground(Color.black);
->>>>>>> bfe53d32bb7fd9405c2f8cb7bf29590b28d04cfe
     shootAtGrid = createShootAtGrid();
     humanGrid = createHumanGrid();
     
@@ -168,7 +137,6 @@ public class GamePanel extends JPanel {
         GridButton temp = new GridButton(i, j);
         temp.addActionListener(new GridButtonListener());
         grid.add(temp);
-        
       }      
     }
     
@@ -176,7 +144,6 @@ public class GamePanel extends JPanel {
   }
   
   public JPanel createHumanGrid() {
-<<<<<<< HEAD
     JPanel hGrid = new JPanel();
     hGrid.setLayout(new GridLayout(10, 10));
     //grid.setPreferredSize(new Dimension(screenHeight/3, screenlength/2))
@@ -205,23 +172,6 @@ public class GamePanel extends JPanel {
     }
     
     return hGrid;
-=======
-    JPanel grid = new JPanel();
-    grid.setLayout(new GridLayout(10, 10));
-    //grid.setPreferredSize(new Dimension(screenHeight/3, screenlength/2))
-    grid.setLayout(new GridLayout(gridSize, gridSize));
-    grid.setBackground(Color.black);
-    
-    for (int i = 1; i <= gridSize; i++) {
-      for (int j = 1; j <= gridSize; j++) {
-        GridButton temp = new GridButton(i, j);
-        temp.addActionListener(new GridButtonListener());
-        grid.add(temp);        
-      }      
-    }
-    
-    return grid;
->>>>>>> bfe53d32bb7fd9405c2f8cb7bf29590b28d04cfe
   }
   
   private class GridButtonListener implements ActionListener {
@@ -229,7 +179,6 @@ public class GamePanel extends JPanel {
     private GridButton nextShot;
     
     public void actionPerformed (ActionEvent e) {
-<<<<<<< HEAD
       if (e.getSource() == letsPlay) {
         letsPlay.setVisible(false);
         revalidate();
@@ -244,25 +193,11 @@ public class GamePanel extends JPanel {
           } catch (InvalidShotException oops) {
             //do nothing
           }
-=======
-      System.out.println("help");
-      while (currentGame.getGameOver() < 0) {
-        nextShot = (GridButton) e.getSource();
-        try {
-          currentGame.turn(nextShot.getXCoord(), nextShot.getYCoord());
-          System.out.println("Took a shot! (" + nextShot.getXCoord()
-                               + ", " + nextShot.getYCoord() + ")");
-        } catch (InvalidShotException oops) {
-          //do nothing
->>>>>>> bfe53d32bb7fd9405c2f8cb7bf29590b28d04cfe
         }
       }
     }
   }
-<<<<<<< HEAD
+    
+  
     
   }
-=======
-  
-}
->>>>>>> bfe53d32bb7fd9405c2f8cb7bf29590b28d04cfe

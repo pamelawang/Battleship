@@ -12,10 +12,10 @@
 public class Boat {
   
   private String boatType;
-  private int startIndexX;
-  private int startIndexY; //start coordinates of boat
-  private int endIndexX; 
-  private int endIndexY; //end coordinates of boat (should correlate with the length of the boat)
+  private int startX;
+  private int startY; //start coordinates of boat
+  private int endX; 
+  private int endY; //end coordinates of boat (should correlate with the length of the boat)
   private int length;
   private int MAX_LENGTH = 5; //largest ship size
   private int numHits; //will count how many shots have been taken
@@ -56,16 +56,13 @@ public class Boat {
     * @param     xStart      starting x-coordinate of boat
     *****************************************************************/
 
-//  public void setStartX (int xStart) {
-//    startX = xStart; //adjusting for 0 indexing
-
-  public void setStartIndexX (int xStart) throws InvalidCoordinateException {
+  public void setStartX (int xStart) throws InvalidCoordinateException {
     if (xStart < 1 || GRID_DIMENSIONS < xStart) {
-      startIndexX = INVALID;
-      throw new InvalidCoordinateException("setStartIndexX(): x-coordinate isn't within the grid dimensions of "
+      startX = INVALID;
+      throw new InvalidCoordinateException("setStartX(): x-coordinate isn't within the grid dimensions of "
                                              + GRID_DIMENSIONS + ".");
     }
-    startIndexX = xStart - 1; //adjusting for 0 indexing
+    startX = xStart; 
 
   }
   
@@ -75,16 +72,13 @@ public class Boat {
     * @param     yStart     starting y-coordinate of boat
     *****************************************************************/
 
-//  public void setStartY (int yStart) {
-//    startY = yStart; //adjusting for 0 indexing
-
-  public void setStartIndexY (int yStart) throws InvalidCoordinateException {
+  public void setStartY (int yStart) throws InvalidCoordinateException {
     if (yStart < 1 || GRID_DIMENSIONS < yStart) {
-      startIndexY = INVALID;
-      throw new InvalidCoordinateException("setStartIndexY(): y-coordinate isn't within the grid dimensions of "
+      startY = INVALID;
+      throw new InvalidCoordinateException("setStartY(): y-coordinate isn't within the grid dimensions of "
                                              + GRID_DIMENSIONS + ".");
     }
-    startIndexY = yStart - 1; //adjusting for 0 indexing
+    startY = yStart; 
 
   }
   
@@ -94,12 +88,8 @@ public class Boat {
     * @return  int     starting x-coordinate of boat
     *****************************************************************/
 
-//  public int getStartX () {
-//    return startX; 
-
-  public int getStartIndexX () {
-    return startIndexX; 
-
+  public int getStartX () {
+    return startX;
   }
   
   /******************************************************************
@@ -108,12 +98,8 @@ public class Boat {
     * @return  int     starting y-coordinate of boat
     *****************************************************************/
 
-//  public int getStartY () {
-//    return startY; 
-
-  public int getStartIndexY () {
-    return startIndexY; 
-
+ public int getStartY () {
+    return startY;
   }
   
   /******************************************************************
@@ -121,46 +107,46 @@ public class Boat {
     * 
     * @param  xEnd     last ('ending') x-coordinate of boat
     *****************************************************************/
-  public void setEndIndexX (int xEnd) throws InvalidCoordinateException {
+  public void setEndX (int xEnd) throws InvalidCoordinateException {
     if (xEnd < 1 || GRID_DIMENSIONS < xEnd) {
-      endIndexX = INVALID;
-      throw new InvalidCoordinateException("setEndIndexX(): x-coordinate isn't within the grid dimensions of "
+      endX = INVALID;
+      throw new InvalidCoordinateException("setEndX(): x-coordinate isn't within the grid dimensions of "
                                              + GRID_DIMENSIONS + ".");
     }
-    endIndexX = xEnd - 1; //takes into account 0 indexing
+    endX = xEnd;
   }
  
   /******************************************************************
-    * Returns the last ('ending') y-coordinate of boat. Assumes setEndIndexX
+    * Returns the last ('ending') y-coordinate of boat. Assumes setEndX
     * has already been set since this method checks whether the coordinates entered
     * matches the length of the boat.
     * 
     * @param  yEnd     last ('ending') y-coordinate of boat
     *****************************************************************/
- public void setEndIndexY (int yEnd) throws InvalidCoordinateException {
+ public void setEndY (int yEnd) throws InvalidCoordinateException {
    int check = 1; //inclusive of the cell mentioned (e.g. (1,1) and (2,1) has a boat length of 2)
-   int tempEndIndexY = yEnd - 1; //accounts for 0 indexing in arrays
+   int tempEndY = yEnd;
    
-   if (yEnd < 1 || GRID_DIMENSIONS < yEnd) {
-     endIndexY = INVALID;
-     throw new InvalidCoordinateException("setEndIndexY(): y-coordinate isn't within the grid dimensions of "
+   if (yEnd < check || GRID_DIMENSIONS < yEnd) {
+     endY = INVALID;
+     throw new InvalidCoordinateException("setEndY(): y-coordinate isn't within the grid dimensions of "
                                             + GRID_DIMENSIONS + ".");
    }
    
-   if (startIndexX == endIndexX) { //if the boat is vertical
-     check += Math.abs(startIndexY - tempEndIndexY);
+   if (startX == endX) { //if the boat is vertical
+     check += Math.abs(startY - tempEndY);
      //System.out.println("ABC 1st IF STATEMENT");
-   } else if (startIndexY == tempEndIndexY) { //if the boat is horizontal
-     check += Math.abs(startIndexX - endIndexX);
+   } else if (startY == tempEndY) { //if the boat is horizontal
+     check += Math.abs(startX - endX);
      //System.out.println("XYZ 2nd IF STATEMENT");
    }
    //System.out.println("check: " + check + "\tlength: " + length);
-   //System.out.println("startIndexX: " + startIndexX + "\tstartIndexY: " + startIndexY + "\tendIndexX: " + endIndexX + "\tendIndexY: " + endIndexY);
+   //System.out.println("startX: " + startX + "\tstartY: " + startY + "\tendX: " + endX + "\tendY: " + endY);
    if (check != length) { //if the y-coordinates entered don't correlate to boat length
-     throw new InvalidCoordinateException("setEndIndexY(): Incorrect boat length - starting and ending y-coordinates should be reentered again.");
+     throw new InvalidCoordinateException("setEndY(): Incorrect boat length - starting and ending y-coordinates should be reentered again.");
    }
    //System.out.println("Coordinates have been entered correctly. Length: " + length);
-   endIndexY = tempEndIndexY;
+   endY = tempEndY;
  }
   
   /******************************************************************
@@ -168,8 +154,8 @@ public class Boat {
     * 
     * @return  int     last ('ending') x-coordinate of boat
     *****************************************************************/
- public int getEndIndexX() {
-   return endIndexX;
+ public int getEndX() {
+   return endX;
  }
  
   /******************************************************************
@@ -177,8 +163,8 @@ public class Boat {
     * 
     * @return  int     last ('ending') y-coordinate of boat
     *****************************************************************/
- public int getEndIndexY() {
-   return endIndexY;
+ public int getEndY() {
+   return endY;
  }
   
   /******************************************************************
@@ -227,8 +213,8 @@ public class Boat {
     *****************************************************************/
   public String toString() {
     String s = boatType + "'s current status is:\n";
-    s += "Starting position: (" + (startIndexX+1) + ", " + (startIndexY+1) + ").\n";
-    s += "Ending position: (" + (endIndexX+1) + ", " + (endIndexY+1) + ").\n";
+    s += "Starting position: (" + (startX+1) + ", " + (startY+1) + ").\n";
+    s += "Ending position: (" + (endX+1) + ", " + (endY+1) + ").\n";
     s += "Length: " + length + "\tnumHits: " + numHits + "\t\tisSunk: " + isSunk;
     return s;
   }
@@ -252,11 +238,11 @@ public class Boat {
     Boat sub = new Boat("submarine", 3);
 //    sub.setStartX(2);
 //    sub.setStartY(3);
-    /****************TESTING WHEN BOATS WERE LENGTH OF 1 (without endIndexX and endIndexY)**********************
+    /****************TESTING WHEN BOATS WERE LENGTH OF 1 (without endX and endY)**********************
     System.out.println("Creating a new boat with 1st constructor");
     Boat sub = new Boat("submarine", 5);
-    sub.setStartIndexX(2);
-    sub.setStartIndexY(3);
+    sub.setStartX(2);
+    sub.setStartY(3);
 >>>>>>> bfe53d32bb7fd9405c2f8cb7bf29590b28d04cfe
     System.out.println(sub);
     
@@ -279,12 +265,12 @@ public class Boat {
     
     System.out.println("Creating a new boat with 2nd constructor");
     Boat boat = new Boat();
-    boat.setStartIndexX(3);
-    boat.setStartIndexY(3);
+    boat.setStartX(3);
+    boat.setStartY(3);
     System.out.println(boat);
     
-    System.out.println("Checking getStartIndexX() and getStartIndexY(): " + sub.getStartIndexX()
-                         + ",\t" + sub.getStartIndexY());
+    System.out.println("Checking getStartX() and getStartY(): " + sub.getStartX()
+                         + ",\t" + sub.getStartY());
     System.out.println("Checking getLength(): " + sub.getLength());
     System.out.println("-------Can't check End getters and setters--------"); */
     
@@ -292,30 +278,30 @@ public class Boat {
     Boat test = new Boat("WRONG", 2); //testing exceptions
     try {
       /*System.out.println("Testing incorrect coordinates (not within GRID_DIMENSIONS)");
-      test.setStartIndexX(-20);
-      test.setStartIndexY(-1);
-      test.setEndIndexX(15);
-      test.setEndIndexY(10);
+      test.setStartX(-20);
+      test.setStartY(-1);
+      test.setEndX(15);
+      test.setEndY(10);
       
-      System.out.println("Testing incorrect end coordinates (neither endIndexX nor endIndexY match either startIndexX or startIndexY)");
-      test.setStartIndexX(1);
-      test.setStartIndexY(1);
-      test.setEndIndexX(1);
-      test.setEndIndexY(2);*/
+      System.out.println("Testing incorrect end coordinates (neither endX nor endY match either startX or startY)");
+      test.setStartX(1);
+      test.setStartY(1);
+      test.setEndX(1);
+      test.setEndY(2);*/
       
-      System.out.println("Testing if coordinates correlate to length (when boat is vertical/startIndexX == endIndexX)");
-      System.out.println("startIndexX should = 4, startIndexY should = 3, endIndexX should = 2, endIndexY should = 1");
-      test.setStartIndexX(1);
-      test.setStartIndexY(1);
-      test.setEndIndexX(1);
-      test.setEndIndexY(2);
+      System.out.println("Testing if coordinates correlate to length (when boat is vertical/startX == endX)");
+      System.out.println("startX should = 4, startY should = 3, endX should = 2, endY should = 1");
+      test.setStartX(1);
+      test.setStartY(1);
+      test.setEndX(1);
+      test.setEndY(2);
       System.out.println(test);
       
-      System.out.println("\nTesting if coordinates correlate to length (when boat is horizontal/startIndexY == endIndexY)");
-      test.setStartIndexX(1);
-      test.setStartIndexY(1);
-      test.setEndIndexX(2);
-      test.setEndIndexY(1);
+      System.out.println("\nTesting if coordinates correlate to length (when boat is horizontal/startY == endY)");
+      test.setStartX(1);
+      test.setStartY(1);
+      test.setEndX(2);
+      test.setEndY(1);
       System.out.println(test);
     } catch (InvalidCoordinateException e) {
     }

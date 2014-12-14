@@ -181,6 +181,7 @@ public class GamePanel extends JPanel {
     public void actionPerformed (ActionEvent e) {
       if (e.getSource() == letsPlay) {
         letsPlay.setVisible(false);
+        humanRefGrid = currentGame.getHumanPlayer().getGrid();
         revalidate();
       } else {
         System.out.println("help");
