@@ -151,10 +151,9 @@ public class Game {
     *****************************************************************/
   public String toString() {
     String s = "This game is " + username + " vs. Computer.";
-    s += "\nThe current score is " + getScore() + ".";
+    s += "\nThe current score is " + getScore() + ",";
     return s;
   }
-  
   
   //testing main:
   public static void main (String[] args) {
