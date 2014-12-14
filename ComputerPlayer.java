@@ -21,14 +21,13 @@ public class ComputerPlayer extends Player {
   private int aimAtY;
   private final int INVALID = -1;
   private Cell[][] shotSoFarGrid;
-  //to be updated:
   private int VERTICAL = 0;
   private int HORIZONTAL = 1;
   private int UP = 2;
   private int DOWN = 3;
   private int LEFT = 4;
   private int RIGHT = 5;
-  private int boatOrientation; //bad coding principles? need to access in setEndCoords()
+  private int boatOrientation;
   
   public ComputerPlayer() {
     super();
@@ -82,12 +81,13 @@ public class ComputerPlayer extends Player {
       if (direction == UP || direction == DOWN) {
         System.out.println("placeBoats(): Boat's upward/downward. ChangingCells.");
         for (int j = blackPearl.getStartY(); j <= blackPearl.getEndY(); j++) {
-          grid[blackPearl.getStartX()][j-1].setHasBoat(true);
+        //sets the cells between starting and ending coordinates to hasBoat() state
+          grid[blackPearl.getStartX()][j-1].setHasBoat(true); //NEED TO ACCOUNT FOR INDEXING? --> grid[blackPearl.getStartX()-1][j-1].setHasBoat(true)
         }
       } else {
         System.out.println("placeBoats(): Boat's left/right. ChangingCells.");
         for (int j = blackPearl.getStartX(); j <= blackPearl.getEndX(); j++) {
-          grid[j-1][blackPearl.getStartY()].setHasBoat(true);
+          grid[j-1][blackPearl.getStartY()].setHasBoat(true); //DITTO ABOVE, therefore [blackPearl.getStartY()-1]
         }
       }
       System.out.println("Boat " + Integer.toString(i+1) + "\n" + blackPearl + "\n");
@@ -101,7 +101,8 @@ public class ComputerPlayer extends Player {
   private void setCoords(Boat b, int direction) {
     //THEORETICALLY CAN STILL USE PICKAPOINT()
 //      System.out.println("setCoords(): X");
-    b.setStartX(makeValidCoord((int)(Math.random()*10))); //using Boat's getters and setters as 'local' variables
+    //using Boat's instance variables as 'local' variables through its getters/setters
+    b.setStartX(makeValidCoord((int)(Math.random()*10)));
 //      System.out.println("setCoords(): Y");
     b.setStartY(makeValidCoord((int)(Math.random()*10)));
     
@@ -265,15 +266,15 @@ public class ComputerPlayer extends Player {
     boolean overlap = false;
     if (direction == UP || direction == DOWN) {
       for (int j = blackPearl.getStartY(); j <= blackPearl.getEndY(); j++) {
-        System.out.println("doesBoatOverlap(): " + grid[blackPearl.getStartX()][j-1].getHasBoat());
-        overlap = (grid[blackPearl.getStartX()][j-1].getHasBoat()) ? true : overlap;
+        System.out.println("doesBoatOverlap(): " + grid[blackPearl.getStartX()][j-1].getHasBoat()); //NEED TO ACCOUNT FOR INDEXING? getStartX()-1
+        overlap = (grid[blackPearl.getStartX()][j-1].getHasBoat()) ? true : overlap; //DITTO HERE
         //if there's a boat, valid = false, else doesn't change
         if (overlap) { return overlap; } //returns at first instance of boatOverlapping
       }
-    } else {
+    } else { //direction == LEFT || RIGHT
       for (int j = blackPearl.getStartX(); j <= blackPearl.getEndX(); j++) {
-        System.out.println("doesBoatOverlap(): " + grid[blackPearl.getStartX()][j-1].getHasBoat());
-        overlap = (grid[j-1][blackPearl.getStartY()].getHasBoat()) ? true : overlap;
+        System.out.println("doesBoatOverlap(): " + grid[j-1][blackPearl.getStartY()].getHasBoat()); //HERE TOO
+        overlap = (grid[j-1][blackPearl.getStartY()].getHasBoat()) ? true : overlap; //AS WELL AS HERE
         //if there's a boat, valid = false, else doesn't change
         if (overlap) { return overlap; } //returns at first instance of boatOverlapping
       }
