@@ -24,7 +24,7 @@ public class BattleshipGUI {
     
     tp.addTab("Instructions", new WelcomePanel());
     //tp.addTab("Game", new GamePanel());
-    //tp.addTab("Top Scores", new StatsPanel());
+    tp.addTab("Top Scores", new StatsPanel());
     
     frame.getContentPane().add(tp);
     frame.setPreferredSize(new Dimension(1000, 700)); //fixed dimensions
