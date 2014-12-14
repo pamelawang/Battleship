@@ -75,6 +75,7 @@ public class ComputerPlayer extends Player {
       Boat blackPearl = fleet.get(i);
       setCoords(blackPearl, direction); //makes and checks Boat coordinates
 //      placeBoat(i, blackPearl.getStartX(), blackPearl.getStartY()); //method from Player; i is for boatIndex in fleet
+      //this was causing the loop.
       System.out.println("Boat " + Integer.toString(i) + "\n" + blackPearl + "\n");
     }
     
