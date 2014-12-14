@@ -6,8 +6,8 @@
  * Purpose: Creates a single game instance, with two players.
  * 
  * NOTES:
- * 1. Have to make the game ask for the players to place their boats when
- * it starts!
+ * Have to reinstate the isHumanTurn variable, and change turn() to make it 
+ * suire the gamepanel. 
  * 
  * @author Meera Hejmadi
  * @author Pamela Wang
@@ -54,16 +54,16 @@ public class Game {
    * the parameters.. So how does this work?
    */
   //TURN IS PLAYER GOES THEN COMPUTER GOES - THAT'S A TURN. NICE AND SIMPLE.
-  public void turn(int x, int y) throws InvalidShotException {
+  public void turn(int x, int y) { //throws InvalidShotException {
     //HUMAN TURN
     System.out.println("turn(): HUMAN");
+    try {
     computer.gotShot(x, y); //Computer is the one being shot at
     score++; //user has taken another shot
     if (computer.didILose()) { //checking if game is over
       gameOver = HUMAN_WIN;
       System.out.println("Game over. Human won.");
-    }
-    
+    }     
     //COMPUTER'S TURN
     System.out.println("turn(): COMPUTER");
     computer.shoot(human);
@@ -71,6 +71,10 @@ public class Game {
       gameOver = COMP_WIN;
       System.out.println("Game over. Computer won.");
     }
+    } catch (InvalidShotException oops) {
+      //restart that turn
+    }
+      
   }
   
   /*****************************************************************
@@ -180,15 +184,15 @@ public class Game {
       bringIt.getCompPlayer().placeBoat(i, boatX, boatY);
     }
     while (bringIt.getGameOver() == NOT_OVER) {
-      try {
+//      try {
         System.out.println("It's your turn! Please enter a set of coordinates you'd"
                              + "like to shoot at.");
         currentX = scan.nextInt();
         currentY = scan.nextInt();
         bringIt.turn(currentX, currentY);
-      } catch (InvalidShotException oops) {
-        //prompts user for a different set of coordinates by going back through loop
-      }
+//      } catch (InvalidShotException oops) {
+//        //prompts user for a different set of coordinates by going back through loop
+//      }
     }
   } 
   
