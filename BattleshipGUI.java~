@@ -11,33 +11,25 @@ import java.awt.*; //to use Dimension
 
 public class BattleshipGUI {
   
-  //private Color c1, c2, c3;
+  //instance variables
   
   public static void main (String[] args) {
     JFrame frame = new JFrame ("Battleship");
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     
-    //GradSchools grad = new GradSchools();
+    //Game battle = new Game();
+    //AllStats scores = new AllStats()
     JTabbedPane tp = new JTabbedPane();
-
+    
     
     tp.addTab("Instructions", new WelcomePanel());
-    //tp.addTab("Add School", new GradSchoolsPanel());
-    //tp.addTab("Evaluate", new EvalSchoolsPanel());
-    /*Idea for color coordination: have each panel take in a color parameter so the colors can
-     *   be changed quickly and coordinated.
-     *   Didn't implement because wasn't sure how to get GradSchoolsGUI to access variable Color */
+    //tp.addTab("Game", new GamePanel());
+    //tp.addTab("Top Scores", new StatsPanel());
     
     frame.getContentPane().add(tp);
-    frame.setPreferredSize(new Dimension(900, 210));
-    //fixed dimensions; size wide enough for all sliders in Evaluate to work
+    frame.setPreferredSize(new Dimension(1000, 700)); //fixed dimensions
     
     frame.pack();
     frame.setVisible(true);
   } // ends main
-  
-  
-  
-  
-  
 } //ends GUI
