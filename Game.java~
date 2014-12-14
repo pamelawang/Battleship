@@ -59,7 +59,7 @@ public class Game {
 
   public void turn(int x, int y) throws InvalidShotException {
     if (humanTurn) {
-      System.out.println("HUMAN");
+      System.out.println("turn(): HUMAN");
       computer.gotShot(x, y); //Computer is the one being shot at
       score++; //user has taken another shot
       humanTurn = false;
@@ -68,7 +68,7 @@ public class Game {
         System.out.println("Game over. Human won.");
       }
     }
-    System.out.println("COMPUTER");
+    System.out.println("turn(): COMPUTER");
     computer.shoot(human);
     humanTurn = true;
     if (human.didILose()) {
@@ -87,6 +87,10 @@ public class Game {
   
   public int getGridSize() {
     return getHumanPlayer().getGridDimensions();
+  }
+  
+  public int getNumBoats() {
+    return getHumanPlayer().getNumBoats();
   }
   
   public String getUsername() {
