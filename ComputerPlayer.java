@@ -60,6 +60,10 @@ public class ComputerPlayer extends Player {
     return false;
   }
   
+  public void placeBoats() {
+    //TO COME BACKT O, use Player's placeBoat() method
+  }
+  
   public static void main (String[] args) {
     
   }

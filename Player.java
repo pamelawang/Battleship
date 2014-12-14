@@ -68,9 +68,13 @@ public class Player {
   public void placeBoat(int boatIndex, int startX, int startY) {
     int adjustedX = startX-1; //(x-1) because 0 indexing.
     int adjustedY = startY-1;
-    fleet.get(boatIndex).setStartIndexX(adjustedX);
-    fleet.get(boatIndex).setStartIndexY(adjustedY);
-    grid[adjustedX][adjustedY].setHasBoat(true); 
+    try {
+      fleet.get(boatIndex).setStartIndexX(adjustedX);
+      fleet.get(boatIndex).setStartIndexY(adjustedY);
+      grid[adjustedX][adjustedY].setHasBoat(true); 
+    } catch (InvalidCoordinateException e) { //from Boat
+      System.out.println("Starting coordinates are incorrect, please enter coordinates again.");
+    }
   }
   
   /*****************************************************************
