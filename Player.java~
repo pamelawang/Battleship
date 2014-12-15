@@ -12,6 +12,8 @@
  * 2. IMPORTANT: Boat's start
  * 3. QUESTION FOR PROFS: ERROR FOR REPEATED GUESS??????
  * 
+ * to do: MAKE CHECK LENGTH METHOD IN BOAT FOR HUMAN
+ * 
  * @author Meera Hejmadi
  * @author Pamela Wang
  */
@@ -23,8 +25,8 @@ public class Player {
 //  private final String username;
   protected Cell[][] grid;
   protected LinkedList<Boat> fleet; //fleet will have a default size in the final version of the game
-  private final int NUM_BOATS = 3;
-  protected final int GRID_DIMENSIONS = 3; //testing size of the grid
+  private final int NUM_BOATS = 5;
+  protected final int GRID_DIMENSIONS = 10; //testing size of the grid
   private final int INVALID_SHOT = -1;
   private final int MISS = 0;
   private final int HIT_NOT_SUNK = 1;
@@ -33,13 +35,14 @@ public class Player {
   private LinkedList<Boat> shipsSunk;
   private final int NOT_OVER = -1;
   private final int GAME_OVER = 0;
-  protected int[] BOAT_LENGTHS = {2, 3, 3, 4, 5}; //also used in ComputerPlayer
+  protected int[] BOAT_LENGTHS = {5, 4, 3, 3, 2}; //also used in ComputerPlayer; largest boat first for easy placement
   
   /******************************************************************
     * Constructor: Creates a Player that has a grid to place their
     * boats on, and a fleet of boats to place. 
     *****************************************************************/
-  public Player() {
+  public Player() { 
+    //USE OTHER BOAT CONSTRUCTOR FOR LENGTH/FLEET
     grid = new Cell[GRID_DIMENSIONS][GRID_DIMENSIONS]; //size of grid
     for (int i = 0; i < GRID_DIMENSIONS; i++ ) { //creating all Cells for a new grid
       for (int j = 0; j < GRID_DIMENSIONS; j++) {
@@ -49,7 +52,7 @@ public class Player {
     
     fleet = new LinkedList<Boat>(); //number of boats in fleet
     for (int i = 0; i < NUM_BOATS; i++) {
-      Boat temp = new Boat(); //for stage 1: single cell boats
+      Boat temp = new Boat("boat-" + Integer.toString(i), BOAT_LENGTHS[i]); //for stage 1: single cell boats
       fleet.add(temp);
     }
     shipsSunk = new LinkedList<Boat>();
@@ -74,13 +77,13 @@ public class Player {
 //    grid[gridX][gridY].setHasBoat(true); 
     int adjustedX = startX-1; //(x-1) because 0 indexing.
     int adjustedY = startY-1;
-    try {
-      fleet.get(boatIndex).setStartX(adjustedX);
-      fleet.get(boatIndex).setStartY(adjustedY);
-      grid[adjustedX][adjustedY].setHasBoat(true); 
-    } catch (InvalidCoordinateException e) { //from Boat
-      System.out.println("Starting coordinates are incorrect, please enter coordinates again.");
-    }
+    fleet.get(boatIndex).setStartX(adjustedX);
+    fleet.get(boatIndex).setStartY(adjustedY);
+    grid[adjustedX][adjustedY].setHasBoat(true); 
+    /*MAKE CHECK LENGTH METHOD
+     * } catch (InvalidCoordinateException e) { //from Boat
+     System.out.println("Starting coordinates are incorrect, please enter coordinates again.");
+     }*/
   }
   
   /*****************************************************************
@@ -92,7 +95,8 @@ public class Player {
     String boatLocations = "Your fleet consists of " + NUM_BOATS + " boat(s):\n";
     for (int i = 0; i < NUM_BOATS; i++) {
       boatLocations += "Boat " + (i+1) + " is " + fleet.get(i).getLength() + " units long and "
-        + "is at (" + fleet.get(i).getStartX() + ", " + fleet.get(i).getStartY() + "). ";
+        + "is at (" + fleet.get(i).getStartX() + ", " + fleet.get(i).getStartY() + ") and (" 
+        + fleet.get(i).getEndX() + ", " + fleet.get(i).getEndY() + ").";
       boatLocations += (fleet.get(i).getIsSunk()) ? "It has been sunk.\n" : "It has not been sunk.\n";
     }
     return boatLocations;
@@ -220,62 +224,6 @@ public class Player {
     
   }
   
-  /* 
-   public int shoot(Player other, int x, int y) {
-   if (other.get(x,y).getShotAt()) { return 1; } //(x,y) not shot at
-   if (other.get(x,y).getHasBoat) {
-   other.get(x,y).setBackground("red");
-   return 2;
-   } else { //shot at & has boat
-   other.get(x,y).setBackground("blue");
-   return 3;
-   }
-   return -1;
-   }
-   
-   public void fireBomb(Player other, int middleX, int middleY) { //3x3 area
-   int left = middleX - 1;
-   int right = middleX + 1;
-   int up = middleY - 1;
-   int down = middleY + 1;
-   
-   //MIDDLE COLUMN
-   shoot(other, middleX, middleY); //centre coordinate
-   
-   if (up > -1) {
-   shoot(other, middleX, up); //middle column top
-   }
-   
-   if (down < GRID_DIMENSIONS) {
-   shoot(other, middleX, down); //middle column bottom
-   }
-   
-   //LEFT COLUMN
-   if (left > -1) { //if the x coordinate isn't at the leftmost wall (coordinate 0)
-   shoot(other, left, middleY); //left column middle
-   
-   if (up > -1) {
-   shoot(other, left, up); //left column top
-   }
-   
-   if (down < GRID_DIMENSIONS) {
-   shoot(other, left, down); //left column bottom
-   }
-   }
-   
-   //RIGHT COLUMN
-   if (right < GRID_DIMENSIONS) { //if x-coordinate isn't at the rightmost wall (at coordinate GRID_DIMENSIONS)
-   shoot(other, right, middleY); //right column middle
-   
-   if (up > -1) {
-   shoot(other, right, up); //right column top
-   }
-   
-   if (down < GRID_DIMENSIONS) {
-   shoot(other, right, down); //right column bottom
-   }
-   }
-   } */
   
   /***********************************************************************
     * Returns the number of boats for this Player.
@@ -286,6 +234,11 @@ public class Player {
     return NUM_BOATS;
   }
   
+   /***********************************************************************
+    * Returns the number of boats still in the fleet (i.e. not sunk).
+    * 
+    * @return   int    Number of Player's un-sunk boats
+    ***********************************************************************/
   public int getFleetSize() {
     return fleet.size();
   }
@@ -299,18 +252,18 @@ public class Player {
   }
   
   /***********************************************************************
-    * Returns cell referenced at a specific coordinates. - DO WE EVER USE THIS?
+    * Returns cell referenced at a specific coordinates. 
     * 
     * @param     x     x-coordinate
     * @param     y     y-coordinate
-    * @return   Cell    Player's number of boats
+    * @return   Cell    Cell at input coordinate
     ***********************************************************************/
   public Cell getCellAt(int x, int y) {
-    return grid[x][y];
+    return grid[x-1][y-1];
   }
 
   /***********************************************************************
-    * Returns grid of the current player. - DO WE EVER USE THIS?
+    * Returns grid of the current player.
     * 
     * @return   Cell[][]    Player's grid
     ***********************************************************************/
@@ -361,6 +314,7 @@ public class Player {
   
   /******************TESTER CODE***************************************/
   public static void main (String[] args) throws InvalidShotException {
+    /**********TESTING CODE FOR BOAT LENGTH OF 1***************
 //    Player human = new Player();
 //    human.placeBoat(0, 2, 2);
 //    System.out.println(human.findMyFleet());
@@ -402,9 +356,39 @@ public class Player {
 //    novice.gotShot(1,1); //all works
     //novice.gotBombed(1,1); //bomb works
     
-    /* System.out.println("Fleets:");
+     System.out.println("Fleets:");
      System.out.println("Novice: " + novice.findMyFleet());
      System.out.println("Computer: " + computer.findMyFleet());*/
+    
+    /**********TESTING CODE FOR VARIABLE BOAT LENGTHS***************/
+    Player computer = new Player();
+    Player novice = new Player();
+    
+    //FIX PLACEBAOT TO BE MORE LIKE A LINKEDLIST ADD()
+    /*computer.placeBoat(0, 1, 1);
+    computer.placeBoat(1, 1, 2);
+    computer.placeBoat(2, 2, 2);
+    novice.placeBoat(0, 1, 1);
+    novice.placeBoat(1, 2, 2);
+    novice.placeBoat(2, 1, 2);
+    System.out.println("Printing computer's boats \n" + computer.printGrid());
+    System.out.println("\n Printing novice's boats \n" + novice.printGrid());
+    //DON'T USE THE ABOVE UNLESS YOU CHANGE IT TO COORDINATES > 0
+    
+    System.out.println("------------ROUND 1------------");
+    
+    computer.gotShot(2, 2);
+    novice.gotShot(1, 2);
+    
+    System.out.println("---------------ROUND 2--------------");
+    
+    computer.gotShot(3, 2);
+    novice.gotShot(1, 2);*/
+    
+    System.out.println("Fleets:");
+    System.out.println("Novice: " + novice.findMyFleet());
+    System.out.println("Computer: " + computer.findMyFleet());
+    
   }
   
 } //closes Player

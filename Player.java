@@ -278,10 +278,11 @@ public class Player {
     * @return   String    String representation of grid
     ***********************************************************************/
   public String printGrid() {
-    String s = "KEY: \nS (sea) = no boat not shot"
+    String s = "KEY: \n- (sea) = no boat not shot"
       + "\nM (miss) = no boat SHOT "
       +" \nB (boat) = boat not shot"
-      + "\nH (hit) = boat SHOT\n";
+      + "\nH (hit) = boat SHOT"
+      + "\n***********************************************************\n";
     for (int i = 0; i < this.getGridDimensions(); i++) {
       for (int j = 0; j < this.getGridDimensions(); j++) {
         s += decideLetter(grid[i][j]) + "\t";
@@ -293,15 +294,15 @@ public class Player {
   
   /***********************************************************************
     * Private, used in printGrid(). Determines if the current cell is one of
-    * the 4 states: S (sea), M (miss), B (boat) or H (hit).
+    * the 4 states: - (sea), M (miss), B (boat) or H (hit).
     * 
     * @param     c        current Cell we're examining
-    * @return   String    whether the Cell is S (sea), M (miss), B (boat) or H (hit)
+    * @return   String    whether the Cell is - (sea), M (miss), B (boat) or H (hit)
     ***********************************************************************/
   private String decideLetter(Cell c) {
     String s = "";
     if (!c.getHasBoat() && !c.getShotAt()) {
-      s = "S";
+      s = "-";
     } else if (!c.getHasBoat() && c.getShotAt()) {
       s = "M";
     } else if (c.getHasBoat() && !c.getShotAt()) {

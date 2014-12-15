@@ -62,13 +62,15 @@ public class ComputerPlayer extends Player {
     return shotSoFarGrid[xCoord-1][yCoord-1].getShotAt();
   }
   
-  
   public boolean shoot(Player other) throws InvalidShotException { //Computer shooting at user
+    boolean indicator = false; //miss
     pickAPoint();    
-    other.gotShot(aimAtX, aimAtY);
+    int hitOrMiss = other.gotShot(aimAtX, aimAtY);
     shotSoFarGrid[aimAtX-1][aimAtY-1].setShotAt(true);
-    System.out.println("Computer shooting (Y)");
-    return false;
+    System.out.println("Computer shooting");
+    indicator = (hitOrMiss < 1) ? false : true; //if hitOrMiss is 0 than the opponent missed; 1 means hit and 2 means sunk
+    System.out.println("INDICATOR IS: " + indicator);
+    return indicator;
   }
   
   public void placeBoats() { // != placeBoat() from Player
@@ -82,12 +84,12 @@ public class ComputerPlayer extends Player {
         System.out.println("placeBoats(): Boat's upward/downward. ChangingCells.");
         for (int j = blackPearl.getStartY(); j <= blackPearl.getEndY(); j++) {
         //sets the cells between starting and ending coordinates to hasBoat() state
-          grid[blackPearl.getStartX()][j-1].setHasBoat(true); //NEED TO ACCOUNT FOR INDEXING? --> grid[blackPearl.getStartX()-1][j-1].setHasBoat(true)
+          grid[blackPearl.getStartX()-1][j-1].setHasBoat(true);
         }
-      } else {
+      } else { //direction == LEFT || RIGHT
         System.out.println("placeBoats(): Boat's left/right. ChangingCells.");
         for (int j = blackPearl.getStartX(); j <= blackPearl.getEndX(); j++) {
-          grid[j-1][blackPearl.getStartY()].setHasBoat(true); //DITTO ABOVE, therefore [blackPearl.getStartY()-1]
+          grid[j-1][blackPearl.getStartY()-1].setHasBoat(true);
         }
       }
       System.out.println("Boat " + Integer.toString(i+1) + "\n" + blackPearl + "\n");
@@ -113,8 +115,6 @@ public class ComputerPlayer extends Player {
     } else {
       setEndCoords(b, direction);
     }
-    
-    
     
     /*OLD CODE BELOW
      if (foundEndCoords == false) {
@@ -153,7 +153,7 @@ public class ComputerPlayer extends Player {
   }
   
   
-  private void setEndCoords(Boat ship, int direction) { //recursive
+  private void setEndCoords(Boat ship, int direction) {
     int startX = ship.getStartX();
     int startY = ship.getStartY();
     int length = ship.getLength();
@@ -266,15 +266,15 @@ public class ComputerPlayer extends Player {
     boolean overlap = false;
     if (direction == UP || direction == DOWN) {
       for (int j = blackPearl.getStartY(); j <= blackPearl.getEndY(); j++) {
-        System.out.println("doesBoatOverlap(): " + grid[blackPearl.getStartX()][j-1].getHasBoat()); //NEED TO ACCOUNT FOR INDEXING? getStartX()-1
-        overlap = (grid[blackPearl.getStartX()][j-1].getHasBoat()) ? true : overlap; //DITTO HERE
+        System.out.println("doesBoatOverlap(): " + grid[blackPearl.getStartX()-1][j-1].getHasBoat());
+        overlap = (grid[blackPearl.getStartX()-1][j-1].getHasBoat()) ? true : overlap;
         //if there's a boat, valid = false, else doesn't change
         if (overlap) { return overlap; } //returns at first instance of boatOverlapping
       }
     } else { //direction == LEFT || RIGHT
       for (int j = blackPearl.getStartX(); j <= blackPearl.getEndX(); j++) {
-        System.out.println("doesBoatOverlap(): " + grid[j-1][blackPearl.getStartY()].getHasBoat()); //HERE TOO
-        overlap = (grid[j-1][blackPearl.getStartY()].getHasBoat()) ? true : overlap; //AS WELL AS HERE
+        System.out.println("doesBoatOverlap(): " + grid[j-1][blackPearl.getStartY()-1].getHasBoat());
+        overlap = (grid[j-1][blackPearl.getStartY()-1].getHasBoat()) ? true : overlap;
         //if there's a boat, valid = false, else doesn't change
         if (overlap) { return overlap; } //returns at first instance of boatOverlapping
       }
