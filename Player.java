@@ -68,42 +68,85 @@ public class Player {
     * @param   endX        end x-coordinate of boat
     * @param   endY        end y-coordinate of boat
     *****************************************************************/
-  public void placeBoat(int boatIndex, int startX, int startY, int endX, int endY) throws BoatOverlapException {
-    int adjustedStartX = startX-1; //(x-1) because 0 indexing
-    int adjustedStartY = startY-1;
-    int adjustedEndX = endX - 1;
-    int adjustedEndY = endY - 1;
+  public void placeBoat(int boatIndex, int startX, int startY, int endX, int endY) throws InvalidPlacementException {
+    int indexStartX = startX-1; //(x-1) because 0 indexing
+    int indexStartY = startY-1;
+    int indexEndX = endX - 1;
+    int indexEndY = endY - 1;
     
-    //checking for any boat overlapping
-    if (doesBoatOverlap(adjustedStartX, adjustedStartY, adjustedEndX, adjustedEndY)) {
-      throw new BoatOverlapException("There is already a boat in the area you selected. Please");
+    //checking if coordinates are within GRID_DIMENSIONS
+    if (!withinGridDimensions(startX, startY, endX, endY)) {
+      throw new InvalidPlacementException("Your boat isn't on the grid. ");
     }
     
-    //setting boat's start and end coordinates
-    fleet.get(boatIndex).setStartX(adjustedStartX);
-    fleet.get(boatIndex).setStartY(adjustedStartY);
-    fleet.get(boatIndex).setEndX(adjustedEndX);
-    fleet.get(boatIndex).setEndY(adjustedEndY);
+    //checking if coordinates inputted correlate with boat length
+    if (!doCoordsEqualLength(boatIndex, indexStartX, indexStartY, indexEndX, indexEndY)) {
+      throw new InvalidPlacementException("Boat length is " + fleet.get(boatIndex).getLength() + ". ");
+    }
+    
+    //checking for any boat overlapping
+    if (doesBoatOverlap(indexStartX, indexStartY, indexEndX, indexEndY)) {
+      throw new InvalidPlacementException("There is already a boat in the area you selected. ");
+    }
     
     //setting all checked coordinates of boat to have a boat
-    int gridStartX = (adjustedStartX > adjustedEndX) ? adjustedEndX : adjustedStartX;
-    int gridEndX = (adjustedStartX > adjustedEndX) ? adjustedStartX : adjustedEndX;
-    int gridStartY = (adjustedStartY > adjustedEndY) ? adjustedEndY : adjustedStartY;
-    int gridEndY = (adjustedStartY > adjustedEndY) ? adjustedStartY : adjustedEndY;
+    int gridStartX = smallestNum(indexStartX, indexEndX);
+    int gridEndX = largestNum(indexStartX, indexEndX);
+    int gridStartY = smallestNum(indexStartY, indexEndY);
+    int gridEndY = largestNum(indexStartY, indexEndY);
     for (int i = gridStartX; i <= gridEndX; i++) {
       for (int j = gridStartY; j <= gridEndY; j++) {
         grid[i][j].setHasBoat(true); //setting all of Boat's Cells
       }
     }
+    System.out.println(fleet.get(boatIndex).getBoatName() + "'s coordinates have successfully been set!~*~!~*~!*~!~*~!");
   }
   
-  private boolean doesBoatOverlap(int startIndexX, int startIndexY, int endIndexX, int endIndexY) {
-    boolean overlap = false;
+  protected boolean withinGridDimensions(int startX, int startY, int endX, int endY) { //takes in COORDINATES
+    boolean within = true;
+    int largerX = largestNum(startX, endX);
+    int smallerX = smallestNum(startX, endX);
+    int largerY = largestNum(startY, endY);
+    int smallerY = smallestNum(startY, endY);
     
-    int startX = (startIndexX > endIndexX) ? endIndexX : startIndexX;
-    int endX = (startIndexX > endIndexX) ? startIndexX : endIndexX;
-    int startY = (startIndexY > endIndexY) ? endIndexY : startIndexY;
-    int endY = (startIndexY > endIndexY) ? startIndexY : endIndexY;
+    if (smallerX < 1 || smallerY < 1 || largerX > GRID_DIMENSIONS || largerY > GRID_DIMENSIONS) {
+      within = false;
+    }
+    
+    return within;
+  }
+  
+  protected boolean doCoordsEqualLength(int boatIndex, int startIndexX, int startIndexY, int endIndexX, int endIndexY) {
+    boolean equal = true;
+    int larger;
+    int smaller;
+    
+    if (startIndexX == endIndexX && startIndexY == endIndexY) {
+      equal = false;
+      System.out.println("doCoordsEqualLength(): Your boat " + fleet.get(boatIndex).getBoatName() + " is diagonal.");
+    } else if (startIndexX == endIndexX) { //boat is vertical
+      larger = largestNum(startIndexY, endIndexY);
+      smaller = smallestNum(startIndexY, endIndexY);
+      if (smaller + (fleet.get(boatIndex).getLength() - 1) != larger) {
+        equal = false;
+      }
+    } else { //adjustedStartY == adjustedEndY (boat is horizontal)
+      larger = largestNum(startIndexX, endIndexX);
+      smaller = smallestNum(startIndexX, endIndexX);
+      if (smaller + (fleet.get(boatIndex).getLength() - 1) != larger) {
+        equal = false;
+      }
+    }
+    return equal;
+  }
+  
+  protected boolean doesBoatOverlap(int startIndexX, int startIndexY, int endIndexX, int endIndexY) {
+    boolean overlap = false;
+    int startX = smallestNum(startIndexX, endIndexX);
+    int endX = largestNum(startIndexX, endIndexX);
+    int startY = smallestNum(startIndexY, endIndexY);
+    int endY = largestNum(startIndexY, endIndexY);
+    
     for (int i = startX; i <= endX; i++) {
       for (int j = startY; j <= endY; j++) {
         overlap = (grid[i][j].getHasBoat()) ? true : overlap;
@@ -111,6 +154,14 @@ public class Player {
       }
     }
     return overlap;
+  }
+  
+  protected int largestNum (int first, int second) {
+    return (first > second) ? first : second;
+  }
+  
+  protected int smallestNum (int first, int second) {
+    return (first > second) ? second : first;
   }
   
   /*****************************************************************
@@ -416,8 +467,22 @@ public class Player {
     System.out.println("Computer: " + computer.findMyFleet());
     
     System.out.println("\nTesting setting boats");
-    //public void placeBoat(int boatIndex, int startX, int startY)
-    //FIX novice.placeBoat(0, 0, 0);
+    try {
+      System.out.println("\tPlacing boat correctly (boat length correlates with coordinates)");
+      novice.placeBoat(0, 1, 1, 1, 5);
+      System.out.println("\tPlacing boat incorrectly (coordinates != length)");
+      novice.placeBoat(1, 2, 2, 2, 2);
+    } catch (InvalidPlacementException e) {
+      System.out.println("!!Exception thrown idk what to do lol");
+    }
+    
+    try {
+      System.out.println("\tPlacing boat incorrectly (overlapping boats)");
+      novice.placeBoat(1, 1, 1, 2, 2);
+    } catch (InvalidPlacementException e) {
+      System.out.println("!!Exception thrown idk what to do lol");
+    }
+    System.out.println("Novice: " + novice.findMyFleet());
     
   }
   
@@ -437,8 +502,8 @@ class InvalidShotException extends Exception {
   * Exception used in gotShot() method for when the Cell currently being
   * aimed at has already been shot at.
   ***********************************************************************/
-class BoatOverlapException extends Exception {
-  public BoatOverlapException(String problem) {
-    System.out.println(problem);
+class InvalidPlacementException extends Exception {
+  public InvalidPlacementException(String problem) {
+    System.out.println(problem + "Please place boat again.");
   }
 }

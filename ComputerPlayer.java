@@ -102,7 +102,7 @@ public class ComputerPlayer extends Player {
   
   //helpers for PlaceBoats
   private void setCoords(Boat b, int direction) {
-    System.out.println("************setCoords() with " + b.boatType + " and direction " + direction + " *************");
+    System.out.println("************setCoords() with " + b.getBoatName() + " and direction " + direction + " *************");
 //      System.out.println("setCoords(): X");
     //using Boat's instance variables as 'local' variables through its getters/setters
     b.setStartX(makeValidCoord((int)(Math.random()*10)));
