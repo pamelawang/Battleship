@@ -11,7 +11,6 @@
 
 public class Boat {
   
-  private String name;
   private int startX;
   private int startY; //start coordinates of boat
   private int endX; 
@@ -30,8 +29,7 @@ public class Boat {
    * @param     name     name of boat
    * @param    length    length of boat (>0)
   ******************************************************************/
-  public Boat (String name, int length) {
-    name = name;
+  public Boat (int length) {
     numHits = 0;
     isSunk = false;
     this.length = length;
@@ -50,7 +48,7 @@ public class Boat {
    * default. Start/end x,y coordinates will be set later. - TO DELETE????????????????
   ******************************************************************/
   public Boat() {
-    this("tester", 1);
+    this(1);
   }
   
   //METHODS
@@ -206,17 +204,13 @@ public class Boat {
     return isSunk;
   }
   
-  public String getBoatName() {
-    return name;
-  }
-  
   /******************************************************************
     * Returns a string representation of the boat.
     * 
     * @return  String     representation of the boat object
     *****************************************************************/
   public String toString() {
-    String s = name + "'s current status is:\n";
+    String s = "Boat's current status is:\n";
     s += "Starting position: (" + (startX) + ", " + (startY) + ").\n";
     s += "Ending position: (" + (endX) + ", " + (endY) + ").\n";
     s += "Length: " + length + "\tnumHits: " + numHits + "\t\tisSunk: " + isSunk;
@@ -239,7 +233,7 @@ public class Boat {
   
   public static void main (String[] args) {
 
-    Boat sub = new Boat("submarine", 3);
+    Boat sub = new Boat(3);
 //    sub.setStartX(2);
 //    sub.setStartY(3);
     /****************TESTING WHEN BOATS WERE LENGTH OF 1 (without endX and endY)**********************
@@ -278,7 +272,7 @@ public class Boat {
     System.out.println("-------Can't check End getters and setters--------"); */
     
     /****************TESTING WITH MULTIPLE LENGTHS**********************/
-    Boat test = new Boat("WRONG", 2); //testing exceptions
+    Boat test = new Boat(2); //testing exceptions
     /*System.out.println("Testing incorrect coordinates (not within GRID_DIMENSIONS)");
      test.setStartX(-20);
      test.setStartY(-1);

@@ -7,10 +7,6 @@
  * a grid on which to place them.
  * 
  * Notes:
- * 1. Completely changed the "shoot" idea. Explanation below, before 
- * gotShot method.
- * 2. IMPORTANT: Boat's start
- * 3. QUESTION FOR PROFS: ERROR FOR REPEATED GUESS??????
  * 
  * @author Meera Hejmadi
  * @author Pamela Wang
@@ -20,7 +16,7 @@ import java.awt.*;
 import java.util.*;
 
 public class Player { 
-//  private final String username;
+  
   protected Cell[][] grid;
   protected LinkedList<Boat> fleet; //fleet will have a default size in the final version of the game
   private final int NUM_BOATS = 5;
@@ -49,10 +45,9 @@ public class Player {
     
     fleet = new LinkedList<Boat>(); //number of boats in fleet
     for (int i = 0; i < NUM_BOATS; i++) {
-      String s = "boat-" + Integer.toString(i);
-      Boat temp = new Boat(s, BOAT_LENGTHS[i]); //for stage 1: single cell boats
+      Boat temp = new Boat(BOAT_LENGTHS[i]); //for stage 1: single cell boats
       fleet.add(temp);
-      System.out.println(fleet.get(i).getBoatName());
+      System.out.println("Boat " + (i+1) + "fleet.get(i).getBoatName()");
     }
     shipsSunk = new LinkedList<Boat>();
   }
@@ -101,7 +96,7 @@ public class Player {
         grid[i][j].setHasBoat(true); //setting all of Boat's Cells
       }
     }
-    System.out.println(fleet.get(boatIndex).getBoatName() + "'s coordinates have successfully been set!~*~!~*~!*~!~*~!");
+    System.out.println("Boat " + (boatIndex+1) + "'s coordinates have successfully been set!~*~!~*~!*~!~*~!");
   }
   
   private boolean withinGridDimensions(int startX, int startY, int endX, int endY) { //takes in COORDINATES
@@ -125,7 +120,7 @@ public class Player {
     
     if (startIndexX == endIndexX && startIndexY == endIndexY) {
       equal = false;
-      System.out.println("doCoordsEqualLength(): Your boat " + fleet.get(boatIndex).getBoatName() + " is diagonal.");
+      System.out.println("doCoordsEqualLength(): Your boat " + (boatIndex + 1) + " is diagonal.");
     } else if (startIndexX == endIndexX) { //boat is vertical
       larger = largestNum(startIndexY, endIndexY);
       smaller = smallestNum(startIndexY, endIndexY);
