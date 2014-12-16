@@ -3,7 +3,8 @@
  * Date created: 12 Dec 2014
  * CS 230 Project: Battleship
  * 
- * Purpose: 
+ * Purpose: Gameplay panel showing two grids and 2 side sections. Main panel
+ * for GUI.
  * 
  * NOTES: 
  * Have to make the buttons react after being pressed (change color)
@@ -36,7 +37,6 @@ public class GamePanel extends JPanel {
   private JButton letsPlay;
   
   public GamePanel(Game battleship) {
-    
     setLayout(new BorderLayout());
     setBackground(Color.black);
     
@@ -65,6 +65,11 @@ public class GamePanel extends JPanel {
     
   }
   
+  /******************************************************************
+  * Creates centre piece of panel.
+  * 
+  * @return  JPanel  fully-formed centre piece (Banner and 2 grids)
+  *****************************************************************/
   public JPanel createCenterPiece() {
     JPanel center = new JPanel();
     center.setLayout(new GridLayout(4, 1));
@@ -82,7 +87,6 @@ public class GamePanel extends JPanel {
     playButton.add(letsPlay);
     
     emptySpace.add(letsPlay);
-    
 
     emptySpace.setBackground(Color.black);
     shootAtGrid = createShootAtGrid();
@@ -96,6 +100,11 @@ public class GamePanel extends JPanel {
     return center;
   }
   
+  /******************************************************************
+  * Leftmost section that shows what boats are left.
+  * 
+  * @return  JPanel  section showing which boats are left for both players
+  *****************************************************************/
   public JPanel createBoatsLeft() {
     JPanel boats = new JPanel();
     boats.setLayout(new GridLayout(5, 1));
@@ -114,6 +123,11 @@ public class GamePanel extends JPanel {
     return boats;
   }
   
+  /******************************************************************
+  * Rightmost section showing how many bombs are left.
+  * 
+  * @return  JPanel  section showing how many bombs are left for both players
+  *****************************************************************/
   public JPanel createBombsLeft() {
     JPanel bombs = new JPanel();
     bombs.setLayout(new GridLayout(5, 1));
@@ -131,6 +145,12 @@ public class GamePanel extends JPanel {
     return bombs;
   }
   
+  /******************************************************************
+  * Creates the top grid (the grid the user is using to shoot at 
+  * opponent and to keep track of previous shots.)
+  * 
+  * @return  JPanel  uppermost grid showing where the user has shot
+  *****************************************************************/
   public JPanel createShootAtGrid() {
     JPanel grid = new JPanel();
     //grid.setPreferredSize(new Dimension(screenHeight/3, screenlength/2))
@@ -149,6 +169,12 @@ public class GamePanel extends JPanel {
     return grid;
   }
   
+  /******************************************************************
+  * Creates the bottom grid (the grid with the user's boats and Computer's
+  * previous shots)
+  * 
+  * @return  JPanel  bottommost grid showing where the user has shot
+  *****************************************************************/
   public JPanel createHumanGrid() {
     JPanel hGrid = new JPanel();
     hGrid.setLayout(new GridLayout(10, 10));
@@ -168,6 +194,12 @@ public class GamePanel extends JPanel {
     return hGrid;
   }
   
+  /******************************************************************
+  * Decides the colour of the cell depending on the state of the Cell
+  * (sea, boat, hit, miss)
+  * 
+  * @return  Color  colour of that represents the cell's current state
+  *****************************************************************/
   public Color decideColor(GridButton g) {
     Color c;
     switch (humanRefGrid[g.getXCoord()][g.getYCoord()].getAllInfo()) {
@@ -186,14 +218,21 @@ public class GamePanel extends JPanel {
     return c;
   }
   
+  /******************************************************************
+  * String representation of current button/coordinate.
+  * 
+  * @return  String  String representation of current Cell/coordinate
+  *****************************************************************/
   private String buttonToString(GridButton b) {
     String s = "buttonToString(): Button (" + b.getXCoord() + ", " +
       b.getYCoord() + ") is now " + b.getBackground();
     return s;
   }
   
+  /******************************************************************
+  * GridButtonListener
+  *****************************************************************/
   private class GridButtonListener implements ActionListener {
-    
     private GridButton nextShot;
     
     public void actionPerformed (ActionEvent e) {
@@ -208,13 +247,8 @@ public class GamePanel extends JPanel {
                                + ", " + nextShot.getYCoord() + ")");
           currentGame.turn(nextShot.getXCoord(), nextShot.getYCoord());
           System.out.println("\n" + buttonToString(nextShot));
-          
-          
         }
       }
     }
   }
-    
-  
-    
-  }
+}

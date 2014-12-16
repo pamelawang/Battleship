@@ -3,13 +3,10 @@
  * StatsPanel.java
  * Dec 12th, 2014
  * 
-<<<<<<< HEAD
- * Purpose: Creates a visual representation of AllStats.java (the user's
-=======
  * Purpose: Creates a visual representation of AllStats.java (the user's stats)
  * 
  * @author Pamela Wang
->>>>>>> bfe53d32bb7fd9405c2f8cb7bf29590b28d04cfe
+
  */
 
 import java.awt.*;

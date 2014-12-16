@@ -5,7 +5,6 @@
  * 
  * Purpose: One instance of one of the grid coordinates on the battleship screen
  * 
- * 
  * @author Meera Hejmadi
  * @author Pamela Wang
  */

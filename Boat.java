@@ -41,14 +41,6 @@ public class Boat {
     endY = INVALID;
   }
   
-  /******************************************************************
-    * Constructor: Creates a Boat object of type "tester" and length 
-    * default. Start/end x,y coordinates will be set later. - TO DELETE????????????????
-    ******************************************************************/
-  public Boat() {
-    this(1);
-  }
-  
   //METHODS
   /******************************************************************
     * Sets all of the boat's coordinates to -1 (invalid).

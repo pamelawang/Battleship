@@ -9,14 +9,18 @@
  * @author Pamela Wang
  */
 
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+
 public class GridButton extends JButton {
   
   private int xCoordinate;
   private int yCoordinate;
   
-  public Gridbutton (int x, int y) {
+  public GridButton (int x, int y) {
     xCoordinate = x;
-    yCoordiante = y;
+    yCoordinate = y;
   }
   
   public int getXCoord () {

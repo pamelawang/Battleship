@@ -10,6 +10,7 @@
  * in-detail comments before those private methods. 
  * 2. There are less setter methods than getter methods, and that was a design
  * decision, because we don't want the stats to be manipulated.
+ * 3. Add file - to add to for old scores
  * 
  * @author Meera Hejmadi
  * @author Pamela Wang
@@ -26,7 +27,7 @@ public class Stats {
   /******************************************************************
     * Constructor: Creates a Stats object for a single user.
     * 
-    * @ param    username    username to be stored in this instance
+    * @param    username    username to be stored in this instance
     *****************************************************************/
   public Stats(String username) {
     userName = username; 
@@ -40,7 +41,7 @@ public class Stats {
   /*******************************************************************
     * Returns the username.
     * 
-    * @return      object's username
+    * @return   String   object's username
     *******************************************************************/
   public String getUserName() {
     return userName;
@@ -49,7 +50,7 @@ public class Stats {
   /*******************************************************************
     * Returns an integer value of the percentage of games won by the user.
     * 
-    * @return      percent of games won
+    * @return   int   percent of games won
     *******************************************************************/
   public int percentGamesWon() {
     return gamesWon*100/gamesPlayed;
@@ -59,15 +60,16 @@ public class Stats {
     * Returns the user's average score. Average score is calculated by
     * adding all the scores and dividing by the number of games won.
     * 
-    * @return      user's average score
+    * @return   int   user's average score
     *******************************************************************/
   public int getAverage() {
     return averageScore;
   }
+  
   /*******************************************************************
-    * Returns an int[] of the user's top 5 scores.
+    * Returns an int array of the user's top 5 scores.
     * 
-    * @return      user's 5 high scores
+    * @return   int[]   user's 5 high scores
     *******************************************************************/
   public int[] getBestScores() {
     return bestScores;

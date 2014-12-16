@@ -3,11 +3,10 @@
  * PlaceBoatPanel.java
  * Dec 13th, 2014
  * 
- * Purpose: 
+ * Purpose: Panel to have user choose the location of their fleet (all their boats)
  * 
  * @author Meera Hejmadi
  */
-
 
 import javax.swing.*;
 import java.awt.*; 
@@ -54,6 +53,11 @@ public class PlaceBoatPanel extends JPanel {
     add(grid);
   }
   
+  /******************************************************************
+  * Creates grid for user to choose boat locations.
+  * 
+  * @return  JPanel  grid for user to choose boat locations
+  *****************************************************************/
   public JPanel createGrid() {
     grid = new JPanel(new GridLayout(gridSize, gridSize));
     grid.setBackground(Color.black);
@@ -70,8 +74,10 @@ public class PlaceBoatPanel extends JPanel {
     return grid;
   }
   
+  /******************************************************************
+  * GridButtonListener
+  *****************************************************************/
   private class GridButtonListener implements ActionListener {
-    
     public void actionPerformed (ActionEvent e) {
       if (e.getSource() == undoButton) {
         System.out.println("Undo! boatNum = " + boatNum + " startIndex = " + undoStartIndex);
