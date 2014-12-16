@@ -54,6 +54,18 @@ public class Boat {
   }
   
   //METHODS
+  
+   /******************************************************************
+    * Sets all of the boat's coordinates to -1 (invalid).
+    *****************************************************************/
+  
+  public void reset () {
+    startX = INVALID; 
+    startY = INVALID; 
+    endX = INVALID; 
+    endY = INVALID; 
+  }
+  
   /******************************************************************
     * Sets the starting x-coordinate of boat.
     * 

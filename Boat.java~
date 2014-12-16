@@ -11,7 +11,7 @@
 
 public class Boat {
   
-  public String boatType;
+  private String name;
   private int startX;
   private int startY; //start coordinates of boat
   private int endX; 
@@ -31,7 +31,7 @@ public class Boat {
    * @param    length    length of boat (>0)
   ******************************************************************/
   public Boat (String name, int length) {
-    boatType = name;
+    name = name;
     numHits = 0;
     isSunk = false;
     this.length = length;
@@ -194,13 +194,17 @@ public class Boat {
     return isSunk;
   }
   
+  public String getBoatName() {
+    return name;
+  }
+  
   /******************************************************************
     * Returns a string representation of the boat.
     * 
     * @return  String     representation of the boat object
     *****************************************************************/
   public String toString() {
-    String s = boatType + "'s current status is:\n";
+    String s = name + "'s current status is:\n";
     s += "Starting position: (" + (startX) + ", " + (startY) + ").\n";
     s += "Ending position: (" + (endX) + ", " + (endY) + ").\n";
     s += "Length: " + length + "\tnumHits: " + numHits + "\t\tisSunk: " + isSunk;
