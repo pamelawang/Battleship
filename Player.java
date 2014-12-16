@@ -90,39 +90,26 @@ public class Player {
     int gridEndX = (adjustedStartX > adjustedEndX) ? adjustedStartX : adjustedEndX;
     int gridStartY = (adjustedStartY > adjustedEndY) ? adjustedEndY : adjustedStartY;
     int gridEndY = (adjustedStartY > adjustedEndY) ? adjustedStartY : adjustedEndY;
-    //for (int i = gridStartX) {
-    grid[adjustedStartX][adjustedStartY].setHasBoat(true); 
+    for (int i = gridStartX; i <= gridEndX; i++) {
+      for (int j = gridStartY; j <= gridEndY; j++) {
+        grid[i][j].setHasBoat(true); //setting all of Boat's Cells
+      }
+    }
   }
   
   private boolean doesBoatOverlap(int startIndexX, int startIndexY, int endIndexX, int endIndexY) {
     boolean overlap = false;
     
-    //if boat orientation = vertical (startX == endX)
-    if (startIndexY < endIndexY) { //checks which value is larger in case user inputted boats 'down to up' 
-      for (int y = startIndexY; y <= endIndexY; y++) { //moving down the grid
-        overlap = (grid[startIndexX][y].getHasBoat()) ? true : overlap;
+    int startX = (startIndexX > endIndexX) ? endIndexX : startIndexX;
+    int endX = (startIndexX > endIndexX) ? startIndexX : endIndexX;
+    int startY = (startIndexY > endIndexY) ? endIndexY : startIndexY;
+    int endY = (startIndexY > endIndexY) ? startIndexY : endIndexY;
+    for (int i = startX; i <= endX; i++) {
+      for (int j = startY; j <= endY; j++) {
+        overlap = (grid[i][j].getHasBoat()) ? true : overlap;
         if (overlap) { return overlap; } //returns at first instance of boatOverlapping
       }
-    } else { //startIndexY > adjustedEndY
-      for (int y = endIndexY; y <= startIndexY; y++) { //moving up the grid
-        overlap = (grid[startIndexX][y].getHasBoat()) ? true : overlap;
-        if (overlap) { return overlap; }
-      }
     }
-    
-    //if boat orientation = horizontal (startY == endY)
-    if (startIndexX < endIndexX) {
-      for (int x = startIndexX; x <= endIndexX; x++) { //moving down the grid
-        overlap = (grid[x][startIndexY].getHasBoat()) ? true : overlap;
-        if (overlap) { return overlap; }
-      }
-    } else { //adjustedStartY > adjustedEndY
-      for (int x = endIndexX; x <= startIndexX; x++) { //moving up the grid
-        overlap = (grid[x][startIndexY].getHasBoat()) ? true : overlap;
-        if (overlap) { return overlap; }
-      }
-    }
-    
     return overlap;
   }
   
@@ -429,8 +416,8 @@ public class Player {
     System.out.println("Computer: " + computer.findMyFleet());
     
     System.out.println("\nTesting setting boats");
-    public void placeBoat(int boatIndex, int startX, int startY)
-    novice.placeBoat(0, 0, 0);
+    //public void placeBoat(int boatIndex, int startX, int startY)
+    //FIX novice.placeBoat(0, 0, 0);
     
   }
   
@@ -444,12 +431,14 @@ class InvalidShotException extends Exception {
   public InvalidShotException(String problem) {
     System.out.println(problem);
   }
-  
-  /***********************************************************************
-   * Exception used in gotShot() method for when the Cell currently being
-   * aimed at has already been shot at.
-   ***********************************************************************/
+}
+
+/***********************************************************************
+  * Exception used in gotShot() method for when the Cell currently being
+  * aimed at has already been shot at.
+  ***********************************************************************/
 class BoatOverlapException extends Exception {
   public BoatOverlapException(String problem) {
     System.out.println(problem);
   }
+}

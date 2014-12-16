@@ -174,14 +174,14 @@ public class Game {
       System.out.println("Where do you want to put boat " + (i+1) + "?");
       boatX = scan.nextInt();
       boatY = scan.nextInt();
-      bringIt.getHumanPlayer().placeBoat(i, boatX, boatY);
+      //FIX bringIt.getHumanPlayer().placeBoat(i, boatX, boatY);
     }
     System.out.println("Computer:");
      for (int i = 0; i < bringIt.getCompPlayer().getNumBoats(); i++) {
       System.out.println("Where do you want to put boat " + (i+1) + "?");
       boatX = scan.nextInt();
       boatY = scan.nextInt();
-      bringIt.getCompPlayer().placeBoat(i, boatX, boatY);
+      //FIX bringIt.getCompPlayer().placeBoat(i, boatX, boatY);
     }
     while (bringIt.getGameOver() == NOT_OVER) {
 //      try {

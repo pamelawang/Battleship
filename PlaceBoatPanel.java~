@@ -4,6 +4,8 @@
  * Dec 13th, 2014
  * 
  * Purpose: 
+ * 
+ * @author Meera Hejmadi
  */
 
 
@@ -24,16 +26,16 @@ public class PlaceBoatPanel extends JPanel {
   
   public PlaceBoatPanel(Player human) {
     humanPlayer = human;
-    boatNum = 1;
+    boatNum = 0;
     gridSize = humanPlayer.getGridDimensions();
     banner = new JLabel("Welcome to Battleship!");
-    instructions = new JLabel("Time to place boat " + boatNum);
+    instructions = new JLabel("Time to place boat " + (boatNum+1));
     grid = createGrid(); 
     
     setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
     
-    add(banner);
-    add(instructions);
+    add(banner, JComponent.CENTER_ALIGNMENT);
+    add(instructions, JComponent.CENTER_ALIGNMENT);
     add(grid);
   }
   
@@ -41,9 +43,10 @@ public class PlaceBoatPanel extends JPanel {
     grid = new JPanel(new GridLayout(gridSize, gridSize));
     grid.setBackground(Color.black);
     
-    for (int i = 1; i <= gridSize; i++) {
-      for (int j = 1; j <= gridSize; j++) {
-        GridButton justMade = new GridButton(i, j);
+    for (int i = 0; i < gridSize; i++) {
+      for (int j = 0; j < gridSize; j++) {
+        GridButton justMade = new GridButton((i+1), (j+1));
+        System.out.println("createGrid(): " + (i+1) + ", " + (j+1));
 //        justMade.setBackground(SEA);
         justMade.addActionListener(new GridButtonListener());
         grid.add(justMade);
@@ -57,18 +60,25 @@ public class PlaceBoatPanel extends JPanel {
     private GridButton nextPlace;
     
     public void actionPerformed (ActionEvent e) {
-      if (boatNum <= humanPlayer.getNumBoats()) {
+      if (boatNum < humanPlayer.getNumBoats()) {
         System.out.println("Just hit a button!");
         nextPlace = (GridButton) e.getSource();
         System.out.println("Boat placed: " + boatNum);
         System.out.println("Location: " + nextPlace.getXCoord() + ", " + nextPlace.getYCoord());
-        humanPlayer.placeBoat(boatNum-1, nextPlace.getXCoord(), nextPlace.getYCoord());
+        humanPlayer.placeBoat(boatNum, nextPlace.getXCoord(), nextPlace.getYCoord());
         nextPlace.setBackground(BOAT);
-        System.out.println("Color: " + nextPlace.getBackground());
         System.out.println(humanPlayer.findMyFleet());
+        banner.setText("Boat " + (boatNum+1) + " is at (" + nextPlace.getXCoord() + 
+                       ", " + nextPlace.getYCoord() + ").");
+        boatNum++;
+        if (boatNum < humanPlayer.getNumBoats()) {
+          instructions.setText("Time to place boat " + (boatNum+1));
+        } else { 
+          instructions.setText("All your boats have been placed. Good luck!");
+        }
+        System.out.println("Color: " + nextPlace.getBackground());
       }
-      boatNum++;
-      revalidate();
+
     }
   }
   
