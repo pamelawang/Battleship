@@ -65,7 +65,7 @@ public class PlaceBoatPanel extends JPanel {
         nextPlace = (GridButton) e.getSource();
         System.out.println("Boat placed: " + boatNum);
         System.out.println("Location: " + nextPlace.getXCoord() + ", " + nextPlace.getYCoord());
-        humanPlayer.placeBoat(boatNum, nextPlace.getXCoord(), nextPlace.getYCoord());
+        //FIX humanPlayer.placeBoat(boatNum, nextPlace.getXCoord(), nextPlace.getYCoord());
         nextPlace.setBackground(BOAT);
         System.out.println(humanPlayer.findMyFleet());
         banner.setText("Boat " + (boatNum+1) + " is at (" + nextPlace.getXCoord() + 
