@@ -7,10 +7,7 @@
  * a grid on which to place them.
  * 
  * Notes:
- * 1. Completely changed the "shoot" idea. Explanation below, before 
- * gotShot method.
- * 2. IMPORTANT: Boat's start
- * 3. QUESTION FOR PROFS: ERROR FOR REPEATED GUESS??????
+ * 1. removeBoat() ISN'T WORKING!! The Cells remain "hasBoat == true".
  * 
  * @author Meera Hejmadi
  * @author Pamela Wang
@@ -20,15 +17,14 @@ import java.awt.*;
 import java.util.*;
 
 public class Player { 
-//  private final String username;
   protected Cell[][] grid;
   protected LinkedList<Boat> fleet; //fleet will have a default size in the final version of the game
   private final int NUM_BOATS = 5;
   protected final int GRID_DIMENSIONS = 10; //testing size of the grid
   private final int INVALID_SHOT = -1;
-  private final int MISS = 0;
-  private final int HIT_NOT_SUNK = 1;
-  private final int HIT_AND_SUNK = 2;
+  protected final int MISS = 0;
+  protected final int HIT_NOT_SUNK = 1;
+  protected final int HIT_AND_SUNK = 2;
   //dk if this is a good idea or not, but..
   private LinkedList<Boat> shipsSunk;
   private final int NOT_OVER = -1;

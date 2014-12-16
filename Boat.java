@@ -17,11 +17,11 @@ public class Boat {
   private int endX; 
   private int endY; //end coordinates of boat (should correlate with the length of the boat)
   private int length;
-  private int MAX_LENGTH = 5; //largest ship size
+  private final int MAX_LENGTH = 5; //largest ship size
   private int numHits; //will count how many shots have been taken
   private boolean isSunk;
-  private int GRID_DIMENSIONS = 5; //maximum length of one size of the grid; hard-coded because grid size should be present
-  private int INVALID = -1;
+  private final int GRID_DIMENSIONS = 5; //maximum length of one size of the grid; hard-coded because grid size should be present
+  private final int INVALID = -1;
   
   /******************************************************************
     * Constructor: Creates a Boat object, taking in the name and length of 
