@@ -49,8 +49,10 @@ public class Player {
     
     fleet = new LinkedList<Boat>(); //number of boats in fleet
     for (int i = 0; i < NUM_BOATS; i++) {
-      Boat temp = new Boat("boat-" + Integer.toString(i), BOAT_LENGTHS[i]); //for stage 1: single cell boats
+      String s = "boat-" + Integer.toString(i);
+      Boat temp = new Boat(s, BOAT_LENGTHS[i]); //for stage 1: single cell boats
       fleet.add(temp);
+      System.out.println(fleet.get(i).getBoatName());
     }
     shipsSunk = new LinkedList<Boat>();
   }
@@ -102,7 +104,7 @@ public class Player {
     System.out.println(fleet.get(boatIndex).getBoatName() + "'s coordinates have successfully been set!~*~!~*~!*~!~*~!");
   }
   
-  protected boolean withinGridDimensions(int startX, int startY, int endX, int endY) { //takes in COORDINATES
+  private boolean withinGridDimensions(int startX, int startY, int endX, int endY) { //takes in COORDINATES
     boolean within = true;
     int largerX = largestNum(startX, endX);
     int smallerX = smallestNum(startX, endX);
@@ -116,7 +118,7 @@ public class Player {
     return within;
   }
   
-  protected boolean doCoordsEqualLength(int boatIndex, int startIndexX, int startIndexY, int endIndexX, int endIndexY) {
+  private boolean doCoordsEqualLength(int boatIndex, int startIndexX, int startIndexY, int endIndexX, int endIndexY) {
     boolean equal = true;
     int larger;
     int smaller;
@@ -140,7 +142,7 @@ public class Player {
     return equal;
   }
   
-  protected boolean doesBoatOverlap(int startIndexX, int startIndexY, int endIndexX, int endIndexY) {
+  private boolean doesBoatOverlap(int startIndexX, int startIndexY, int endIndexX, int endIndexY) {
     boolean overlap = false;
     int startX = smallestNum(startIndexX, endIndexX);
     int endX = largestNum(startIndexX, endIndexX);
@@ -156,11 +158,11 @@ public class Player {
     return overlap;
   }
   
-  protected int largestNum (int first, int second) {
+  private int largestNum (int first, int second) {
     return (first > second) ? first : second;
   }
   
-  protected int smallestNum (int first, int second) {
+  private int smallestNum (int first, int second) {
     return (first > second) ? second : first;
   }
   
