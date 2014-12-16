@@ -73,8 +73,20 @@ public class PlaceBoatPanel extends JPanel {
   private class GridButtonListener implements ActionListener {
     
     public void actionPerformed (ActionEvent e) {
-      //if source = undo
-      if (boatNum < humanPlayer.getNumBoats()) {
+      if (e.getSource() == undoButton) {
+        System.out.println("Undo! boatNum = " + boatNum + " startIndex = " + undoStartIndex);
+        if (boatNum > 0 && boatStack.size() >= undoStartIndex) {
+          System.out.println("Undo!");
+          Boat toReset = boatStack.pop();
+          toReset.reset();
+          boatNum--;
+          banner.setText("Welcome to Battleship! Time to place boat " + (boatNum+1));
+          instructions.setText("Choose a starting coordinate for boat " + (boatNum+1));
+          currentBoatInfo.setText("Boat " + (boatNum+1) + " has a length of " + 
+                                  humanPlayer.getBoatAt(boatNum).getLength() + ".");
+          isStartCoord = true;
+        }
+      } else if (boatNum < humanPlayer.getNumBoats()) {
         System.out.println("Just hit a button!");
         if (isStartCoord) {
         currentStart = (GridButton) e.getSource();
@@ -82,15 +94,18 @@ public class PlaceBoatPanel extends JPanel {
                            currentStart.getXCoord() + ", " + currentStart.getYCoord() + ").");
         instructions.setText("Choose an ending coordinate for boat " + (boatNum+1));
         isStartCoord = false;
-        } else {
+        } else { //end coordinate
           currentEnd = (GridButton) e.getSource(); 
           System.out.println("[PlaceBoat] actionPerformed(): end = (" + 
                              currentEnd.getXCoord() + ", " + currentEnd.getYCoord() + ").");
           try {
           humanPlayer.placeBoat(boatNum, currentStart.getXCoord(), currentStart.getYCoord(),
                                 currentEnd.getXCoord(), currentEnd.getYCoord());
+          System.out.println("pushing boat to boatStack");
+          boatStack.push(humanPlayer.getBoatAt(boatNum));
+          undoStartIndex++;            
           isStartCoord = true;
-          boatNum++;
+          boatNum++;          
           if (boatNum < humanPlayer.getNumBoats()) {
              banner.setText("Welcome to Battleship! Time to place boat " + (boatNum+1));
              instructions.setText("Choose a starting coordinate for boat " + (boatNum+1));
@@ -109,21 +124,7 @@ public class PlaceBoatPanel extends JPanel {
             isStartCoord = true;
           }
         }
-          
-          /*
-        //FIX humanPlayer.placeBoat(boatNum, nextPlace.getXCoord(), nextPlace.getYCoord());
-        nextPlace.setBackground(BOAT);
-        System.out.println(humanPlayer.findMyFleet());
-        banner.setText("Boat " + (boatNum+1) + " is at (" + nextPlace.getXCoord() + 
-                       ", " + nextPlace.getYCoord() + ").");
-        boatNum++;
-        if (boatNum < humanPlayer.getNumBoats()) {
-          instructions.setText("Time to place boat " + (boatNum+1));
-        } else { 
-          instructions.setText("All your boats have been placed. Good luck!");
-        }
-        System.out.println("Color: " + nextPlace.getBackground());
-      } */
+     
 
     }
   }
