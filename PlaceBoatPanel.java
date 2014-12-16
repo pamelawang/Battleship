@@ -115,7 +115,7 @@ public class PlaceBoatPanel extends JPanel {
             instructions.setText("");
             currentBoatInfo.setText("");
           }
-          } catch (InvalidPlacementException dumb) {
+          } catch (BoatOverlapException dumb) {
             banner.setText("INVALID! Please place boat " + (boatNum+1) + " again.");
             instructions.setText("Choose a starting coordinate for boat " + (boatNum+1));
             currentBoatInfo.setText("Boat " + (boatNum+1) + " has a length of " + 

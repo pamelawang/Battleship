@@ -12,7 +12,7 @@ import javafoundations.exceptions.*;
 
 public class LinkedBinaryTree<T> implements BinaryTree<T>
 {
-  protected BTNode<T> root;
+  protected LinkedBinaryTree<T> root;
   
   //-----------------------------------------------------------------
   //  Creates an empty binary tree.
@@ -27,7 +27,7 @@ public class LinkedBinaryTree<T> implements BinaryTree<T>
   //-----------------------------------------------------------------
   public LinkedBinaryTree (T element)
   {
-    root = new BTNode<T>(element);
+    root = new LinkedBinaryTree<T>(element);
   }
   
   //-----------------------------------------------------------------
@@ -36,7 +36,7 @@ public class LinkedBinaryTree<T> implements BinaryTree<T>
   public LinkedBinaryTree (T element, LinkedBinaryTree<T> left,
                            LinkedBinaryTree<T> right)
   {
-    root = new BTNode<T>(element);
+    root = new LinkedBinaryTree<T>(element);
     root.setLeft(left.root);
     root.setRight(right.root);
   }
@@ -51,6 +51,17 @@ public class LinkedBinaryTree<T> implements BinaryTree<T>
                                             + "failed. The tree is empty.");
     
     return root.getElement();
+  }
+  
+   public void setLeft(LinkedBinaryTree<T> bt)
+  {
+     
+    if (root == null)
+      throw new ElementNotFoundException("setLeft() failed. LBT is empty");
+
+       root.setLeft(bt.root); 
+
+  
   }
   
   //-----------------------------------------------------------------
@@ -68,12 +79,26 @@ public class LinkedBinaryTree<T> implements BinaryTree<T>
   }
   
   //-----------------------------------------------------------------
+  //  Returns the right subtree of the root of this tree.
+  //-----------------------------------------------------------------
+  public LinkedBinaryTree<T> getRight() {
+    if (root == null)
+      throw new EmptyCollectionException ("Get right operation "
+                                            + "failed. The tree is empty.");
+    
+    LinkedBinaryTree<T> result = new LinkedBinaryTree<T>();
+    result.root = root.getRight();
+    
+    return result;
+  }
+  
+  //-----------------------------------------------------------------
   //  Returns the element in this binary tree that matches the
   //  specified target. Throws a ElementNotFoundException if the
   //  target is not found.
   //-----------------------------------------------------------------
   public T find (T target) {
-    BTNode<T> node = null;
+    LinkedBinaryTree<T> node = null;
     
     if (root != null)
       node = root.find(target);
@@ -104,9 +129,36 @@ public class LinkedBinaryTree<T> implements BinaryTree<T>
   public Iterator<T> inorder() {
     ArrayIterator<T> iter = new ArrayIterator<T>();
     
-    //cannot call methods on null
     if (root != null)
       root.inorder (iter);
+    
+    return iter;
+  }
+  
+  //-----------------------------------------------------------------
+  //  Populates and returns an iterator containing the elements in
+  //  this binary tree using an preorder traversal.
+  //-----------------------------------------------------------------
+  public Iterator<T> preorder() {
+    ArrayIterator<T> iter = new ArrayIterator<T>();
+    
+    if (root != null)
+      root.preorder (iter);
+    
+    return iter;
+  }
+  
+  
+  
+  //-----------------------------------------------------------------
+  //  Populates and returns an iterator containing the elements in
+  //  this binary tree using an postorder traversal.
+  //-----------------------------------------------------------------
+  public Iterator<T> postorder() {
+    ArrayIterator<T> iter = new ArrayIterator<T>();
+    
+    if (root != null)
+      root.postorder (iter);
     
     return iter;
   }
@@ -116,13 +168,13 @@ public class LinkedBinaryTree<T> implements BinaryTree<T>
   //  this binary tree using a levelorder traversal.
   //-----------------------------------------------------------------
   public Iterator<T> levelorder() {
-    LinkedQueue<BTNode<T>> queue = new LinkedQueue<BTNode<T>>();
+    LinkedQueue<LinkedBinaryTree<T>> queue = new LinkedQueue<LinkedBinaryTree<T>>();
     ArrayIterator<T> iter = new ArrayIterator<T>();
     
     if (root != null) {
       queue.enqueue(root);
       while (!queue.isEmpty()) {
-        BTNode<T> current = queue.dequeue();
+        LinkedBinaryTree<T> current = queue.dequeue();
         
         iter.add (current.getElement());
         
@@ -139,7 +191,7 @@ public class LinkedBinaryTree<T> implements BinaryTree<T>
   //  Satisfies the Iterable interface using an inorder traversal.
   //-----------------------------------------------------------------
   public Iterator<T> iterator() {
-    return inorder();
+    return levelorder();
   }
   
   //-----------------------------------------------------------------
@@ -149,48 +201,79 @@ public class LinkedBinaryTree<T> implements BinaryTree<T>
   public String toString() {
     String s = "";
     
+    if (root != null ){  
+      Iterator i = iterator(); // can also call this.levelorder() or root.preorder(); or root.postorder();
+      while (i.hasNext())
+        s += i.next();
+    }
+    
     return s;
-  }
-
-  public LinkedBinaryTree<T> getRight() {
-    return this.getRight();
   }
   
   public boolean contains (T target) {
-    if (root == null) {
-      throw new EmptyCollectionException("contains(): failed.");
-    } else {
+    
+    if (root == null) 
+      throw new EmptyCollectionException("contains() failed, tree is empty"); 
+    
     return (root.find(target) != null);
-    }
   }
   
   public boolean isEmpty() {
-    return false;
+    
+    return (root == null);
+    
   }
   
-  public Iterator<T> preorder() {
-    //Iterator<T> temp = (new Iterator<T>());
-    return null;
-  }
-  
-  public Iterator<T> postorder() {
-    //Iterator<T> temp = new Iterator<T>();
-    return null;
-  }
   
   public int height() {
-    if (root != null) 
-      return root.height(); // root is a BTNode
-    else
-      throw new EmptyCollectionException("height(): failed");
+    
+    if (root == null) 
+      throw new EmptyCollectionException("height() failed, tree is empty"); 
+    
+    return root.height() ; 
   }
   
   public void spin() {
-    if (root==null) 
-      throw new EmptyCollectionException("spin(): failed");
-    else
-      root.spin();
-
+    
+    if (root == null) 
+      throw new EmptyCollectionException("spin() failed, tree is empty"); 
+    
+    root.spin();
+    
+  }
+  
+  public static void main(String[] args){
+    //LinkedBinaryTree<String> t1 = new  LinkedBinaryTree<String>("does it meow?", new  LinkedBinaryTree<String>("dog"), new  LinkedBinaryTree<String>("cat")); 
+    LinkedBinaryTree<String> big = new LinkedBinaryTree<String>("is it big?");
+    LinkedBinaryTree<String> meow = new  LinkedBinaryTree<String>("does it meow?");
+    LinkedBinaryTree<String> cage = new  LinkedBinaryTree<String>("does it live in a cage?");
+    LinkedBinaryTree<String> chirp = new  LinkedBinaryTree<String>("does it chirp?");
+    LinkedBinaryTree<String> dog = new  LinkedBinaryTree<String>("dog");
+    LinkedBinaryTree<String> cat = new  LinkedBinaryTree<String>("cat");
+    LinkedBinaryTree<String> hamster = new  LinkedBinaryTree<String>("hamster");
+    LinkedBinaryTree<String> bird = new  LinkedBinaryTree<String>("bird");
+    LinkedBinaryTree<String> grass = new  LinkedBinaryTree<String>("does it eat grass");
+    LinkedBinaryTree<String> neck = new  LinkedBinaryTree<String>("does it have a long neck"); 
+    LinkedBinaryTree<String> bear = new  LinkedBinaryTree<String>("bear");
+    LinkedBinaryTree<String> giraffe = new LinkedBinaryTree<String>("giraffe");
+    LinkedBinaryTree<String> moo = new  LinkedBinaryTree<String>("does it moo?");
+    LinkedBinaryTree<String> horse = new LinkedBinaryTree<String>("horse");
+    LinkedBinaryTree<String> cow = new  LinkedBinaryTree<String>("cow"); 
+    big.setLeft(cage);
+    big.setRight(grass);
+    cage.setLeft(meow);
+    cage.setRight(chirp);
+    meow.setLeft(dog);
+    meow.setRight(cat);
+    chirp.setLeft(hamster);
+    chirp.setRight(bird);
+    neck.setLeft(bear);
+    neck.setRight(giraffe);
+    grass.setLeft(neck);
+    grass.setRight(moo);
+    moo.setLeft(horse);
+    moo.setRight(cow);
+    
   }
 }
 

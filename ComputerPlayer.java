@@ -16,17 +16,18 @@
 public class ComputerPlayer extends Player {
   
   //instance variables:
-//  private BinaryTree
+//  private BinaryTree<Integer> decision;
+  private GridButton nextShot;
   private int aimAtX;
   private int aimAtY;
   private final int INVALID = -1;
   private Cell[][] shotSoFarGrid;
-  private int VERTICAL = 0;
-  private int HORIZONTAL = 1;
-  private int UP = 2;
-  private int DOWN = 3;
-  private int LEFT = 4;
-  private int RIGHT = 5;
+  private final int VERTICAL = 0;
+  private final int HORIZONTAL = 1;
+  private final int UP = 2;
+  private final int DOWN = 3;
+  private final int LEFT = 4;
+  private final int RIGHT = 5;
   private int boatOrientation;
   
   public ComputerPlayer() {
@@ -39,22 +40,26 @@ public class ComputerPlayer extends Player {
         shotSoFarGrid[i][j] = new Cell();
       }
     }
+//    decision = createDecisionTree();
   }
+  
+//  public <Integer> createDecisionTree() {
+    
   
   private void pickAPoint() { //randomiser
     do {
       int randomX = (int) (Math.random()*10);
-      aimAtX = withinGridDimensions(randomX);
+      aimAtX = makeValidCoord(randomX);
       int randomY = (int) (Math.random()*10);
-      aimAtY = withinGridDimensions(randomY);
+      aimAtY = makeValidCoord(randomY);
       System.out.println("pickAPoint() used x = " + aimAtX + " and y = " + aimAtY);
     } while (previouslyShotAt(aimAtX, aimAtY));
   }
   
-  private int withinGridDimensions (int coordinate) { //not the same as Player's withinGridDimensions
+  private int makeValidCoord (int coordinate) { //checks if coordinate is within grid dimensions
     int valid = (coordinate >= 1) ? coordinate : 1;
     valid = (valid <= GRID_DIMENSIONS) ? valid : GRID_DIMENSIONS;
-    System.out.println("withinGridDimensions: coordinate = " + coordinate + " and valid = " + valid);
+    System.out.println("makeValidCoord: coordinate = " + coordinate + " and valid = " + valid);
     return valid;
   }
   
@@ -62,17 +67,53 @@ public class ComputerPlayer extends Player {
     return shotSoFarGrid[xCoord-1][yCoord-1].getShotAt();
   }
   
-  public boolean shoot(Player other) throws InvalidShotException { //Computer shooting at user
-    boolean indicator = false; //miss
-    pickAPoint();    
-    int hitOrMiss = other.gotShot(aimAtX, aimAtY);
-    shotSoFarGrid[aimAtX-1][aimAtY-1].setShotAt(true);
-    System.out.println("Computer shooting");
-    indicator = (hitOrMiss < 1) ? false : true; //if hitOrMiss is 0 than the opponent missed; 1 means hit and 2 means sunk
-    System.out.println("INDICATOR IS: " + indicator);
-    return indicator;
+  //*****************EDITS FROM HERE
+  private Coordinate getNextShot(Coordinate lastShot, int direction) { //only called when a boat has been hit
+    int x, y;
+    switch (direction) {
+      case 2: //UP == 2 (not using constant variable UP because of DrJava); x-coordinate is the same
+        x = lastShot.getX();
+        y = (lastShot.getY() - 1 < GRID_DIMENSIONS) ? INVALID : lastShot.getY() - 1;
+        break;
+        
+      case 3: //DOWN == 3
+        x = lastShot.getX();
+        y = (lastShot.getY() + 1 > GRID_DIMENSIONS) ? INVALID : lastShot.getY() + 1;
+        break;
+        
+      case 4: //LEFT == 4, y-coordinate is the same
+        x = (lastShot.getX() - 1 < GRID_DIMENSIONS) ? INVALID : lastShot.getX() - 1;
+        y = lastShot.getY();
+        break;
+        
+      case 5: //RIGHT == 5
+        x = (lastShot.getX() + 1 > GRID_DIMENSIONS) ? INVALID : lastShot.getX() + 1;
+        y = lastShot.getY();
+        break;
+        
+      default:
+        x = y = INVALID;
+    }
+    return new Coordinate(x, y);
   }
   
+  //takeAShot - determiens whether to take a random shot or not
+  
+  //change to private???
+  public int shoot (Player p, int x, int y) throws InvalidShotException {
+    int hitOrMiss = p.gotShot(x, y); //uses MISS (0), HIT_NOT_SUNK (1) and HIT_AND_SUNK (2)
+    shotSoFarGrid[x-1][y-1].setShotAt(true);
+    System.out.println("Computer shooting");
+    return hitOrMiss;
+  }
+  
+  public int shoot(Player p) throws InvalidShotException {
+    pickAPoint();    
+    int hitOrMiss = shoot(p, aimAtX, aimAtY); //aimAtX and aimAtY is set in pickAPoint()
+    return hitOrMiss;
+  }
+  
+    //**************** EDITS END HERE
   public void placeBoats() { // != placeBoat() from Player
     for (int i = 0; i < getNumBoats(); i++) {
       System.out.println("/////////////////////////placeBoats() round " + (i+1) + " //////////////////////////////////");
@@ -102,12 +143,12 @@ public class ComputerPlayer extends Player {
   
   //helpers for PlaceBoats
   private void setCoords(Boat b, int direction) {
-//    System.out.println("************setCoords() with " + b.getBoatName() + " and direction " + direction + " *************");
+    System.out.println("************setCoords() with " + b.boatType + " and direction " + direction + " *************");
 //      System.out.println("setCoords(): X");
     //using Boat's instance variables as 'local' variables through its getters/setters
-    b.setStartX(withinGridDimensions((int)(Math.random()*10)));
+    b.setStartX(makeValidCoord((int)(Math.random()*10)));
 //      System.out.println("setCoords(): Y");
-    b.setStartY(withinGridDimensions((int)(Math.random()*10)));
+    b.setStartY(makeValidCoord((int)(Math.random()*10)));
     int startX = b.getStartX();
     int startY = b.getStartY();
     
@@ -118,41 +159,6 @@ public class ComputerPlayer extends Player {
     } else { //no boat
       setEndCoords(b, direction);
     }
-    
-    /*OLD CODE BELOW
-     if (foundEndCoords == false) {
-     switch (direction) {
-     case 2: //UP, vertical orientation (startX == endX)
-     //Java or DrJava doesn't allow for the use of constants in switch statements, so we're hard coding here
-     b.setEndX(b.getStartX()); //same x-coordinate
-     b.setEndY(setEndCoords(b, direction, 1)); //here with Meera
-     foundEndCoords = true;
-     break;
-     
-     case 3: //DOWN, vertical orientation
-     b.setEndX(b.getStartX());
-     b.setEndY(setEndCoords(b, direction, 1));
-     foundEndCoords = true;
-     break;
-     
-     case 4: //LEFT, horizontal (startY == endY)
-     b.setEndY(b.getEndY()); //same y-coordinate
-     b.setEndX(setEndCoords(b, direction, 1));
-     foundEndCoords = true;
-     break;
-     
-     case 5: //RIGHT, horizontal
-     b.setEndY(b.getEndY());
-     b.setEndX(setEndCoords(b, direction, 1));
-     foundEndCoords = true;
-     break;
-     
-     default:
-     break;
-     }
-     } else { //foundEndCoords == true
-     return;
-     }*/
   }
   
   
@@ -226,48 +232,13 @@ public class ComputerPlayer extends Player {
     if (!foundEndCoords) {
       setCoords(ship, direction); //finding new starting coordinates
     }
-    
-    /*OLD CODE
-     int coordinate = -1;
-     if (tries > 4) { //tried all directions
-     setCoords(ship, direction); //start anew and find new starting coordinates
-     } else if (tries > 2) { //tried both directions; tries is 
-     if (boatOrientation == VERTICAL) {
-     boatOrientation = HORIZONTAL;
-     setEndCoords(ship, getLeftOrRight(), tries);
-     } else { //boatOrientation == HORIZONTAL
-     boatOrientation = VERTICAL;
-     setEndCoords(ship, getUpOrDown(), tries);
-     }
-     }
-     
-     //
-     if (boatOrientation == VERTICAL) { //coordinate = endIndexY
-     if (direction == UP) {
-     coordinate = ship.getStartY() - (ship.getLength()-1);
-     coordinate = (coordinate < 1) ? setEndCoords(ship, DOWN, tries++) : coordinate;
-     } else if (direction == DOWN) {
-     coordinate = ship.getStartY() + (ship.getLength()-1);
-     coordinate = (coordinate > GRID_DIMENSIONS) ? setEndCoords(ship, UP, tries++) : coordinate;
-     }
-     } else { //boatOrientation == HORIZONTAL; coordinate = endIndexX
-     if (direction == LEFT) {
-     coordinate = ship.getStartX() - (ship.getLength()-1);
-     coordinate = (coordinate < 1) ? setEndCoords(ship, RIGHT, tries++) : coordinate;
-     } else { //direction == RIGHT
-     coordinate = ship.getStartX() + (ship.getLength()-1);
-     coordinate = (coordinate > GRID_DIMENSIONS) ? setEndCoords(ship, LEFT, tries++) : coordinate;
-     }
-     }
-     
-     return coordinate;*/
   }
   
   private boolean isCoordValid (int coord) {
     return (coord > 0  && coord <= GRID_DIMENSIONS);
   }
   
-  private boolean doesBoatOverlap(Boat blackPearl, int direction) { //not the same as Player's doesBoatOverlap
+  private boolean doesBoatOverlap(Boat blackPearl, int direction) { //overrides Player's doesBoatOverlap
     boolean overlap = false;
     if (direction == UP || direction == DOWN) {
       for (int j = blackPearl.getStartY(); j <= blackPearl.getEndY(); j++) {

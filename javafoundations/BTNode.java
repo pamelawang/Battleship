@@ -6,6 +6,7 @@
 //*******************************************************************
 
 package javafoundations;
+import java.util.*;
 
 public class BTNode<T>
 {
@@ -125,63 +126,70 @@ public class BTNode<T>
   //  The following methods are left as programming projects.
   //-----------------------------------------------------------------
   public void preorder (ArrayIterator<T> iter) {
+    
     iter.add (element);
     
     if (left != null)
-      left.inorder (iter);
+      left.preorder (iter);
+    
     
     if (right != null)
-      right.inorder (iter);
+      right.preorder (iter);
     
   }
   
   public void postorder (ArrayIterator<T> iter) {
     
     if (left != null)
-      left.inorder (iter);
+      left.postorder (iter);
+    
     
     if (right != null)
-      right.inorder (iter);
+      right.postorder (iter);
     
-     iter.add (element);
+    iter.add (element);
+    
     
   }
   
   
   public int height() {
+    
     int h1 = 0;
     int h2 = 0;
-    if (left==null & right==null) {
+    
+    // base case
+    if (left == null && right == null)
       return 0;
-    }
-    if (right!= null) {
-      h2 = right.height();
-    }
-    if (left != null){
-      h1 = left.height();
-    }
-    return Math.max(h1,h2);
+    
+    if (left != null)
+      h1 = left.height(); // call left recursively
+    
+    if (right != null)
+      h2 = right.height(); 
+    
+    return (1 + Math.max(h1,h2)); // add one for the zero case
+      
   }
   
   public void spin(){
-
-    BTNode temp; //declare variable
-    temp = left; // initialize
+   
+    BTNode temp = left;
     left = right;
     right = temp;
-    if (left != null) {
+    
+    if (left != null) 
       left.spin();
-    }
-    if (right != null) {
+    
+    if (right != null) 
       right.spin();
-    }
     
   }
   
   public static void main(String[] args) {
     BTNode<String> one = new BTNode<String>("one");
     BTNode<String> two = new BTNode<String>("two");
-   
+    
     BTNode<String> three = new BTNode<String>("three");
     BTNode<String> four = new BTNode<String>("four");
     
@@ -194,14 +202,13 @@ public class BTNode<T>
     
     one.setLeft(two);
     one.setRight(three);
-   // (one.getRight()).setLeft(four);
+    // (one.getRight()).setLeft(four);
     
     one.inorder(it);
     while (it.hasNext()) {
       System.out.println(it.next());
-    
-    
+      
+      
+    }
   }
-  }
-  
 }
