@@ -11,7 +11,11 @@
 
 public class Boat {
   
+<<<<<<< HEAD
+  public String boatType;
+=======
   private String name;
+>>>>>>> master
   private int startX;
   private int startY; //start coordinates of boat
   private int endX; 

@@ -1,0 +1,20 @@
+/* NAME: Coordinate.java
+ * Created by: Meera Hejmadi and Pamela Wang
+ * Date created: 16 Dec 2014
+ * CS 230 Project: Battleship
+ * 
+ * Purpose:
+ * 
+ * @author Meera Hejmadi
+ * @author Pamela Wang
+ */
+
+public class Coordinate {
+  private int x;
+  private int y;
+  
+  public Coordinate (int x, int y) {
+    this.x = x;
+    this.y = y;
+  }
+}

@@ -1,50 +1,56 @@
 //*******************************************************************
-//  BTNode.java       Java Foundations
+//  BTShootNode.java       Java Foundations
 //
 //  Represents a node in a binary tree with a left and right child.
 //  Therefore this class also represents the root of a subtree.
 //*******************************************************************
 
-package javafoundations;
-<<<<<<< HEAD
-=======
+import javafoundations.*;
 import java.util.*;
->>>>>>> master
+import java.lang.Integer;
 
-public class BTNode<T>
-{
-  protected T element;
-  protected BTNode<T> left, right;
+public class BTShootNode<Integer> {
+  
+  protected Integer direction;
+  protected BTShootNode<Integer> left, right;
+  private Integer RANDOM;
+  private int NORTH = 1;
+  private int SOUTH = 2;
+  private int EAST = 3;
+  private int WEST = 4;
+
   
   //-----------------------------------------------------------------
   //  Creates a new tree node with the specified data.
   //-----------------------------------------------------------------
-  public BTNode (T element)
+  public BTShootNode (Integer dir)
   {
-    this.element = element;
-    left = right = null;
+    RANDOM = new Interger
+    this.direction = dir;
+    left = new BTShootNode(RANDOM);
+    
   }
   
   //-----------------------------------------------------------------
-  //  Returns the element stored in this node.
+  //  Returns the direction stored in this node.
   //-----------------------------------------------------------------
-  public T getElement()
+  public Integer getDirection()
   {
-    return element;
+    return direction;
   }
   
   //-----------------------------------------------------------------
-  //  Sets the element stored in this node.
+  //  Sets the direction stored in this node.
   //-----------------------------------------------------------------
-  public void setElement (T element)
+  public void setDirection (Integer direction)
   {
-    this.element = element;
+    this.direction = direction;
   }
   
   //-----------------------------------------------------------------
   //  Returns the left subtree of this node.
   //-----------------------------------------------------------------
-  public BTNode<T> getLeft()
+  public BTShootNode<Integer> getLeft()
   {
     return left;
   }
@@ -52,7 +58,7 @@ public class BTNode<T>
   //-----------------------------------------------------------------
   //  Sets the left child of this node.
   //-----------------------------------------------------------------
-  public void setLeft (BTNode<T> left)
+  public void setLeft (BTShootNode<Integer> left)
   {
     this.left = left;
   }
@@ -60,7 +66,7 @@ public class BTNode<T>
   //-----------------------------------------------------------------
   //  Returns the right subtree of this node.
   //-----------------------------------------------------------------
-  public BTNode<T> getRight()
+  public BTShootNode<Integer> getRight()
   {
     return right;
   }
@@ -68,20 +74,20 @@ public class BTNode<T>
   //-----------------------------------------------------------------
   //  Sets the right child of this node.
   //-----------------------------------------------------------------
-  public void setRight (BTNode<T> right)
+  public void setRight (BTShootNode<Integer> right)
   {
     this.right = right;
   }
   
   //-----------------------------------------------------------------
-  //  Returns the element in this subtree that matches the
+  //  Returns the direction in this subtree that matches the
   //  specified target. Returns null if the target is not found.
   //-----------------------------------------------------------------
-  public BTNode<T> find (T target)
+  public BTShootNode<Integer> find (Integer target)
   {
-    BTNode<T> result = null;
+    BTShootNode<Integer> result = null;
     
-    if (element.equals(target))
+    if (direction.equals(target))
       result = this;
     else
     {
@@ -114,12 +120,12 @@ public class BTNode<T>
   //  Performs an inorder traversal on this subtree, updating the
   //  specified iterator.
   //-----------------------------------------------------------------
-  public void inorder (ArrayIterator<T> iter)
+  public void inorder (ArrayIterator<Integer> iter)
   {
     if (left != null)
       left.inorder (iter);
     
-    iter.add (element);
+    iter.add (direction);
     
     if (right != null)
       right.inorder (iter);
@@ -128,55 +134,31 @@ public class BTNode<T>
   //-----------------------------------------------------------------
   //  The following methods are left as programming projects.
   //-----------------------------------------------------------------
-  public void preorder (ArrayIterator<T> iter) {
-<<<<<<< HEAD
-    iter.add (element);
+  public void preorder (ArrayIterator<Integer> iter) {
+    iter.add (direction);
     
     if (left != null)
       left.inorder (iter);
     
     if (right != null)
       right.inorder (iter);
-=======
-    
-    iter.add (element);
-    
-    if (left != null)
-      left.preorder (iter);
-    
-    
-    if (right != null)
-      right.preorder (iter);
->>>>>>> master
     
   }
   
-  public void postorder (ArrayIterator<T> iter) {
+  public void postorder (ArrayIterator<Integer> iter) {
     
     if (left != null)
-<<<<<<< HEAD
       left.inorder (iter);
     
     if (right != null)
       right.inorder (iter);
     
-     iter.add (element);
-=======
-      left.postorder (iter);
-    
-    
-    if (right != null)
-      right.postorder (iter);
-    
-    iter.add (element);
-    
->>>>>>> master
+     iter.add (direction);
     
   }
   
   
   public int height() {
-<<<<<<< HEAD
     int h1 = 0;
     int h2 = 0;
     if (left==null & right==null) {
@@ -193,7 +175,7 @@ public class BTNode<T>
   
   public void spin(){
 
-    BTNode temp; //declare variable
+    BTShootNode temp; //declare variable
     temp = left; // initialize
     left = right;
     right = temp;
@@ -203,50 +185,15 @@ public class BTNode<T>
     if (right != null) {
       right.spin();
     }
-=======
-    
-    int h1 = 0;
-    int h2 = 0;
-    
-    // base case
-    if (left == null && right == null)
-      return 0;
-    
-    if (left != null)
-      h1 = left.height(); // call left recursively
-    
-    if (right != null)
-      h2 = right.height(); 
-    
-    return (1 + Math.max(h1,h2)); // add one for the zero case
-      
-  }
-  
-  public void spin(){
-   
-    BTNode temp = left;
-    left = right;
-    right = temp;
-    
-    if (left != null) 
-      left.spin();
-    
-    if (right != null) 
-      right.spin();
->>>>>>> master
     
   }
   
   public static void main(String[] args) {
-    BTNode<String> one = new BTNode<String>("one");
-    BTNode<String> two = new BTNode<String>("two");
-<<<<<<< HEAD
+    BTShootNode<String> one = new BTShootNode<String>("one");
+    BTShootNode<String> two = new BTShootNode<String>("two");
    
-=======
-    
->>>>>>> master
-    BTNode<String> three = new BTNode<String>("three");
-    BTNode<String> four = new BTNode<String>("four");
+    BTShootNode<String> three = new BTShootNode<String>("three");
+    BTShootNode<String> four = new BTShootNode<String>("four");
     
     ArrayIterator<String> it = new ArrayIterator<String>();
     
@@ -257,25 +204,14 @@ public class BTNode<T>
     
     one.setLeft(two);
     one.setRight(three);
-<<<<<<< HEAD
    // (one.getRight()).setLeft(four);
-=======
-    // (one.getRight()).setLeft(four);
->>>>>>> master
     
     one.inorder(it);
     while (it.hasNext()) {
       System.out.println(it.next());
-<<<<<<< HEAD
     
     
   }
   }
   
-=======
-      
-      
-    }
-  }
->>>>>>> master
 }

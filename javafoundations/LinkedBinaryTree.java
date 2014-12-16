@@ -12,7 +12,11 @@ import javafoundations.exceptions.*;
 
 public class LinkedBinaryTree<T> implements BinaryTree<T>
 {
+<<<<<<< HEAD
+  protected BTNode<T> root;
+=======
   protected LinkedBinaryTree<T> root;
+>>>>>>> master
   
   //-----------------------------------------------------------------
   //  Creates an empty binary tree.
@@ -27,7 +31,11 @@ public class LinkedBinaryTree<T> implements BinaryTree<T>
   //-----------------------------------------------------------------
   public LinkedBinaryTree (T element)
   {
+<<<<<<< HEAD
+    root = new BTNode<T>(element);
+=======
     root = new LinkedBinaryTree<T>(element);
+>>>>>>> master
   }
   
   //-----------------------------------------------------------------
@@ -36,7 +44,11 @@ public class LinkedBinaryTree<T> implements BinaryTree<T>
   public LinkedBinaryTree (T element, LinkedBinaryTree<T> left,
                            LinkedBinaryTree<T> right)
   {
+<<<<<<< HEAD
+    root = new BTNode<T>(element);
+=======
     root = new LinkedBinaryTree<T>(element);
+>>>>>>> master
     root.setLeft(left.root);
     root.setRight(right.root);
   }
@@ -53,6 +65,8 @@ public class LinkedBinaryTree<T> implements BinaryTree<T>
     return root.getElement();
   }
   
+<<<<<<< HEAD
+=======
    public void setLeft(LinkedBinaryTree<T> bt)
   {
      
@@ -64,6 +78,7 @@ public class LinkedBinaryTree<T> implements BinaryTree<T>
   
   }
   
+>>>>>>> master
   //-----------------------------------------------------------------
   //  Returns the left subtree of the root of this tree.
   //-----------------------------------------------------------------
@@ -79,6 +94,8 @@ public class LinkedBinaryTree<T> implements BinaryTree<T>
   }
   
   //-----------------------------------------------------------------
+<<<<<<< HEAD
+=======
   //  Returns the right subtree of the root of this tree.
   //-----------------------------------------------------------------
   public LinkedBinaryTree<T> getRight() {
@@ -93,12 +110,17 @@ public class LinkedBinaryTree<T> implements BinaryTree<T>
   }
   
   //-----------------------------------------------------------------
+>>>>>>> master
   //  Returns the element in this binary tree that matches the
   //  specified target. Throws a ElementNotFoundException if the
   //  target is not found.
   //-----------------------------------------------------------------
   public T find (T target) {
+<<<<<<< HEAD
+    BTNode<T> node = null;
+=======
     LinkedBinaryTree<T> node = null;
+>>>>>>> master
     
     if (root != null)
       node = root.find(target);
@@ -129,6 +151,10 @@ public class LinkedBinaryTree<T> implements BinaryTree<T>
   public Iterator<T> inorder() {
     ArrayIterator<T> iter = new ArrayIterator<T>();
     
+<<<<<<< HEAD
+    //cannot call methods on null
+=======
+>>>>>>> master
     if (root != null)
       root.inorder (iter);
     
@@ -137,6 +163,12 @@ public class LinkedBinaryTree<T> implements BinaryTree<T>
   
   //-----------------------------------------------------------------
   //  Populates and returns an iterator containing the elements in
+<<<<<<< HEAD
+  //  this binary tree using a levelorder traversal.
+  //-----------------------------------------------------------------
+  public Iterator<T> levelorder() {
+    LinkedQueue<BTNode<T>> queue = new LinkedQueue<BTNode<T>>();
+=======
   //  this binary tree using an preorder traversal.
   //-----------------------------------------------------------------
   public Iterator<T> preorder() {
@@ -169,12 +201,17 @@ public class LinkedBinaryTree<T> implements BinaryTree<T>
   //-----------------------------------------------------------------
   public Iterator<T> levelorder() {
     LinkedQueue<LinkedBinaryTree<T>> queue = new LinkedQueue<LinkedBinaryTree<T>>();
+>>>>>>> master
     ArrayIterator<T> iter = new ArrayIterator<T>();
     
     if (root != null) {
       queue.enqueue(root);
       while (!queue.isEmpty()) {
+<<<<<<< HEAD
+        BTNode<T> current = queue.dequeue();
+=======
         LinkedBinaryTree<T> current = queue.dequeue();
+>>>>>>> master
         
         iter.add (current.getElement());
         
@@ -191,7 +228,11 @@ public class LinkedBinaryTree<T> implements BinaryTree<T>
   //  Satisfies the Iterable interface using an inorder traversal.
   //-----------------------------------------------------------------
   public Iterator<T> iterator() {
+<<<<<<< HEAD
+    return inorder();
+=======
     return levelorder();
+>>>>>>> master
   }
   
   //-----------------------------------------------------------------
@@ -201,6 +242,50 @@ public class LinkedBinaryTree<T> implements BinaryTree<T>
   public String toString() {
     String s = "";
     
+<<<<<<< HEAD
+    return s;
+  }
+
+  public LinkedBinaryTree<T> getRight() {
+    return this.getRight();
+  }
+  
+  public boolean contains (T target) {
+    if (root == null) {
+      throw new EmptyCollectionException("contains(): failed.");
+    } else {
+    return (root.find(target) != null);
+    }
+  }
+  
+  public boolean isEmpty() {
+    return false;
+  }
+  
+  public Iterator<T> preorder() {
+    //Iterator<T> temp = (new Iterator<T>());
+    return null;
+  }
+  
+  public Iterator<T> postorder() {
+    //Iterator<T> temp = new Iterator<T>();
+    return null;
+  }
+  
+  public int height() {
+    if (root != null) 
+      return root.height(); // root is a BTNode
+    else
+      throw new EmptyCollectionException("height(): failed");
+  }
+  
+  public void spin() {
+    if (root==null) 
+      throw new EmptyCollectionException("spin(): failed");
+    else
+      root.spin();
+
+=======
     if (root != null ){  
       Iterator i = iterator(); // can also call this.levelorder() or root.preorder(); or root.postorder();
       while (i.hasNext())
@@ -274,6 +359,7 @@ public class LinkedBinaryTree<T> implements BinaryTree<T>
     moo.setLeft(horse);
     moo.setRight(cow);
     
+>>>>>>> master
   }
 }
 
