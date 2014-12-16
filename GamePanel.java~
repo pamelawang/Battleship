@@ -5,6 +5,9 @@
  * 
  * Purpose: 
  * 
+ * NOTES: 
+ * Have to make the buttons react after being pressed (change color)
+ * 
  * @author Meera Hejmadi
  */
 
@@ -49,6 +52,7 @@ public class GamePanel extends JPanel {
     numBombsLeftHuman = 0;
     currentGame = battleship;
     humanRefGrid = currentGame.getHumanPlayer().getGrid();
+    letsPlay = new JButton();
 
     
     boatsLeft = createBoatsLeft();
@@ -73,8 +77,9 @@ public class GamePanel extends JPanel {
     JPanel moreEmpty = new JPanel();
     moreEmpty.setBackground(Color.black);
     JPanel playButton = new JPanel();
-    playButton.add(letsPlay);
     letsPlay.setText("Play game!");
+    letsPlay.addActionListener(new GridButtonListener());
+    playButton.add(letsPlay);
     
     emptySpace.add(letsPlay);
     
@@ -136,6 +141,7 @@ public class GamePanel extends JPanel {
       for (int j = 1; j <= gridSize; j++) {
         GridButton temp = new GridButton(i, j);
         temp.addActionListener(new GridButtonListener());
+        temp.setBackground(SEA);
         grid.add(temp);
       }      
     }
@@ -153,25 +159,37 @@ public class GamePanel extends JPanel {
     for (int i = 0; i < gridSize; i++) {
       for (int j = 0; j < gridSize; j++) {
         GridButton temp = new GridButton(i, j);
-        switch (humanRefGrid[i][j].getAllInfo()) {
-          case (1):
-            temp.setBackground(Color.black);
-            break;
-          case (2):
-            temp.setBackground(Color.white);
-            break;
-          case (3):
-            temp.setBackground(Color.red);
-            break;
-          default:
-            temp.setBackground(SEA);
-        }
+        temp.setBackground(decideColor(temp));
         System.out.println("humanGrid(): " + i + ", " + j + " is " + temp.getBackground());
         hGrid.add(temp);        
       }      
     }
     
     return hGrid;
+  }
+  
+  public Color decideColor(GridButton g) {
+    Color c;
+    switch (humanRefGrid[g.getXCoord()][g.getYCoord()].getAllInfo()) {
+          case (1):
+            c = Color.black;
+            break;
+          case (2):
+            c = Color.white;
+            break;
+          case (3):
+            c = Color.red;
+            break;
+          default:
+            c = SEA;
+        }
+    return c;
+  }
+  
+  private String buttonToString(GridButton b) {
+    String s = "buttonToString(): Button (" + b.getXCoord() + ", " +
+      b.getYCoord() + ") is now " + b.getBackground();
+    return s;
   }
   
   private class GridButtonListener implements ActionListener {
@@ -181,18 +199,17 @@ public class GamePanel extends JPanel {
     public void actionPerformed (ActionEvent e) {
       if (e.getSource() == letsPlay) {
         letsPlay.setVisible(false);
+        humanRefGrid = currentGame.getHumanPlayer().getGrid();
         revalidate();
       } else {
-        System.out.println("help");
         if (currentGame.getGameOver() < 0) {
           nextShot = (GridButton) e.getSource();
-          try {
-            currentGame.turn(nextShot.getXCoord(), nextShot.getYCoord());
-            System.out.println("Took a shot! (" + nextShot.getXCoord()
-                                 + ", " + nextShot.getYCoord() + ")");
-          } catch (InvalidShotException oops) {
-            //do nothing
-          }
+          System.out.println("Took a shot! (" + nextShot.getXCoord()
+                               + ", " + nextShot.getYCoord() + ")");
+          currentGame.turn(nextShot.getXCoord(), nextShot.getYCoord());
+          System.out.println("\n" + buttonToString(nextShot));
+          
+          
         }
       }
     }
