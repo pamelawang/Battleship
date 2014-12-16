@@ -160,7 +160,7 @@ public class GamePanel extends JPanel {
       for (int j = 0; j < gridSize; j++) {
         GridButton temp = new GridButton(i, j);
         temp.setBackground(decideColor(temp));
-        System.out.println("humanGrid(): " + i + ", " + j + " is " + temp.getBackground());
+//        System.out.println("humanGrid(): " + i + ", " + j + " is " + temp.getBackground());
         hGrid.add(temp);        
       }      
     }

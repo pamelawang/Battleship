@@ -3,7 +3,7 @@
  * Date created: 13 Dec 2014
  * CS 230 Project: Battleship
  * 
- * Purpose: 
+ * Purpose: Button representing one coordinate/Cell on a grid.
  * 
  * @author Meera Hejmadi
  * @author Pamela Wang
@@ -14,7 +14,6 @@ import java.awt.event.*;
 import javax.swing.*;
 
 public class GridButton extends JButton {
-  
   private int xCoordinate;
   private int yCoordinate;
   
@@ -23,12 +22,18 @@ public class GridButton extends JButton {
     yCoordinate = y;
   }
   
-  public int getXCoord () {
-    return xCoordinate;
-  }
+  /******************************************************************
+  * Returns x-coordinate of current Cell/coordinate/button.
+  * 
+  * @return  int  x-coordinate of current button
+  *****************************************************************/
+  public int getXCoord () { return xCoordinate; }
   
-  public int getYCoord () {
-    return yCoordinate;
-  }  
+  /******************************************************************
+  * Returns y-coordinate of current Cell/coordinate/button.
+  * 
+  * @return  int  y-coordinate of current button
+  *****************************************************************/
+  public int getYCoord () { return yCoordinate; }  
   
 }
