@@ -182,6 +182,50 @@ public class Player {
     return boatLocations;
   }
   
+   /****************************************************************************
+    * Removes the boat at the specified index. i.e. sets it's coordinates to INVALID,
+    * and makes relevant changes to the Player's grid.
+    * 
+    * @param     index     index of boat to be "removed"
+    *******************************************************************************/
+  public void removeBoat (int i) {
+    int startX = getBoatAt(i).getStartX();
+    System.out.println("removeBoat(): before resetting boat. startX = " + startX);
+    int startY = getBoatAt(i).getStartY();
+    int endX = getBoatAt(i).getEndX();
+    int endY = getBoatAt(i).getEndY();
+    getBoatAt(i).reset(); //coordinates set to invalid
+    
+    int gridStartX = Math.min(startX, endX);
+    System.out.println("removeBoat(): gridStartX = " + gridStartX +
+                       "\tstartX = " + startX + "\tendX = " + endX);
+    int gridStartY = Math.min(startY, endY);
+    System.out.println("removeBoat(): gridStartY = " + gridStartY +
+                       "\tstartY = " + startY + "\tendY = " + endY);
+    int gridEndX = Math.max(startX, endX);
+    System.out.println("removeBoat(): gridEndX = " + gridEndX +
+                       "\tstartX = " + startX + "\tendX = " + endX);
+    int gridEndY = Math.max(startY, endY); 
+    System.out.println("removeBoat(): gridEndY = " + gridEndY +
+                       "\tstartY = " + startY + "\tendY = " + endY);
+    
+    //reset cells in grid.
+    if (gridStartX == gridEndX) { 
+      for (int a = gridStartY; a <= gridEndY; a++) {
+        System.out.println("removeBoat(): X constant. Changing coordinate: " + a);
+        grid[a][gridStartX].setHasBoat(false);
+        System.out.println("removeBoat(): Cell: " + grid[a][gridStartX]);
+      }   
+    } else if (gridStartY == gridEndY) {
+      for (int b = gridStartX; b <= gridEndX; b++) {
+        System.out.println("removeBoat(): Y constant. Changing coordinate: " + b);
+        grid[gridStartY][b].setHasBoat(false);
+        System.out.println("removeBoat(): Cell: " + grid[gridStartY][b]);
+      }
+    }
+    
+  }
+  
   /* cuz we're dealing with only one player's side of things. the grid
    * we're working with is the grid that our boats are on. we can't shoot
    * and see if we hit/miss, because that's the other player's business.
@@ -302,6 +346,15 @@ public class Player {
     }
   }
   
+    /***********************************************************************
+    * Returns boat at specified index in Player's fleet.
+    * 
+    * @param     int    index of boat
+    * @return   Boat    boat at specified index
+    ***********************************************************************/
+  public Boat getBoatAt (int index) {
+    return fleet.get(index);
+  }
   
   /***********************************************************************
     * Returns the number of boats for this Player.
@@ -486,6 +539,21 @@ public class Player {
     }
     System.out.println("Novice: " + novice.findMyFleet());
     
+     
+    //testing getBoatAt and removeBoat:
+    Player human = new Player();
+    try {
+    human.placeBoat(0, 5, 4, 5, 8);
+    human.placeBoat(1, 2, 3, 5, 3);
+    System.out.println(human.findMyFleet());
+    System.out.println(human.printGrid());
+    System.out.println(human.getBoatAt(0));
+    human.removeBoat(1);
+    
+    System.out.println(human.findMyFleet());
+    System.out.println(human.printGrid());
+    } catch (Exception oops) {
+    }
   }
   
 } //closes Player
