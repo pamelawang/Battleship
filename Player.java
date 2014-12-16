@@ -249,6 +249,15 @@ public class Player {
     }
   }
   
+   /***********************************************************************
+    * Returns boat at specified index in Player's fleet.
+    * 
+    * @param     int    index of boat
+    * @return   Boat    boat at specified index
+    ***********************************************************************/
+  public Boat getBoatAt (int index) {
+    return fleet.get(index);
+  }
   
   /***********************************************************************
     * Returns the number of boats for this Player.
