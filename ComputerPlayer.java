@@ -44,17 +44,17 @@ public class ComputerPlayer extends Player {
   private void pickAPoint() { //randomiser
     do {
       int randomX = (int) (Math.random()*10);
-      aimAtX = makeValidCoord(randomX);
+      aimAtX = withinGridDimensions(randomX);
       int randomY = (int) (Math.random()*10);
-      aimAtY = makeValidCoord(randomY);
+      aimAtY = withinGridDimensions(randomY);
       System.out.println("pickAPoint() used x = " + aimAtX + " and y = " + aimAtY);
     } while (previouslyShotAt(aimAtX, aimAtY));
   }
   
-  private int makeValidCoord (int coordinate) { //checks if coordinate is within grid dimensions
+  private int withinGridDimensions (int coordinate) { //not the same as Player's withinGridDimensions
     int valid = (coordinate >= 1) ? coordinate : 1;
     valid = (valid <= GRID_DIMENSIONS) ? valid : GRID_DIMENSIONS;
-    System.out.println("makeValidCoord: coordinate = " + coordinate + " and valid = " + valid);
+    System.out.println("withinGridDimensions: coordinate = " + coordinate + " and valid = " + valid);
     return valid;
   }
   
@@ -105,9 +105,9 @@ public class ComputerPlayer extends Player {
     System.out.println("************setCoords() with " + b.getBoatName() + " and direction " + direction + " *************");
 //      System.out.println("setCoords(): X");
     //using Boat's instance variables as 'local' variables through its getters/setters
-    b.setStartX(makeValidCoord((int)(Math.random()*10)));
+    b.setStartX(withinGridDimensions((int)(Math.random()*10)));
 //      System.out.println("setCoords(): Y");
-    b.setStartY(makeValidCoord((int)(Math.random()*10)));
+    b.setStartY(withinGridDimensions((int)(Math.random()*10)));
     int startX = b.getStartX();
     int startY = b.getStartY();
     
@@ -267,7 +267,7 @@ public class ComputerPlayer extends Player {
     return (coord > 0  && coord <= GRID_DIMENSIONS);
   }
   
-  private boolean doesBoatOverlap(Boat blackPearl, int direction) { //overrides Player's doesBoatOverlap
+  private boolean doesBoatOverlap(Boat blackPearl, int direction) { //not the same as Player's doesBoatOverlap
     boolean overlap = false;
     if (direction == UP || direction == DOWN) {
       for (int j = blackPearl.getStartY(); j <= blackPearl.getEndY(); j++) {
