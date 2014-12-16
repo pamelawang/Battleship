@@ -62,32 +62,35 @@ public class ComputerPlayer extends Player {
     return shotSoFarGrid[xCoord-1][yCoord-1].getShotAt();
   }
   
-  
   public boolean shoot(Player other) throws InvalidShotException { //Computer shooting at user
+    boolean indicator = false; //miss
     pickAPoint();    
-    other.gotShot(aimAtX, aimAtY);
+    int hitOrMiss = other.gotShot(aimAtX, aimAtY);
     shotSoFarGrid[aimAtX-1][aimAtY-1].setShotAt(true);
-    System.out.println("Computer shooting (Y)");
-    return false;
+    System.out.println("Computer shooting");
+    indicator = (hitOrMiss < 1) ? false : true; //if hitOrMiss is 0 than the opponent missed; 1 means hit and 2 means sunk
+    System.out.println("INDICATOR IS: " + indicator);
+    return indicator;
   }
   
   public void placeBoats() { // != placeBoat() from Player
     for (int i = 0; i < getNumBoats(); i++) {
+      System.out.println("/////////////////////////placeBoats() round " + (i+1) + " //////////////////////////////////");
       boatOrientation = getBoatOrientation();
       int direction = (boatOrientation == VERTICAL) ? getUpOrDown() : getLeftOrRight();
       Boat blackPearl = fleet.get(i);
       setCoords(blackPearl, direction); //makes and checks Boat coordinates
       
       if (direction == UP || direction == DOWN) {
-        System.out.println("placeBoats(): Boat's upward/downward. ChangingCells.");
+        System.out.println("placeBoats(): Boat's upward/downward. Changing cells to have boat.");
         for (int j = blackPearl.getStartY(); j <= blackPearl.getEndY(); j++) {
         //sets the cells between starting and ending coordinates to hasBoat() state
-          grid[blackPearl.getStartX()][j-1].setHasBoat(true); //NEED TO ACCOUNT FOR INDEXING? --> grid[blackPearl.getStartX()-1][j-1].setHasBoat(true)
+          grid[blackPearl.getStartX()-1][j-1].setHasBoat(true);
         }
-      } else {
-        System.out.println("placeBoats(): Boat's left/right. ChangingCells.");
+      } else { //direction == LEFT || RIGHT
+        System.out.println("placeBoats(): Boat's left/right. Changing cells to have boat.");
         for (int j = blackPearl.getStartX(); j <= blackPearl.getEndX(); j++) {
-          grid[j-1][blackPearl.getStartY()].setHasBoat(true); //DITTO ABOVE, therefore [blackPearl.getStartY()-1]
+          grid[j-1][blackPearl.getStartY()-1].setHasBoat(true);
         }
       }
       System.out.println("Boat " + Integer.toString(i+1) + "\n" + blackPearl + "\n");
@@ -99,22 +102,22 @@ public class ComputerPlayer extends Player {
   
   //helpers for PlaceBoats
   private void setCoords(Boat b, int direction) {
-    //THEORETICALLY CAN STILL USE PICKAPOINT()
+    System.out.println("************setCoords() with " + b.boatType + " and direction " + direction + " *************");
 //      System.out.println("setCoords(): X");
     //using Boat's instance variables as 'local' variables through its getters/setters
     b.setStartX(makeValidCoord((int)(Math.random()*10)));
 //      System.out.println("setCoords(): Y");
     b.setStartY(makeValidCoord((int)(Math.random()*10)));
+    int startX = b.getStartX();
+    int startY = b.getStartY();
     
-    System.out.println("setCoords(): Already a boat? " + grid[b.getStartX()-1][b.getStartY()-1].getHasBoat());
-    if (grid[b.getStartX()-1][b.getStartY()-1].getHasBoat()) { //no boat
+    System.out.println("setCoords(): Already a boat? " + grid[startX-1][startY-1].getHasBoat());
+    if (grid[startX-1][startY-1].getHasBoat()) { //has a boat
       System.out.println("setCoords(): checking for previous boat. Found one.");
-      setCoords(b, direction); //find new coordinates
-    } else {
+      setCoords(b, direction); //find new starting coordinates
+    } else { //no boat
       setEndCoords(b, direction);
     }
-    
-    
     
     /*OLD CODE BELOW
      if (foundEndCoords == false) {
@@ -153,17 +156,19 @@ public class ComputerPlayer extends Player {
   }
   
   
-  private void setEndCoords(Boat ship, int direction) { //recursive
+  private void setEndCoords(Boat ship, int direction) {
     int startX = ship.getStartX();
     int startY = ship.getStartY();
     int length = ship.getLength();
     boolean foundEndCoords = false;
     int directionsTried = 0;
     
+    if (directionsTried > 0) { System.out.println("directionsTried is " + directionsTried + " and new direction is " + direction); }
+    
     while (directionsTried <= 4 && !foundEndCoords) {
 //        System.out.println("setEndCoords(): directionsTried: " + directionsTried
 //                             + " Haven't found the endCoords.");
-      if (direction == UP) { //direction
+      if (direction == UP) { //direction == 2
         System.out.println("setEndCoords(): Direction = UP");
         directionsTried++;
         ship.setEndX(startX);
@@ -262,19 +267,19 @@ public class ComputerPlayer extends Player {
     return (coord > 0  && coord <= GRID_DIMENSIONS);
   }
   
-  private boolean doesBoatOverlap(Boat blackPearl, int direction) {
+  private boolean doesBoatOverlap(Boat blackPearl, int direction) { //overrides Player's doesBoatOverlap
     boolean overlap = false;
     if (direction == UP || direction == DOWN) {
       for (int j = blackPearl.getStartY(); j <= blackPearl.getEndY(); j++) {
-        System.out.println("doesBoatOverlap(): " + grid[blackPearl.getStartX()][j-1].getHasBoat()); //NEED TO ACCOUNT FOR INDEXING? getStartX()-1
-        overlap = (grid[blackPearl.getStartX()][j-1].getHasBoat()) ? true : overlap; //DITTO HERE
+        System.out.println("doesBoatOverlap(): " + grid[blackPearl.getStartX()-1][j-1].getHasBoat());
+        overlap = (grid[blackPearl.getStartX()-1][j-1].getHasBoat()) ? true : overlap;
         //if there's a boat, valid = false, else doesn't change
         if (overlap) { return overlap; } //returns at first instance of boatOverlapping
       }
     } else { //direction == LEFT || RIGHT
       for (int j = blackPearl.getStartX(); j <= blackPearl.getEndX(); j++) {
-        System.out.println("doesBoatOverlap(): " + grid[j-1][blackPearl.getStartY()].getHasBoat()); //HERE TOO
-        overlap = (grid[j-1][blackPearl.getStartY()].getHasBoat()) ? true : overlap; //AS WELL AS HERE
+        System.out.println("doesBoatOverlap(): " + grid[j-1][blackPearl.getStartY()-1].getHasBoat());
+        overlap = (grid[j-1][blackPearl.getStartY()-1].getHasBoat()) ? true : overlap;
         //if there's a boat, valid = false, else doesn't change
         if (overlap) { return overlap; } //returns at first instance of boatOverlapping
       }
