@@ -77,9 +77,8 @@ public class PlaceBoatPanel extends JPanel {
         System.out.println("Undo! boatNum = " + boatNum + " startIndex = " + undoStartIndex);
         if (boatNum > 0 && boatStack.size() >= undoStartIndex) {
           System.out.println("Undo!");
-          Boat toReset = boatStack.pop();
-          toReset.reset();
-          boatNum--;
+          humanPlayer.removeBoat(boatNum);
+//          boatNum--;
           banner.setText("Welcome to Battleship! Time to place boat " + (boatNum+1));
           instructions.setText("Choose a starting coordinate for boat " + (boatNum+1));
           currentBoatInfo.setText("Boat " + (boatNum+1) + " has a length of " + 
@@ -123,6 +122,8 @@ public class PlaceBoatPanel extends JPanel {
                                  humanPlayer.getBoatAt(boatNum).getLength() + ".");
             isStartCoord = true;
           }
+          System.out.println(humanPlayer.findMyFleet());
+          System.out.println(humanPlayer.printGrid());
         }
      
 

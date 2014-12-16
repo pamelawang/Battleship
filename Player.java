@@ -80,10 +80,10 @@ public class Player {
     }
     
     //setting boat's start and end coordinates
-    fleet.get(boatIndex).setStartX(adjustedStartX);
-    fleet.get(boatIndex).setStartY(adjustedStartY);
-    fleet.get(boatIndex).setEndX(adjustedEndX);
-    fleet.get(boatIndex).setEndY(adjustedEndY);
+    fleet.get(boatIndex).setStartX(startX);
+    fleet.get(boatIndex).setStartY(startY);
+    fleet.get(boatIndex).setEndX(endX);
+    fleet.get(boatIndex).setEndY(endY);
     
     //setting all checked coordinates of boat to have a boat
     int gridStartX = (adjustedStartX > adjustedEndX) ? adjustedEndX : adjustedStartX;
@@ -127,6 +127,50 @@ public class Player {
       boatLocations += (fleet.get(i).getIsSunk()) ? "It has been sunk.\n" : "It has not been sunk.\n";
     }
     return boatLocations;
+  }
+  
+  /****************************************************************************
+    * Removes the boat at the specified index. i.e. sets it's coordinates to INVALID,
+    * and makes relevant changes to the Player's grid.
+    * 
+    * @param     index     index of boat to be "removed"
+    *******************************************************************************/
+  public void removeBoat (int i) {
+    int startX = getBoatAt(i).getStartX();
+    System.out.println("removeBoat(): before resetting boat. startX = " + startX);
+    int startY = getBoatAt(i).getStartY();
+    int endX = getBoatAt(i).getEndX();
+    int endY = getBoatAt(i).getEndY();
+    getBoatAt(i).reset(); //coordinates set to invalid
+    
+    int gridStartX = Math.min(startX, endX);
+    System.out.println("removeBoat(): gridStartX = " + gridStartX +
+                       "\tstartX = " + startX + "\tendX = " + endX);
+    int gridStartY = Math.min(startY, endY);
+    System.out.println("removeBoat(): gridStartY = " + gridStartY +
+                       "\tstartY = " + startY + "\tendY = " + endY);
+    int gridEndX = Math.max(startX, endX);
+    System.out.println("removeBoat(): gridEndX = " + gridEndX +
+                       "\tstartX = " + startX + "\tendX = " + endX);
+    int gridEndY = Math.max(startY, endY); 
+    System.out.println("removeBoat(): gridEndY = " + gridEndY +
+                       "\tstartY = " + startY + "\tendY = " + endY);
+    
+    //reset cells in grid.
+    if (gridStartX == gridEndX) { 
+      for (int a = gridStartY; a <= gridEndY; a++) {
+        System.out.println("removeBoat(): X constant. Changing coordinate: " + a);
+        grid[a][gridStartX].setHasBoat(false);
+        System.out.println("removeBoat(): Cell: " + grid[a][gridStartX]);
+      }   
+    } else if (gridStartY == gridEndY) {
+      for (int b = gridStartX; b <= gridEndX; b++) {
+        System.out.println("removeBoat(): Y constant. Changing coordinate: " + b);
+        grid[gridStartY][b].setHasBoat(false);
+        System.out.println("removeBoat(): Cell: " + grid[gridStartY][b]);
+      }
+    }
+    
   }
   
   /* cuz we're dealing with only one player's side of things. the grid
@@ -396,7 +440,7 @@ public class Player {
      System.out.println("Computer: " + computer.findMyFleet());*/
     
     /**********TESTING CODE FOR VARIABLE BOAT LENGTHS***************/
-    Player computer = new Player();
+  /*  Player computer = new Player();
     Player novice = new Player();
     
     //FIX PLACEBAOT TO BE MORE LIKE A LINKEDLIST ADD()
@@ -420,16 +464,30 @@ public class Player {
     computer.gotShot(3, 2);
     novice.gotShot(1, 2);*/
     
-    System.out.println("Fleets:");
+ /*   System.out.println("Fleets:");
     System.out.println("Novice: " + novice.findMyFleet());
     System.out.println("Computer: " + computer.findMyFleet());
     
     System.out.println("\nTesting setting boats");
     //public void placeBoat(int boatIndex, int startX, int startY)
     //FIX novice.placeBoat(0, 0, 0);
+    */
     
+    //testing getBoatAt and removeBoat:
+    Player human = new Player();
+    try {
+    human.placeBoat(0, 5, 4, 5, 8);
+    human.placeBoat(1, 2, 3, 5, 3);
+    System.out.println(human.findMyFleet());
+    System.out.println(human.printGrid());
+    System.out.println(human.getBoatAt(0));
+    human.removeBoat(1);
+    
+    System.out.println(human.findMyFleet());
+    System.out.println(human.printGrid());
+    } catch (BoatOverlapException oops) {
+    }
   }
-  
 } //closes Player
 
  /***********************************************************************
