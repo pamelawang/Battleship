@@ -12,8 +12,6 @@
  * 2. IMPORTANT: Boat's start
  * 3. QUESTION FOR PROFS: ERROR FOR REPEATED GUESS??????
  * 
- * to do: MAKE CHECK LENGTH METHOD IN BOAT FOR HUMAN
- * 
  * @author Meera Hejmadi
  * @author Pamela Wang
  */
@@ -42,7 +40,6 @@ public class Player {
     * boats on, and a fleet of boats to place. 
     *****************************************************************/
   public Player() { 
-    //USE OTHER BOAT CONSTRUCTOR FOR LENGTH/FLEET
     grid = new Cell[GRID_DIMENSIONS][GRID_DIMENSIONS]; //size of grid
     for (int i = 0; i < GRID_DIMENSIONS; i++ ) { //creating all Cells for a new grid
       for (int j = 0; j < GRID_DIMENSIONS; j++) {
@@ -66,24 +63,67 @@ public class Player {
     * Allows user to choose where to put their boat.
     * 
     * @param   boatIndex   current Boat's index in user's fleet array
-    * @param   startX      x-coordinate of boat (single-cell)
-    * @param   startY      y-coordinate of boat (single-cell)
+    * @param   startX      start x-coordinate of boat
+    * @param   startY      start y-coordinate of boat
+    * @param   endX        end x-coordinate of boat
+    * @param   endY        end y-coordinate of boat
     *****************************************************************/
-  public void placeBoat(int boatIndex, int startX, int startY) {
-//    int gridX = startX - 1;
-//    int gridY = startY - 1;
-//    fleet.get(boatIndex).setStartX(startX);
-//    fleet.get(boatIndex).setStartY(startY);
-//    grid[gridX][gridY].setHasBoat(true); 
-    int adjustedX = startX-1; //(x-1) because 0 indexing.
-    int adjustedY = startY-1;
-    fleet.get(boatIndex).setStartX(adjustedX);
-    fleet.get(boatIndex).setStartY(adjustedY);
-    grid[adjustedX][adjustedY].setHasBoat(true); 
-    /*MAKE CHECK LENGTH METHOD
-     * } catch (InvalidCoordinateException e) { //from Boat
-     System.out.println("Starting coordinates are incorrect, please enter coordinates again.");
-     }*/
+  public void placeBoat(int boatIndex, int startX, int startY, int endX, int endY) throws BoatOverlapException {
+    int adjustedStartX = startX-1; //(x-1) because 0 indexing
+    int adjustedStartY = startY-1;
+    int adjustedEndX = endX - 1;
+    int adjustedEndY = endY - 1;
+    
+    //checking for any boat overlapping
+    if (doesBoatOverlap(adjustedStartX, adjustedStartY, adjustedEndX, adjustedEndY)) {
+      throw new BoatOverlapException("There is already a boat in the area you selected. Please");
+    }
+    
+    //setting boat's start and end coordinates
+    fleet.get(boatIndex).setStartX(adjustedStartX);
+    fleet.get(boatIndex).setStartY(adjustedStartY);
+    fleet.get(boatIndex).setEndX(adjustedEndX);
+    fleet.get(boatIndex).setEndY(adjustedEndY);
+    
+    //setting all checked coordinates of boat to have a boat
+    int gridStartX = (adjustedStartX > adjustedEndX) ? adjustedEndX : adjustedStartX;
+    int gridEndX = (adjustedStartX > adjustedEndX) ? adjustedStartX : adjustedEndX;
+    int gridStartY = (adjustedStartY > adjustedEndY) ? adjustedEndY : adjustedStartY;
+    int gridEndY = (adjustedStartY > adjustedEndY) ? adjustedStartY : adjustedEndY;
+    //for (int i = gridStartX) {
+    grid[adjustedStartX][adjustedStartY].setHasBoat(true); 
+  }
+  
+  private boolean doesBoatOverlap(int startIndexX, int startIndexY, int endIndexX, int endIndexY) {
+    boolean overlap = false;
+    
+    //if boat orientation = vertical (startX == endX)
+    if (startIndexY < endIndexY) { //checks which value is larger in case user inputted boats 'down to up' 
+      for (int y = startIndexY; y <= endIndexY; y++) { //moving down the grid
+        overlap = (grid[startIndexX][y].getHasBoat()) ? true : overlap;
+        if (overlap) { return overlap; } //returns at first instance of boatOverlapping
+      }
+    } else { //startIndexY > adjustedEndY
+      for (int y = endIndexY; y <= startIndexY; y++) { //moving up the grid
+        overlap = (grid[startIndexX][y].getHasBoat()) ? true : overlap;
+        if (overlap) { return overlap; }
+      }
+    }
+    
+    //if boat orientation = horizontal (startY == endY)
+    if (startIndexX < endIndexX) {
+      for (int x = startIndexX; x <= endIndexX; x++) { //moving down the grid
+        overlap = (grid[x][startIndexY].getHasBoat()) ? true : overlap;
+        if (overlap) { return overlap; }
+      }
+    } else { //adjustedStartY > adjustedEndY
+      for (int x = endIndexX; x <= startIndexX; x++) { //moving up the grid
+        overlap = (grid[x][startIndexY].getHasBoat()) ? true : overlap;
+        if (overlap) { return overlap; }
+      }
+    }
+    
+    return overlap;
   }
   
   /*****************************************************************
@@ -220,8 +260,6 @@ public class Player {
         }
       }
     }
-    
-    
   }
   
   
@@ -283,8 +321,8 @@ public class Player {
       +" \nB (boat) = boat not shot"
       + "\nH (hit) = boat SHOT"
       + "\n***********************************************************\n";
-    for (int i = 0; i < this.getGridDimensions(); i++) {
-      for (int j = 0; j < this.getGridDimensions(); j++) {
+    for (int i = 0; i < GRID_DIMENSIONS; i++) {
+      for (int j = 0; j < GRID_DIMENSIONS; j++) {
         s += decideLetter(grid[i][j]) + "\t";
       }
       s += "\n";
@@ -390,6 +428,10 @@ public class Player {
     System.out.println("Novice: " + novice.findMyFleet());
     System.out.println("Computer: " + computer.findMyFleet());
     
+    System.out.println("\nTesting setting boats");
+    public void placeBoat(int boatIndex, int startX, int startY)
+    novice.placeBoat(0, 0, 0);
+    
   }
   
 } //closes Player
@@ -402,4 +444,12 @@ class InvalidShotException extends Exception {
   public InvalidShotException(String problem) {
     System.out.println(problem);
   }
-}
+  
+  /***********************************************************************
+   * Exception used in gotShot() method for when the Cell currently being
+   * aimed at has already been shot at.
+   ***********************************************************************/
+class BoatOverlapException extends Exception {
+  public BoatOverlapException(String problem) {
+    System.out.println(problem);
+  }
