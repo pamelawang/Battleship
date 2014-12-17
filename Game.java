@@ -6,8 +6,7 @@
  * Purpose: Creates a single game instance, with two players.
  * 
  * NOTES:
- * Have to reinstate the isHumanTurn variable, and change turn() to make it 
- * suire the gamepanel. 
+ * 1. Make sure to explain why turn isn't used!
  * 
  * @author Meera Hejmadi
  * @author Pamela Wang
@@ -18,16 +17,15 @@ import java.util.*;
 public class Game {
   
   //instance variables:
-  private String username; //for the Stats class to use?
+  private String username; //for the Stats class to use
   private Player human;
-  private ComputerPlayer computer; //will be changed to ComputerPlayer later
+  private ComputerPlayer computer; 
+  private boolean isHumanTurn;
   private int score;
   private int gameOver; // -1 if not true, 0 for comp, 1 for human
   private static int NOT_OVER = -1;
   private static int COMP_WIN = 0;
   private static int HUMAN_WIN = 1;
-//  private CircularArrayStack last3Human;
-//  private CircularArrayStack last3Comp; //undo stuff
   
   /***********************************************************************
     * Constructor: Creates a game. Each game has two players - human and 
@@ -37,6 +35,7 @@ public class Game {
     username = name;
     human = new Player();
     computer = new ComputerPlayer();
+    isHumanTurn = true; //human starts.
     score = 0;
     gameOver = NOT_OVER;
   }
@@ -48,13 +47,7 @@ public class Game {
     * @param   x   x-coordinate indicating where 'this' Player is shooting at the other PLayer
     * @param   y   y-coordinate indicating where 'this' Player is shooting at the other Player
     *****************************************************************/
-  /* QUESTIONS FOR PROFS: So, for our player, the turn receives an (x,y) coordinate
-   * when they click on a button. BUT for the computer, when it's its turn then
-   * it generates the coordinates. And the turn method requires the x and y in 
-   * the parameters.. So how does this work?
-   */
-  //TURN IS PLAYER GOES THEN COMPUTER GOES - THAT'S A TURN. NICE AND SIMPLE.
-  public void turn(int x, int y) { //throws InvalidShotException {
+ /* public void turn(int x, int y) { //throws InvalidShotException {
     //HUMAN TURN
     System.out.println("turn(): HUMAN");
     try {
@@ -75,7 +68,7 @@ public class Game {
       //restart that turn
     }
       
-  }
+  } */ //This was used only for non-GUI playing of the game.
   
   /*****************************************************************
     * Returns the user's account (Player) along with their fleet and grid.
@@ -128,6 +121,25 @@ public class Game {
   }  
   
   /*****************************************************************
+    * Returns whose turn it is; if true, then human's turn.
+    * 
+    * @return  boolean   whether it is the human player's turn to guess
+    *****************************************************************/
+  public boolean getIsHumanTurn() {
+    return isHumanTurn;
+  }  
+  
+   /*****************************************************************
+    * Sets whose turn it is; if true, then human's turn.
+    * 
+    * @param  turn   whether it is the human player's turn to guess
+    *****************************************************************/
+  public void setIsHumanTurn(boolean turn) {
+    isHumanTurn = turn;
+  }  
+  
+  
+  /*****************************************************************
     * Returns whether the game isn't over (-1), the Computer won (0) or
     * the user won (1) in int form.
     * 
@@ -160,7 +172,7 @@ public class Game {
   }
   
   //testing main:
-  public static void main (String[] args) {
+/*  public static void main (String[] args) {
     Game bringIt = new Game("meera");
     Scanner scan = new Scanner(System.in);
     int currentX, currentY;
@@ -194,6 +206,6 @@ public class Game {
 //        //prompts user for a different set of coordinates by going back through loop
 //      }
     }
-  } 
+  } */
   
 }
