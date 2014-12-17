@@ -72,7 +72,7 @@ public class Player {
     }
     
     //checking that the coordinates match boat's length
-    if (((startX==endX) && (endY-startY!=toPlace.getLength()-1)) || ((startY==endY) && (endX-startX!=toPlace.getLength()-1))) {
+    if (((startX==endX) && (Math.abs(endY-startY)!=toPlace.getLength()-1)) || ((startY==endY) && (Math.abs(endX-startX)!=toPlace.getLength()-1))) {
       System.out.println(startX +" " + endX + "diff in Y: " + (endY-startY));
       System.out.println(startY +" " + endY + "diff in X: " + (endX-startX));
       throw new InvalidPlacementException("Your boat isn't the right length.");
