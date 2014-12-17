@@ -15,7 +15,7 @@ import javafoundations.*;
 
 public class PlaceBoatPanel extends JPanel {
   
-  private Player humanPlayer;
+  private Game battle;
   private JLabel banner, instructions, currentBoatInfo;
   private int boatNum;
   private int gridSize;
@@ -29,14 +29,14 @@ public class PlaceBoatPanel extends JPanel {
   private final Color BOAT = new Color (96, 96, 96);
   private final int MAX_UNDO = 3;
   
-  public PlaceBoatPanel(Player human) {
-    humanPlayer = human;
+  public PlaceBoatPanel(Game game) {
+    battle = game;
     boatNum = 0;
-    gridSize = humanPlayer.getGridDimensions();
+    gridSize = game.getHumanPlayer().getGridDimensions();
     banner = new JLabel("Welcome to Battleship! Time to place boat " + (boatNum+1));
     instructions = new JLabel("Choose a starting coordinate for boat " + (boatNum+1));
     currentBoatInfo = new JLabel("Boat " + (boatNum+1) + " has a length of " + 
-                                 humanPlayer.getBoatAt(boatNum).getLength() + ".");
+                                 battle.getHumanPlayer().getBoatAt(boatNum).getLength() + ".");
     grid = createGrid(); 
     isStartCoord = true;
     boatStack = new ArrayStack<Boat>();
@@ -83,15 +83,17 @@ public class PlaceBoatPanel extends JPanel {
         System.out.println("Undo! boatNum = " + boatNum + " startIndex = " + undoStartIndex);
         if (boatNum > 0 && boatStack.size() >= undoStartIndex) {
           System.out.println("Undo!");
-          humanPlayer.removeBoat(boatNum);
-//          boatNum--;
+          boatStack.pop();
+          boatNum--;
+          battle.getHumanPlayer().removeBoat(boatNum);
+          System.out.println(battle.getHumanPlayer().printGrid());
           banner.setText("Welcome to Battleship! Time to place boat " + (boatNum+1));
           instructions.setText("Choose a starting coordinate for boat " + (boatNum+1));
           currentBoatInfo.setText("Boat " + (boatNum+1) + " has a length of " + 
-                                  humanPlayer.getBoatAt(boatNum).getLength() + ".");
+                                  battle.getHumanPlayer().getBoatAt(boatNum).getLength() + ".");
           isStartCoord = true;
         }
-      } else if (boatNum < humanPlayer.getNumBoats()) {
+      } else if (boatNum < battle.getHumanPlayer().getNumBoats()) {
         System.out.println("Just hit a button!");
         if (isStartCoord) {
         currentStart = (GridButton) e.getSource();
@@ -104,18 +106,18 @@ public class PlaceBoatPanel extends JPanel {
           System.out.println("[PlaceBoat] actionPerformed(): end = (" + 
                              currentEnd.getXCoord() + ", " + currentEnd.getYCoord() + ").");
           try {
-          humanPlayer.placeBoat(boatNum, currentStart.getXCoord(), currentStart.getYCoord(),
+          battle.getHumanPlayer().placeBoat(boatNum, currentStart.getXCoord(), currentStart.getYCoord(),
                                 currentEnd.getXCoord(), currentEnd.getYCoord());
           System.out.println("pushing boat to boatStack");
-          boatStack.push(humanPlayer.getBoatAt(boatNum));
-          undoStartIndex++;            
+          boatStack.push(battle.getHumanPlayer().getBoatAt(boatNum));
+          if (boatStack.size() >= 3) { undoStartIndex = boatStack.size()-MAX_UNDO; }            
           isStartCoord = true;
           boatNum++;          
-          if (boatNum < humanPlayer.getNumBoats()) {
+          if (boatNum < battle.getHumanPlayer().getNumBoats()) {
              banner.setText("Welcome to Battleship! Time to place boat " + (boatNum+1));
              instructions.setText("Choose a starting coordinate for boat " + (boatNum+1));
              currentBoatInfo.setText("Boat " + (boatNum+1) + " has a length of " + 
-                                 humanPlayer.getBoatAt(boatNum).getLength() + ".");
+                                 battle.getHumanPlayer().getBoatAt(boatNum).getLength() + ".");
           } else {
             banner.setText("All your boats have been placed. Good luck!");
             instructions.setText("");
@@ -125,11 +127,11 @@ public class PlaceBoatPanel extends JPanel {
             banner.setText("INVALID! Please place boat " + (boatNum+1) + " again.");
             instructions.setText("Choose a starting coordinate for boat " + (boatNum+1));
             currentBoatInfo.setText("Boat " + (boatNum+1) + " has a length of " + 
-                                 humanPlayer.getBoatAt(boatNum).getLength() + ".");
+                                 battle.getHumanPlayer().getBoatAt(boatNum).getLength() + ".");
             isStartCoord = true;
           }
-          System.out.println(humanPlayer.findMyFleet());
-          System.out.println(humanPlayer.printGrid());
+          System.out.println(battle.getHumanPlayer().findMyFleet());
+          System.out.println(battle.getHumanPlayer().printGrid());
         }
      
 
