@@ -272,6 +272,7 @@ public class GamePanel extends JPanel {
               readyForComp.setVisible(true);
               System.out.println("\n" + buttonToString(nextShot));
               battle.setIsHumanTurn(false);
+              System.out.println("After human's shot, computer's grid: \n" + computer.printGrid());
             } catch (InvalidShotException oops) {
               //do nothing for now - ask user to pick a diff coordinate.
             }
@@ -283,6 +284,8 @@ public class GamePanel extends JPanel {
             int y = computer.getAimAtY();
             banner.setText("It shot at ("+x+", "+y+")! "+ postShot(result) + " Your turn!");
             changeSettings(result, humanGrid[x][y]);
+            System.out.println("\n" + buttonToString(nextShot));
+            System.out.println("After computer's shot, humans's grid: \n" + human.printGrid());
             System.out.println("Computer shoots!");
             battle.setIsHumanTurn(true);
           }
