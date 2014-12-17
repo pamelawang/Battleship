@@ -1,0 +1,28 @@
+CS230 Final Project Coversheet
+
+Authors: Meera Hejmadi (mhejmadi) and Pamela Wang (pwang2)
+
+Date Submitted: 17 December 2014
+
+Files attached: AllStats.java, allstats.txt, BattleshipGUI.java, Boat.java, Cell.java, ComputerPlayer.java, Game.java, GamePanel.java, GridButton.java, intro.png, PlaceBoatPanel.java, Player.java, Stats.java, StatsPanel.java, WelcomePanel.java
+
+Notes:
+-shoot(p, x, y) in ComputerPlayer.java isn't fully functional: gets stuck on the case where Computer 'aims' at a wall and still trying to use the try-catch statement to loop back/get new coordinates again
+-turn() isn't used in Game.java - was used in our Stage 1, when boats were length of 1 Cell
+-Buttons in GamePanel don't change colour when pressed (miss, hit). Can still play but lacking visual indicator.
+-ComputerPlayer.java doesn't use/overwrites any shooting-related methods from Player because it handles it differently
+-StatsPanel.java doesn't work; idea was that by entering in a username and pressing the button the programme would open the .txt file with all the stats information and display that specific user.
+
+Future implementations:
+-2 human users playing the game
+-have difficulty levels (different sized grids, boats)
+-have a special shoot (bomb) - we have written the code for this in Player.java through gotBombed(), but haven't implemented it into gameplay
+-have a more intelligient shooting algorithm
+  e.g. of what it currently does
+        - - H H B B - - (sea sea hit hit boat boat sea sea)
+   next turn:
+        - M H H B B - -
+   next turn (doesn't follow the boat anymore, does randomiser))
+-exportFile() in AllStats - be able to export list of users' scores in a .txt file
+-StatsPanel being able to use a .txt document to display searchable user information
+-fixing buttons in GamePanel to change colour
