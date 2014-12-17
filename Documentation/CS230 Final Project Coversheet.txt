@@ -1,8 +1,9 @@
 CS230 Final Project Coversheet
 
 Authors: Meera Hejmadi (mhejmadi) and Pamela Wang (pwang2)
-
+Project: Battleship
 Date Submitted: 17 December 2014
+https://github.com/pamelawang/Battleship
 
 Files attached: AllStats.java, allstats.txt, BattleshipGUI.java, Boat.java, Cell.java, ComputerPlayer.java, Game.java, GamePanel.java, GridButton.java, intro.png, PlaceBoatPanel.java, Player.java, Stats.java, StatsPanel.java, WelcomePanel.java
 
