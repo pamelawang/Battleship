@@ -24,7 +24,7 @@ public class GamePanel extends JPanel {
   private ComputerPlayer computer;
   private JPanel centerPiece; //will contain banner, humanGrid, and shootAtGrid
   private JLabel banner;
-  private JPanel humanGrid;
+//  private JPanel humanGrid;
   private JPanel shootAtGrid;
   private JPanel boatsLeft; //goes on the left of the center panel
   private int numBoatsLeftComp;
@@ -36,6 +36,8 @@ public class GamePanel extends JPanel {
   private final Color SEA = new Color (0, 0, 128);
 //  private static Border CELL_BORDER = BorderFactory.createBevelBorder(BevelBorder.RAISED);
   private Cell[][] humanRefGrid;
+  private Cell[][] compRefGrid;
+  private GridButton[][] humanGrid;
   private JButton letsPlay;
   private JButton readyForComp;
   
@@ -44,15 +46,16 @@ public class GamePanel extends JPanel {
     battle = battleship;
     human = battle.getHumanPlayer();
     computer = battle.getCompPlayer();
+    gridSize = battleship.getGridSize();
     
     setLayout(new BorderLayout());
     setBackground(Color.black);
     
     banner =  new JLabel("Welcome to Battleship! Press \"Play\" to begin!");
     banner.setForeground(Color.white);
-    humanGrid = new JPanel();
+    humanGrid = new GridButton[gridSize][gridSize];
     shootAtGrid = new JPanel();
-    gridSize = battleship.getGridSize();
+
     numBoatsLeftComp = computer.getNumBoats();
     numBoatsLeftHuman = human.getNumBoats();
 //    numBombsLeftComp = battleship.getCompPlayer().getNumBombs();
@@ -60,6 +63,7 @@ public class GamePanel extends JPanel {
     numBombsLeftComp = 0;
     numBombsLeftHuman = 0;
     humanRefGrid = human.getGrid();
+    compRefGrid = computer.getGrid();
     letsPlay = new JButton();
     readyForComp = new JButton("Bring it on!");
     
@@ -102,13 +106,13 @@ public class GamePanel extends JPanel {
     playButton.add(letsPlay);
     emptySpace.add(playButton);
     
-    shootAtGrid = createShootAtGrid();
-    humanGrid = createHumanGrid();
+    JPanel shootGrid = createShootAtGrid();
+    JPanel hGrid = createHGrid();
     
     center.add(top);
-    center.add(shootAtGrid);
+    center.add(shootGrid);
     center.add(emptySpace);
-    center.add(humanGrid);
+    center.add(hGrid);
     
     return center;
   }
@@ -188,23 +192,24 @@ public class GamePanel extends JPanel {
     * 
     * @return  JPanel  bottommost grid showing where the user has shot
     *****************************************************************/
-  public JPanel createHumanGrid() {
-    JPanel hGrid = new JPanel();
-    hGrid.setLayout(new GridLayout(10, 10));
+  public JPanel createHGrid() {
+    JPanel hagrid = new JPanel();
+    hagrid.setLayout(new GridLayout(10, 10));
     //grid.setPreferredSize(new Dimension(screenHeight/3, screenlength/2))
-    hGrid.setLayout(new GridLayout(gridSize, gridSize));
-    hGrid.setBackground(Color.black);
+    hagrid.setLayout(new GridLayout(gridSize, gridSize));
+    hagrid.setBackground(Color.black);
     
     for (int i = 0; i < gridSize; i++) {
       for (int j = 0; j < gridSize; j++) {
         GridButton temp = new GridButton(i, j);
         temp.setBackground(decideColor(temp));
+        humanGrid[i][j] = temp;
 //        System.out.println("humanGrid(): " + i + ", " + j + " is " + temp.getBackground());
-        hGrid.add(temp);        
+        hagrid.add(temp);        
       }      
     }
     
-    return hGrid;
+    return hagrid;
   }
   
   /******************************************************************
@@ -274,7 +279,10 @@ public class GamePanel extends JPanel {
           } else {
             readyForComp.setVisible(false);
             int result = computer.takeAShot(human);
-            banner.setText("It shot at ("+computer.getAimAtX()+", "+computer.getAimAtY()+")! "+ postShot(result) + " Your turn!");
+            int x = computer.getAimAtX();
+            int y = computer.getAimAtY();
+            banner.setText("It shot at ("+x+", "+y+")! "+ postShot(result) + " Your turn!");
+            changeSettings(result, humanGrid[x][y]);
             System.out.println("Computer shoots!");
             battle.setIsHumanTurn(true);
           }
