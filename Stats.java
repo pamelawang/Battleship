@@ -5,13 +5,6 @@
  * 
  * Purpose: To create a LinkedList that stores a user's stats.
  * 
- * Notes: 
- * 1. There are no Javadoc comments for the private methods, but there are
- * in-detail comments before those private methods. 
- * 2. There are less setter methods than getter methods, and that was a design
- * decision, because we don't want the stats to be manipulated.
- * 3. Add file - to add to for old scores
- * 
  * @author Meera Hejmadi
  * @author Pamela Wang
  */
@@ -53,7 +46,29 @@ public class Stats {
     * @return   int   percent of games won
     *******************************************************************/
   public int percentGamesWon() {
-    return gamesWon*100/gamesPlayed;
+    if (gamesWon == 0) {
+      return 0;
+    } else {
+      return gamesWon*100/gamesPlayed;
+    }
+  }
+  
+  /******************************************************************
+    * Sets games played. Only for use in AllStats' loadFile()
+    * 
+    * @param  games     number of games player
+    *****************************************************************/
+  public void setGamesPlayed(int games) { //for AllStats only
+    gamesPlayed = games;
+  }
+  
+  /******************************************************************
+    * Sets number of games won. Only for use in AllStats' loadFile()
+    * 
+    * @param  games    number of games won
+    *****************************************************************/
+  public void setGamesWon(int games) { //for AllStats only
+    gamesWon = games;
   }
   
   /*******************************************************************
@@ -66,6 +81,15 @@ public class Stats {
     return averageScore;
   }
   
+  /******************************************************************
+    * Sets average score. Only for use in AllStats' loadFile()
+    * 
+    * @param  av     average score
+    *****************************************************************/
+  public void setAverage (int av) { //for use with .txt file in AllStats
+    averageScore = av;
+  }
+  
   /*******************************************************************
     * Returns an int array of the user's top 5 scores.
     * 
@@ -73,6 +97,16 @@ public class Stats {
     *******************************************************************/
   public int[] getBestScores() {
     return bestScores;
+  }
+  
+  /******************************************************************
+    * Sets best scores. Only for use in AllStats' loadFile()
+    * 
+    * @param  best     int[] of bet scores
+    *****************************************************************/
+  public void setBestScores (int[] best) {
+    //sorting algorithm would be here
+    bestScores = best;
   }
   
   /*******************************************************************
@@ -90,33 +124,22 @@ public class Stats {
       calculateAverage(score); //average score only changes if the user won
     }
   }
-  
-  // Private methods: no Javadocs.
-  
-  /* addHighScore(): This method has three functions: 
-   * (i) to take in a score and decide if it should be added to the bestScores array
-   * (ii) to figure out where to put the new high score
-   * (iii) to place it into the correct position in the array.
-   * 
-   * There are two possibilities:
-   * (a) the user has played only one game, in which case the score is 
-   * automatically added to the 0 index of the bestScores array.
-   * (b) th user has played more than one game, in which case it may or may
-   * not be added to the array. A helper method is called to see what position
-   * the score would get if it was added. This returned position is used to
-   * decide whether to add the score or not: if position > bestScores.length -1,
-   * then it isn't added. Else the array is adjusted and the score added
-   * where it should be.
-   */
+ 
+  /*******************************************************************
+    * Private, used in gameCompleted(). Takes in a score and decides whether
+    * it should be added to bestScores[]. Figures out where to put the high
+    * score. Places it in the correct position in the array.
+    * 
+    * @param   score   user's score from newly-completed game
+    *******************************************************************/
   private void addHighScore(int score) {
     System.out.println("addHighScore(): gamesWon: " + gamesWon);
-    if (gamesWon == 1) { //ask if this should be a final variable
-      bestScores[0] = score; //and this too
+    if (gamesWon == 1) {
+      bestScores[0] = score;
       System.out.println("addHighScore(): Just put " + score + " at position 0.");
-    } else {
+    } else { //user has won multiple games
       System.out.println("addHighScore(): gamesWon > NUM_HIGHSCORES");
-      //helper method returns where "score" should go if placed into the bestScores array
-      int scorePosition = scoreLocation(score); 
+      int scorePosition = scoreLocation(score); //returns where "score" goes if placed into the bestScores[]
       System.out.println("Final whereToPlace for " + score + " is " + scorePosition);
       //decides whether score should be inserted into array or not
       if (scorePosition < NUM_HIGHSCORES) { 
@@ -127,22 +150,18 @@ public class Stats {
     }
   }
   
-  /* scoreLocation(): Calculates the input score's location in the bestScores
-   * array. Assumes that the score is the user's best (i.e. least number of 
-   * shots to sink all the opponents boat). Then goes through bestScores array
-   * from the beginning and compares "score" to the values in the array.
-   * While "score" is larger (i.e. worse) than the scores in the array, 
-   * "whereToPlace" increases. 
-   * If the score larger than all the scores in the 
-   * array, one of two things happens:
-   * (a) if gamesWon <= NUM_HIGHSCORES, then whereToPlace becomes the index of 
-   * the first empty slot in bestScores (which currently stores the default of 0).
-   * (b) if gamesWon > NUM_HIGHSCORES, then whereToPlace beomes NUM_HIGHSCORES,
-   * which means that it will not be added into the array later on.
-   */
+  /*******************************************************************
+    * Private, used in addHighScores(). Calculates input score's location
+    * in bestScores[].
+    * 
+    * Assumptions:
+    * -`score` is user's best score
+    * 
+    * @param   score   user's score from newly-completed game
+    *******************************************************************/
   private int scoreLocation(int score) {
     int whereToPlace = 0; //if not to be added, this will work.
-    for (int i = 0; i < gamesWon-1; i++) {
+    for (int i = 0; i < gamesWon-1; i++) { //if gamesWon == 1, is has already been set in addHighScore
       if (score > bestScores[i]) {
         whereToPlace++;
         System.out.println("addHighScore(): " + score+ "'s whereToPlace is " + whereToPlace);
@@ -153,10 +172,13 @@ public class Stats {
     return whereToPlace;
   }
   
-  /* adjustScores(): shifts all the values past "moveFrom" in bestScores array 
-   * to the right by one, so that the new best score can be added in the 
-   * "moveFrom" slot.
-   */
+  /*******************************************************************
+    * Private, used in addHighScore(). Shifts all values past `moveFrom`
+    * in bestScores[] to the right by one to slow in new best score at index
+    * `moveFrom`.
+    * 
+    * @param   moveFrom   index location to start shifting elements over right
+    *******************************************************************/
   private void adjustScores(int moveFrom) {
     for (int i = NUM_HIGHSCORES - 1; i >= moveFrom; i--) {
       if (i != 0) { //if i == 0, then (i-1) will throw an error
@@ -166,19 +188,26 @@ public class Stats {
     }
   }
   
-  /* calculateAverage(): takes in the user's score from the newly completed game
-   * and calculates the new average; resets averageScore appropriately.
-   * Not a public method  because this should be called only when a game is completed,
-   * from within the completedGame method.
-   * While calculating, assumes that gamesWon is up-to-date (i.e. gamesWon is updated
-   * before this method is called, and hence uses (gamesWon-1) in the first part.
-   */
+  /*******************************************************************
+    * Private, used in gamedCompleted(). Takes in user's new score and calculates
+    * the new average, resetting averageScore appropriately.
+    * 
+    * Assumptions:
+    * -gamesWon is up to date
+    * 
+    * @param   newScore   user's score from newly-completed game
+    *******************************************************************/
   private void calculateAverage(int newScore) {
     int sum = averageScore * (gamesWon-1); 
     averageScore = (sum + newScore)/gamesWon;
   }
   
   /* printBestScores(): used for testing purposes. Prints bestScores array. */
+  /*******************************************************************
+    * Private, for testing purposes only. Prints bestScores array.
+    * 
+    * @param   String   String representation of bestScores[]
+    *******************************************************************/
   private String printBestScores() {
     String s = "High scores: ";
     for (int i = 0; i < NUM_HIGHSCORES; i++) {

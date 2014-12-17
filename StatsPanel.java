@@ -10,29 +10,63 @@
 
 import java.awt.*;
 import javax.swing.*;
+import javafoundations.*;
+import java.awt.event.*;
+import javax.swing.JOptionPane;
 
-public class StatsPanel extends JPanel {
+  public class StatsPanel extends JPanel {
+  //extends JPanel instead of GridPanel because of tabbed Pane layout
   
-  private JLabel title, instructions, authors;
+  private JLabel question, percent, five, average;
+  private TextField messageField;
+  private JButton ok;
+  private AllStats all;
+  private ButtonListener buttonAction;
   
   public StatsPanel() {
+    setLayout (new GridLayout(2, 3));
+    setBackground(Color.white);
+    question = new JLabel ("What is your username?");
+    messageField = new TextField(5);
+    add(question);
+    add(messageField);
     
-    setBackground(Color.black);
-    setLayout (new BoxLayout (this, BoxLayout.Y_AXIS)); //writing goes until end of screen
+    ok = new JButton("OK");
+    buttonAction = new ButtonListener();
+    ok.addActionListener(buttonAction);
+    add(ok);
     
-    title = new JLabel ("Battleship");
-    title.setAlignmentX (Component.CENTER_ALIGNMENT);
-    this.add(title);
+    percent = new JLabel("% games won: ");
+    add(percent);
     
-    instructions = new JLabel ("How to play");
-    instructions.setAlignmentX (Component.CENTER_ALIGNMENT);
-    this.add(instructions);
+    five = new JLabel ("Top 5 \nScores");
+    add(five);
     
-    authors = new JLabel ("\u00A9 2014 Meera Hejmadi and Pamela Wang");
-    authors.setAlignmentX (Component.CENTER_ALIGNMENT);
-    this.add(authors);
+    average = new JLabel ("Average Score");
+    add(average);
     
-    //this.add(new JLabel(new ImageIcon("IMAGE NAME HERE"));
-  } 
- 
+  }
+  
+  public void addToLabel(JLabel j, String s) {
+    j.setText(j.getText() + s);
+  }
+  
+ private class ButtonListener implements ActionListener {
+    
+    public void actionPerformed (ActionEvent e) {
+      String uName = messageField.getText();
+      try {
+      all.loadFile("allstats.txt");
+      Stats current = all.getPlayer(uName);
+      addToLabel(percent, current.percentGamesWon() + "%");
+      int[] best = current.getBestScores();
+      for (int i = 0; i < 5; i++) {
+        addToLabel(five, " " + best[i]);
+      }
+      addToLabel(average, Integer.toString(current.getAverage()));
+      } catch (Exception ex) {
+        System.out.println("File unsuccessfully opened.");
+      }
+    } //closes actionPerformed
+  } //closes ButtonListener
 }//ends StatsPanel
