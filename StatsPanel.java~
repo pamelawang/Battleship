@@ -6,7 +6,6 @@
  * Purpose: Creates a visual representation of AllStats.java (the user's stats)
  * 
  * @author Pamela Wang
-
  */
 
 import java.awt.*;
