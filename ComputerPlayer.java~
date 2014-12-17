@@ -16,7 +16,6 @@
 public class ComputerPlayer extends Player {
   
   //instance variables:
-//  private BinaryTree<Integer> decision;
   private GridButton nextShot;
   private int aimAtX;
   private int aimAtY;
@@ -47,6 +46,7 @@ public class ComputerPlayer extends Player {
     lastShotResult = 0;
   }
   
+  
   private void pickAPoint() { //randomiser
     do {
       int randomX = (int) (Math.random()*10);
@@ -74,8 +74,8 @@ public class ComputerPlayer extends Player {
     System.out.println("setNextShot(): direction = " + direction);
     if (direction == UP) {
       //x-coordinate is the same
-      System.out.println(direction + "\t(should be 2/UP)");
-      if (isValidCoord(aimAtY-1)) {
+        System.out.println(direction + "\t(should be 2/UP)");
+        if (isValidCoord(aimAtY-1)) {
         aimAtY--;
         System.out.println("setNextShot(): new x,y = " + aimAtX + ", " + aimAtY);
       } else { 
@@ -83,8 +83,8 @@ public class ComputerPlayer extends Player {
         direction++; //nothing up, check down
       }
     } else if (direction == DOWN) {
-      System.out.println(direction + "\t(should be 3/DOWN)");
-      if (isValidCoord(aimAtY+1)) {
+        System.out.println(direction + "\t(should be 3/DOWN)");
+        if (isValidCoord(aimAtY+1)) {
         aimAtY++;
         System.out.println("setNextShot(): new x,y = " + aimAtX + ", " + aimAtY);
       } else if (wasRandomShot) { //still trying to figure out if boat is vertical or horizontal
@@ -97,8 +97,8 @@ public class ComputerPlayer extends Player {
         direction = UP;
       }
     } else if (direction == LEFT){ // y-coordinate is the same
-      System.out.println(direction +"\t(should be 4/LEFT)");
-      if (isValidCoord(aimAtX-1)) {
+        System.out.println(direction +"\t(should be 4/LEFT)");
+        if (isValidCoord(aimAtX-1)) {
         aimAtX--;
         System.out.println("setNextShot(): new x,y = " + aimAtX + ", " + aimAtY);
       } else { 
@@ -106,8 +106,8 @@ public class ComputerPlayer extends Player {
         direction++; //nothing up, check down
       }
     } else { //RIGHT
-      System.out.println(direction+ "\t(should be 5/RIGHT)");
-      if (isValidCoord(aimAtY+1)) {
+        System.out.println(direction+ "\t(should be 5/RIGHT)");
+        if (isValidCoord(aimAtY+1)) {
         aimAtY++;
         System.out.println("setNextShot(): new x,y = " + aimAtX + ", " + aimAtY);
       } else { //random or not, doesn't matter.
@@ -144,7 +144,7 @@ public class ComputerPlayer extends Player {
           //don't change wasRandomShot to false, because this was a random shot. 
           //the next shot will NOT be random.
         }
-      } catch (InvalidShotException oops) {
+        } catch (InvalidShotException oops) {
         //do nothing. The program should never have this problem, because of pickAPoint().
       } 
     } else {
@@ -163,6 +163,9 @@ public class ComputerPlayer extends Player {
     return lastShotResult;
   }
   
+  
+  
+  
   //change to private???
   public void shoot (Player p, int x, int y) throws InvalidShotException {
     System.out.println("shoot(P, x, y): (" + aimAtX + ", " + aimAtY + ").");
@@ -179,8 +182,10 @@ public class ComputerPlayer extends Player {
     shoot(p, aimAtX, aimAtY); //aimAtX and aimAtY is set in pickAPoint()
   }
   
-    //**************** EDITS END HERE
-  public void placeBoats() { // != placeBoat() from Player
+  //**************** EDITS END HERE
+  
+  
+ public void placeBoats() { // != placeBoat() from Player
     for (int i = 0; i < getNumBoats(); i++) {
       //System.out.println("/////////////////////////placeBoats() round " + (i+1) + " //////////////////////////////////");
       boatOrientation = getBoatOrientation();
@@ -188,16 +193,25 @@ public class ComputerPlayer extends Player {
       Boat blackPearl = fleet.get(i);
       setCoords(blackPearl, direction); //makes and checks Boat coordinates
       
-      if (direction == UP || direction == DOWN) {
-        //System.out.println("placeBoats(): Boat's upward/downward. Changing cells to have boat.");
-        for (int j = blackPearl.getStartY(); j <= blackPearl.getEndY(); j++) {
+      //setting the cells to haveBoat. first get the min and max x,y values. then loop through.
+      int startX = Math.min(blackPearl.getStartX(), blackPearl.getEndX());
+      int startY = Math.min(blackPearl.getStartY(), blackPearl.getEndY());
+      int endX = Math.max(blackPearl.getStartX(), blackPearl.getEndX());
+      int endY = Math.max(blackPearl.getStartY(), blackPearl.getEndY());
+      System.out.println("startX, Y, endX, Y: " + startX + " " + startY+ " " + endX+" "+endY);
+      
+      if (startX==endX) {
+        System.out.println("placeBoats(): Boat's upward/downward. Changing cells to have boat.");
+        for (int j = startY; j <= endY; j++) {
         //sets the cells between starting and ending coordinates to hasBoat() state
-          grid[blackPearl.getStartX()-1][j-1].setHasBoat(true);
+          grid[startX-1][j-1].setHasBoat(true);
+          System.out.println("grid["+(startX-1)+"]["+(j-1)+"] hasBoat: " + grid[startX-1][j-1].getHasBoat());
         }
-      } else { //direction == LEFT || RIGHT
+      } else if (startY==endY) { //direction == LEFT || RIGHT
         System.out.println("placeBoats(): Boat's left/right. Changing cells to have boat.");
-        for (int j = blackPearl.getStartX(); j <= blackPearl.getEndX(); j++) {
-          grid[j-1][blackPearl.getStartY()-1].setHasBoat(true);
+        for (int j = startX; j <= endX; j++) {
+          grid[j-1][startY-1].setHasBoat(true);
+          System.out.println("grid["+(j-1)+"]["+(startY-1)+"] hasBoat: " + grid[j-1][startY-1].getHasBoat());
         }
       }
       //System.out.println("Boat " + Integer.toString(i+1) + "\n" + blackPearl + "\n");
@@ -209,7 +223,7 @@ public class ComputerPlayer extends Player {
   
   //helpers for PlaceBoats
   private void setCoords(Boat b, int direction) {
-    //System.out.println("************setCoords() with " + b.boatType + " and direction " + direction + " *************");
+//    System.out.println("************setCoords() with " + b.boatType + " and direction " + direction + " *************");
 //      System.out.println("setCoords(): X");
     //using Boat's instance variables as 'local' variables through its getters/setters
     b.setStartX(makeValidCoord((int)(Math.random()*10)));
@@ -218,9 +232,9 @@ public class ComputerPlayer extends Player {
     int startX = b.getStartX();
     int startY = b.getStartY();
     
-    //System.out.println("setCoords(): Already a boat? " + grid[startX-1][startY-1].getHasBoat());
+//    System.out.println("setCoords(): Already a boat? " + grid[startX-1][startY-1].getHasBoat());
     if (grid[startX-1][startY-1].getHasBoat()) { //has a boat
-      //System.out.println("setCoords(): checking for previous boat. Found one.");
+//      System.out.println("setCoords(): checking for previous boat. Found one.");
       setCoords(b, direction); //find new starting coordinates
     } else { //no boat
       setEndCoords(b, direction);
@@ -241,55 +255,55 @@ public class ComputerPlayer extends Player {
 //        System.out.println("setEndCoords(): directionsTried: " + directionsTried
 //                             + " Haven't found the endCoords.");
       if (direction == UP) { //direction == 2
-        //System.out.println("setEndCoords(): Direction = UP");
+//        System.out.println("setEndCoords(): Direction = UP");
         directionsTried++;
         ship.setEndX(startX);
         ship.setEndY(startY - (length-1));
 //          System.out.println("setEndCoords(): endY = "+ (startY - (length-1)));
         if (isValidCoord(ship.getEndY()) && !doesBoatOverlap(ship, direction)) {
-          //System.out.println("setEndCoords(): endY (" + ship.getEndY() + ") is valid");
+//          System.out.println("setEndCoords(): endY (" + ship.getEndY() + ") is valid");
           foundEndCoords = true;
         } else {
-          //System.out.println("setEndCoords(): endY (" + ship.getEndY() + ")is not valid. Direction++");
+//          System.out.println("setEndCoords(): endY (" + ship.getEndY() + ")is not valid. Direction++");
           direction++;
         }
       } else if (direction == DOWN) { //direction == 3
-        //System.out.println("setEndCoords(): Direction = DOWN");
+//        System.out.println("setEndCoords(): Direction = DOWN");
         directionsTried++;
         ship.setEndX(startX);
         ship.setEndY(startY + (length-1));
 //          System.out.println("setEndCoords(): endY = "+ (startY + (length-1)));
         if (isValidCoord(ship.getEndY()) && !doesBoatOverlap(ship, direction)) {
-          //System.out.println("setEndCoords(): endY (" + ship.getEndY() + ") is valid");
+//          System.out.println("setEndCoords(): endY (" + ship.getEndY() + ") is valid");
           foundEndCoords = true;
         } else {
-         // System.out.println("setEndCoords(): endY (" + ship.getEndY() + ") is not valid. Direction++");
+//          System.out.println("setEndCoords(): endY (" + ship.getEndY() + ") is not valid. Direction++");
           direction++;
         }
       } else if (direction == LEFT) { //direction == 4
-        //System.out.println("setEndCoords(): Direction = LEFT");
+//        System.out.println("setEndCoords(): Direction = LEFT");
         directionsTried++;
         ship.setEndX(startX - (length-1));
 //          System.out.println("setEndCoords(): endX = "+ (startX - (length-1)));
         ship.setEndY(startY);
         if (isValidCoord(ship.getEndX()) && !doesBoatOverlap(ship, direction)) {
-          //System.out.println("setEndCoords(): endX (" + ship.getEndX() + ") is valid");
+//          System.out.println("setEndCoords(): endX (" + ship.getEndX() + ") is valid");
           foundEndCoords = true;
         } else {
-          //System.out.println("setEndCoords(): endX (" + ship.getEndX() + ") is not valid. Direction++");
+//          System.out.println("setEndCoords(): endX (" + ship.getEndX() + ") is not valid. Direction++");
           direction++;
         }
       } else { //direction == RIGHT (5)
-        //System.out.println("setEndCoords(): Direction = RIGHT");
+//        System.out.println("setEndCoords(): Direction = RIGHT");
         directionsTried++;
         ship.setEndX(startX + (length-1));
 //          System.out.println("setEndCoords(): endX = "+ (startX + (length-1)));
         ship.setEndY(startY);
         if (isValidCoord(ship.getEndX()) && !doesBoatOverlap(ship, direction)) {
-          //System.out.println("setEndCoords(): endX (" + ship.getEndX() + ") is valid");
+//          System.out.println("setEndCoords(): endX (" + ship.getEndX() + ") is valid");
           foundEndCoords = true;
         } else {
-          //System.out.println("setEndCoords(): endX (" + ship.getEndX() + ") is not valid. Direction++");
+//          System.out.println("setEndCoords(): endX (" + ship.getEndX() + ") is not valid. Direction++");
           direction = UP; //restarting while loop
         }
       }
@@ -306,16 +320,20 @@ public class ComputerPlayer extends Player {
   
   private boolean doesBoatOverlap(Boat blackPearl, int direction) { //overrides Player's doesBoatOverlap
     boolean overlap = false;
-    if (direction == UP || direction == DOWN) {
-      for (int j = blackPearl.getStartY(); j <= blackPearl.getEndY(); j++) {
-        //System.out.println("doesBoatOverlap(): " + grid[blackPearl.getStartX()-1][j-1].getHasBoat());
+    if (blackPearl.getStartX()==blackPearl.getEndX()) {
+      int startY = Math.min(blackPearl.getStartY(), blackPearl.getEndY());
+      int endY = Math.max(blackPearl.getStartY(), blackPearl.getEndY());
+      for (int j = startY; j <= endY; j++) {
+//        System.out.println("doesBoatOverlap(): " + grid[blackPearl.getStartX()-1][j-1].getHasBoat());
         overlap = (grid[blackPearl.getStartX()-1][j-1].getHasBoat()) ? true : overlap;
         //if there's a boat, valid = false, else doesn't change
         if (overlap) { return overlap; } //returns at first instance of boatOverlapping
       }
-    } else { //direction == LEFT || RIGHT
-      for (int j = blackPearl.getStartX(); j <= blackPearl.getEndX(); j++) {
-        //System.out.println("doesBoatOverlap(): " + grid[j-1][blackPearl.getStartY()-1].getHasBoat());
+    } else { //Y values are equal
+      int startX = Math.min(blackPearl.getStartX(), blackPearl.getEndX());
+      int endX = Math.max(blackPearl.getStartX(), blackPearl.getEndX());
+      for (int j = startX; j <= endX; j++) {
+//        System.out.println("doesBoatOverlap(): " + grid[j-1][blackPearl.getStartY()-1].getHasBoat());
         overlap = (grid[j-1][blackPearl.getStartY()-1].getHasBoat()) ? true : overlap;
         //if there's a boat, valid = false, else doesn't change
         if (overlap) { return overlap; } //returns at first instance of boatOverlapping
@@ -336,27 +354,35 @@ public class ComputerPlayer extends Player {
     return (int)Math.round(Math.random() + 4);
   }
   
+  public int getAimAtX() {
+    return aimAtX;
+  }
+  
+  public int getAimAtY() {
+    return aimAtY;
+  }
+  
   public static void main (String[] args) {
     ComputerPlayer c = new ComputerPlayer();
     c.placeBoats();
-        System.out.println("COMPUTER\nfindMyFleet(): " + c.findMyFleet());
+    System.out.println("COMPUTER\nfindMyFleet(): " + c.findMyFleet());
     System.out.println(c.printGrid());
 //    System.out.println(c.printGrid());
-    ComputerPlayer human = new ComputerPlayer();
-    human.placeBoats();
-    System.out.println("HUMAN\n" + human.findMyFleet());
-    System.out.println(human.printGrid());
-    
-    System.out.println("*****************BEGIN GUESSING*****************");
-    int count = 0;
-    while (count < 5) {
-      System.out.println("Computer: ");
-      c.takeAShot(human);
-      System.out.println("Human: ");
-      human.takeAShot(c);
-      count++;
-      System.out.println("Turn complete");
-    }
+//    ComputerPlayer human = new ComputerPlayer();
+//    human.placeBoats();
+//    System.out.println("HUMAN\n" + human.findMyFleet());
+//    System.out.println(human.printGrid());
+//    
+//    System.out.println("*****************BEGIN GUESSING*****************");
+//    int count = 0;
+//    while (count < 5) {
+//      System.out.println("Computer: ");
+//      c.takeAShot(human);
+//      System.out.println("Human: ");
+//      human.takeAShot(c);
+//      count++;
+//      System.out.println("Turn complete");
+//    }
   }
   
 }

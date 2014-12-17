@@ -14,3 +14,8 @@ Future implementation ideas (for technical report):
 -2 human users
 -difficulty levels
 -bomb (but the bomb method works, just not in the actual game)
+-more intelligent shooting algorithm
+  (e.g. - - H H B B - -
+   next turn:
+        - M H H B B - -
+   next turn (doesn't follow the boat anymore, does randomiser))

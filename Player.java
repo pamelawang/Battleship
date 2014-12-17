@@ -20,7 +20,7 @@ public class Player {
   protected LinkedList<Boat> fleet; //fleet will have a default size in the final version of the game
   private final int NUM_BOATS = 5;
   protected final int GRID_DIMENSIONS = 10; //testing size of the grid
-  private final int INVALID = -1;
+  protected final int INVALID = -1;
   protected final int MISS = 0;
   protected final int HIT_NOT_SUNK = 1;
   protected final int HIT_AND_SUNK = 2;
