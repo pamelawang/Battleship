@@ -1,12 +1,15 @@
 Battleship Checklist
 (To mark as done, write "- DONE")
 
-Technical Report
-AI for shooting
-Testing Stats/AllStats
+Technical Report - PAM (done so far)
+Player/ComputerPLayer + Javadocs - MEERA
+Testing Stats/AllStats + StatsPanel - PAM
 Images for Panels - PAM
-Testing placeBoats loop in ComputerPlayer
+GamePanel - MEERA
+removeBoat() - PAM
+Player - MOST UPDATED VERSION - PAM
 
 Future implementation ideas (for technical report):
 -2 human users
 -difficulty levels
+-bomb (but the bomb method works, just not in the actual game)

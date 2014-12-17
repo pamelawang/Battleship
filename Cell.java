@@ -56,11 +56,16 @@ public class Cell {
   * upon once when the grid is first created, and afterwards shouldn't be
   * able to change hasBoat.
   * 
+  * Assumption:
+  * setHasBoat(false) will only be used for the undo button during set up,
+  * so Cell never has to set a Cell that has been hit (shot with a boat)
+  * to NADA.
+  * 
   * @param  b   boolean that hasBoat will be set to
   *****************************************************************/
   public void setHasBoat(boolean b) {
     hasBoat = b;
-    allInfo = BOAT_ONLY;
+    allInfo = (b) ? BOAT_ONLY : NADA;
   }
   
   /******************************************************************
