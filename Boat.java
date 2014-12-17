@@ -10,16 +10,16 @@
  */
 
 public class Boat {
-  private int startX;
-  private int startY; //start coordinates of boat
-  private int endX; 
-  private int endY; //end coordinates of boat (should correlate with the length of the boat)
+  private int startIndexX;
+  private int startIndexY; //start coordinates of boat
+  private int endIndexX; 
+  private int endIndexY; //end coordinates of boat (should correlate with the length of the boat)
   private int length;
-  private final int MAX_LENGTH = 5; //largest ship size
+  private int MAX_LENGTH = 5; //largest ship size
   private int numHits; //will count how many shots have been taken
   private boolean isSunk;
-  private final int GRID_DIMENSIONS = 5; //maximum length of one size of the grid; hard-coded because grid size should be present
-  private final int INVALID = -1;
+  private int GRID_DIMENSIONS = 5; //maximum length of one size of the grid; hard-coded because grid size should be present
+  private int INVALID = -1;
   
   /******************************************************************
     * Constructor: Creates a Boat object, taking in the name and length of 
@@ -108,7 +108,7 @@ public class Boat {
   }
   
   /******************************************************************
-    * Returns the last ('ending') x-coordinate of boat. Not yet functional.
+    * Returns the last ('ending') x-coordinate of boat.
     * 
     * @return  int     last ('ending') x-coordinate of boat
     *****************************************************************/
@@ -117,7 +117,7 @@ public class Boat {
   }
   
   /******************************************************************
-    * Returns the last ('ending') y-coordinate of boat. Not yet functional.
+    * Returns the last ('ending') y-coordinate of boat.
     * 
     * @return  int     last ('ending') y-coordinate of boat
     *****************************************************************/
