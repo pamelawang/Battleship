@@ -108,7 +108,7 @@ public class Boat {
   }
   
   /******************************************************************
-    * Returns the last ('ending') x-coordinate of boat. Not yet functional.
+    * Returns the last ('ending') x-coordinate of boat.
     * 
     * @return  int     last ('ending') x-coordinate of boat
     *****************************************************************/
@@ -117,7 +117,7 @@ public class Boat {
   }
   
   /******************************************************************
-    * Returns the last ('ending') y-coordinate of boat. Not yet functional.
+    * Returns the last ('ending') y-coordinate of boat.
     * 
     * @return  int     last ('ending') y-coordinate of boat
     *****************************************************************/

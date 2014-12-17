@@ -10,10 +10,10 @@
  */
 
 public class Boat {
-  private int startIndexX;
-  private int startIndexY; //start coordinates of boat
-  private int endIndexX; 
-  private int endIndexY; //end coordinates of boat (should correlate with the length of the boat)
+  private int startX;
+  private int startY; //start coordinates of boat
+  private int endX; 
+  private int endY; //end coordinates of boat (should correlate with the length of the boat)
   private int length;
   private int MAX_LENGTH = 5; //largest ship size
   private int numHits; //will count how many shots have been taken
@@ -41,18 +41,7 @@ public class Boat {
     endY = INVALID;
   }
   
-  //METHODS
-  /******************************************************************
-    * Sets all of the boat's coordinates to -1 (invalid).
-    *****************************************************************/
-  public void reset () {
-    startX = INVALID; 
-    startY = INVALID; 
-    endX = INVALID; 
-    endY = INVALID; 
-  }
-  
-  
+  //METHODS  
   /******************************************************************
     * Sets the starting x-coordinate of boat.
     * 
