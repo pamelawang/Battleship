@@ -37,6 +37,7 @@ public class GamePanel extends JPanel {
 //  private static Border CELL_BORDER = BorderFactory.createBevelBorder(BevelBorder.RAISED);
   private Cell[][] humanRefGrid;
   private JButton letsPlay;
+  private JButton readyForComp;
   
   public GamePanel(Game battleship) {
     
@@ -60,6 +61,7 @@ public class GamePanel extends JPanel {
     numBombsLeftHuman = 0;
     humanRefGrid = human.getGrid();
     letsPlay = new JButton();
+    readyForComp = new JButton("Bring it on!");
     
     
     boatsLeft = createBoatsLeft();
@@ -82,24 +84,28 @@ public class GamePanel extends JPanel {
     center.setLayout(new GridLayout(4, 1));
     center.setBackground(Color.black);
     
+    JPanel top = new JPanel(new FlowLayout());
+    top.setBackground(Color.black);
     JPanel emptySpace = new JPanel();
-    
     emptySpace.setLayout(new GridLayout(3,6));
     emptySpace.setBackground(Color.black);
-    JPanel moreEmpty = new JPanel();
-    moreEmpty.setBackground(Color.black);
     JPanel playButton = new JPanel();
-    letsPlay.setText(">>>>>>>>>>Play game!<<<<<<<<<<");
+    playButton.setBackground(Color.black);
+    
+    letsPlay.setText(">>>>>>>>>> Play! <<<<<<<<<<");
     letsPlay.addActionListener(new GridButtonListener());
+    readyForComp.addActionListener(new GridButtonListener());
+    readyForComp.setVisible(false);
+    
+    top.add(banner);
+    top.add(readyForComp);
     playButton.add(letsPlay);
+    emptySpace.add(playButton);
     
-    emptySpace.add(letsPlay);
-    
-    emptySpace.setBackground(Color.black);
     shootAtGrid = createShootAtGrid();
     humanGrid = createHumanGrid();
     
-    center.add(banner);
+    center.add(top);
     center.add(shootAtGrid);
     center.add(emptySpace);
     center.add(humanGrid);
@@ -246,7 +252,7 @@ public class GamePanel extends JPanel {
       if (e.getSource() == letsPlay) {
         letsPlay.setVisible(false);
         humanRefGrid = human.getGrid();
-        banner.setText("It's your turn! Click on a square to shoot at it.");
+        banner.setText("It's your turn! Click on a square in the upper grid to shoot at the computer.");
         revalidate();
       } else {
         if (battle.getGameOver() < 0) {
@@ -256,18 +262,21 @@ public class GamePanel extends JPanel {
                                  + ", " + nextShot.getYCoord() + ")");
             try {
               int result = computer.gotShot(nextShot.getXCoord(), nextShot.getYCoord());
-              banner.setText(postShot(result));
+              changeSettings(result, nextShot);
+              banner.setText(postShot(result)+ " It's the computer's turn!");
+              readyForComp.setVisible(true);
               System.out.println("\n" + buttonToString(nextShot));
               battle.setIsHumanTurn(false);
-              banner.setText("It's the computer's turn!");
-              result = computer.takeAShot(human);
-              banner.setText("It shot at ("+computer.getAimAtX()+", "+computer.getAimAtY()+")");
-              banner.setText(postShot(result));
-              System.out.println("Computer shoots!");
             } catch (InvalidShotException oops) {
               //do nothing for now - ask user to pick a diff coordinate.
             }
             
+          } else {
+            readyForComp.setVisible(false);
+            int result = computer.takeAShot(human);
+            banner.setText("It shot at ("+computer.getAimAtX()+", "+computer.getAimAtY()+")! "+ postShot(result) + " Your turn!");
+            System.out.println("Computer shoots!");
+            battle.setIsHumanTurn(true);
           }
         }
       }
@@ -287,6 +296,20 @@ public class GamePanel extends JPanel {
           break;
       }
       return s;
+    }
+    
+    private void changeSettings (int resultOfShot, GridButton justShot) { //only when user goes
+      switch (resultOfShot) {
+        case 1: //hit 
+          justShot.setBackground(Color.red);
+          break;
+        case 2:
+          justShot.setBackground(Color.red);
+          break;
+        default:
+          justShot.setBackground(Color.white);
+          break;
+      }
     }
   }
 }
