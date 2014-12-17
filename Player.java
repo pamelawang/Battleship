@@ -60,7 +60,7 @@ public class Player {
     *****************************************************************/
   public void placeBoat(int boatIndex, int startX, int startY, int endX, int endY) throws InvalidPlacementException {
     System.out.println("placeBoat(): boatNum " + boatIndex);
-    
+    Boat toPlace = getBoatAt(boatIndex);
     //checking if coordinates are within GRID_DIMENSIONS
     if (!withinGridDimensions(startX, startY, endX, endY)) {
       throw new InvalidPlacementException("Your boat isn't on the grid. ");
@@ -71,15 +71,27 @@ public class Player {
       throw new InvalidPlacementException("There is already a boat in the area you selected. ");
     }
     
+    //checking that the coordinates match boat's length
+    if (((startX==endX) && (endY-startY!=toPlace.getLength()-1)) || ((startY==endY) && (endX-startX!=toPlace.getLength()-1))) {
+      System.out.println(startX +" " + endX + "diff in Y: " + (endY-startY));
+      System.out.println(startY +" " + endY + "diff in X: " + (endX-startX));
+      throw new InvalidPlacementException("Your boat isn't the right length.");
+    }
+    
+    //ensures boat is vertical/horizontal
+    if ((startX != endX) && (startY != endY)) {
+      throw new InvalidPlacementException("You need to make your boat either vertical or horizontal.");
+    }
+    
     //setting boat's start and end coordinates
-    fleet.get(boatIndex).setStartX(startX);
-    fleet.get(boatIndex).setStartY(startY);
-    System.out.println("placeBoat(): StartX, Y = " + fleet.get(boatIndex).getStartX()+" "+
-                       fleet.get(boatIndex).getStartY());
-    fleet.get(boatIndex).setEndX(endX);
-    fleet.get(boatIndex).setEndY(endY);
-    System.out.println("placeBoat(): EndX, Y = " + fleet.get(boatIndex).getEndX()+" "+
-                       fleet.get(boatIndex).getEndY());
+    toPlace.setStartX(startX);
+    toPlace.setStartY(startY);
+    System.out.println("placeBoat(): StartX, Y = " + toPlace.getStartX()+" "+
+                       toPlace.getStartY());
+    toPlace.setEndX(endX);
+    toPlace.setEndY(endY);
+    System.out.println("placeBoat(): EndX, Y = " + toPlace.getEndX()+" "+
+                       toPlace.getEndY());
     
     //setting all checked coordinates of boat to have a boat
     int gridStartX = Math.min(startX, endX);
@@ -212,12 +224,10 @@ public class Player {
     * was a hit, then the necessary changes are made to the Cell that was
     * aimed at and the Boat that was hit.
     * 
-    * Assumptions/Notes:
-    * -gotShot() is one-sided, only applies to the user/Player.
-    * -Can only tell the other player (ComputerPlayer) where the user is
-    * guessing, and the user doesn't know if it was a miss/hit/sunk until
-    * the opponent (ComputerPlayer) notifies them.
-    * -To shoot the opponent, we call upon the other player's gotShot() method
+    * Note:
+    * gotShot() is one-sided: within the Player class, there is only one player;
+    * therefore, that player gets shot at, and does not do the shooting directly.
+    * In order for the "other" player for be shot, we will use other.gotShot(x,y).
     * 
     * @param     x     x-coordinate of opponent's guess
     * @param     y     y-coordinate of opponent's guess
@@ -325,7 +335,7 @@ public class Player {
     * @return    Boat     boat at specified index
     ***********************************************************************/
   public Boat getBoatAt (int index) {
-    System.out.println("getBoatAt(): " + fleet.get(index));
+//    System.out.println("getBoatAt(): " + fleet.get(index));
     return fleet.get(index);
   }
   
