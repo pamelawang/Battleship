@@ -75,7 +75,8 @@ public class PlaceBoatPanel extends JPanel {
   }
   
   /******************************************************************
-  * GridButtonListener
+  * GridButtonListener: actionPerformed() keeps the game running by
+  * changing those things that need to be changed.
   *****************************************************************/
   private class GridButtonListener implements ActionListener {
     public void actionPerformed (ActionEvent e) {

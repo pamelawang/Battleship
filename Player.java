@@ -43,7 +43,7 @@ public class Player {
     
     fleet = new LinkedList<Boat>(); //number of boats in fleet
     for (int i = 0; i < NUM_BOATS; i++) {
-      Boat temp = new Boat(BOAT_LENGTHS[i]); //for stage 1: single cell boats
+      Boat temp = new Boat(BOAT_LENGTHS[i]); 
       fleet.add(temp);
     }
     shipsSunk = new LinkedList<Boat>();

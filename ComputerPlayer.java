@@ -3,11 +3,10 @@
  * Date created: 10 Dec 2014
  * CS 230 Project: Battleship
  * 
- * Purpose: 
+ * Purpose: Creates a ComputerPlayer, which can place its boats 
+ * and take shots automatically. 
  * 
  * NOTES:
- * 1. Need to fix the checking for a boat (doesBoatOverlap()) - have to start from the
- * least between start and end.
  * 
  * @author Meera Hejmadi
  * @author Pamela Wang
@@ -353,7 +352,13 @@ private void pickAPoint() { //randomiser
     }
   }
   
-  
+  /******************************************************************************
+    * Private. Sets the end coordinates of the boat using its direction. If unable to
+    * satisfy direction, changes it and tries again.
+    * 
+    * @param     ship     boat to be placed
+    * @param     direction     which direction the boat should go
+    *******************************************************************************/
   private void setEndCoords(Boat ship, int direction) {
     int startX = ship.getStartX();
     int startY = ship.getStartY();

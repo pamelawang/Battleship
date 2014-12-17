@@ -6,7 +6,11 @@
  * Purpose: Creates a single game instance, with two players.
  * 
  * NOTES:
- * 1. Make sure to explain why turn isn't used!
+ * 1. We don't use a "turn" method because the way that the GUI is 
+ * structured means that each player takes a turn separately, and we can't
+ * combine the two into a single turn method for GUI-purposes.
+ * However, we've just commented out the turn method below, because we used 
+ * it for non-GUI testing.
  * 
  * @author Meera Hejmadi
  * @author Pamela Wang

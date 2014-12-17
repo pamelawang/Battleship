@@ -15,7 +15,7 @@
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.BorderFactory;
+
 
 public class GamePanel extends JPanel {
   
@@ -23,9 +23,8 @@ public class GamePanel extends JPanel {
   private Player human;
   private ComputerPlayer computer;
   private JPanel centerPiece; //will contain banner, humanGrid, and shootAtGrid
-  private JLabel banner;
-//  private JPanel humanGrid;
-  private JPanel shootAtGrid;
+  private JLabel banner; //instructions, hit/miss, etc
+  private JPanel shootAtGrid; //grid the human player will shoot at
   private JPanel boatsLeft; //goes on the left of the center panel
   private int numBoatsLeftComp;
   private int numBoatsLeftHuman;
@@ -34,13 +33,19 @@ public class GamePanel extends JPanel {
   private JPanel bombsLeft; //goes on right of center panel
   private int gridSize;
   private final Color SEA = new Color (0, 0, 128);
-//  private static Border CELL_BORDER = BorderFactory.createBevelBorder(BevelBorder.RAISED);
-  private Cell[][] humanRefGrid;
-  private Cell[][] compRefGrid;
-  private GridButton[][] humanGrid;
+  private Cell[][] humanRefGrid; //copy of the human Player's grid.
+  private Cell[][] compRefGrid; //copy of the ComputerPlayer
+  private GridButton[][] humanGrid; //2D array of gridButtons create human's GUI grid.
   private JButton letsPlay;
   private JButton readyForComp;
   
+  
+   /******************************************************************
+    * Creates a new instance of the GamePanel. Requires a Game input, and 
+    * works based off of that.
+    * 
+    * @param    battleship    input game that GamePanel runs off of
+    *****************************************************************/
   public GamePanel(Game battleship) {
     
     battle = battleship;
@@ -257,6 +262,7 @@ public class GamePanel extends JPanel {
       if (e.getSource() == letsPlay) {
         letsPlay.setVisible(false);
         humanRefGrid = human.getGrid();
+        compRefGrid = computer.getGrid();
         banner.setText("It's your turn! Click on a square in the upper grid to shoot at the computer.");
         revalidate();
       } else {
@@ -284,7 +290,7 @@ public class GamePanel extends JPanel {
             int y = computer.getAimAtY();
             banner.setText("It shot at ("+x+", "+y+")! "+ postShot(result) + " Your turn!");
             changeSettings(result, humanGrid[x][y]);
-            System.out.println("\n" + buttonToString(nextShot));
+//            System.out.println("\n" + buttonToString(nextShot));
             System.out.println("After computer's shot, humans's grid: \n" + human.printGrid());
             System.out.println("Computer shoots!");
             battle.setIsHumanTurn(true);
