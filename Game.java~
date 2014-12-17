@@ -1,4 +1,3 @@
-
 /* NAME: Game.java
  * Created by: Meera Hejmadi and Pamela Wang
  * Date created: 10 Dec 2014

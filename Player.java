@@ -7,7 +7,6 @@
  * a grid on which to place them.
  * 
  * Notes:
- * 1. removeBoat() ISN'T WORKING!! The Cells remain "hasBoat == true".
  * 
  * @author Meera Hejmadi
  * @author Pamela Wang
@@ -60,35 +59,54 @@ public class Player {
     * @param   endY        end y-coordinate of boat
     *****************************************************************/
   public void placeBoat(int boatIndex, int startX, int startY, int endX, int endY) throws InvalidPlacementException {
-    int indexStartX = startX-1; //(x-1) because 0 indexing
-    int indexStartY = startY-1;
-    int indexEndX = endX - 1;
-    int indexEndY = endY - 1;
-    
+    System.out.println("placeBoat(): boatNum " + boatIndex);
+    Boat toPlace = getBoatAt(boatIndex);
     //checking if coordinates are within GRID_DIMENSIONS
     if (!withinGridDimensions(startX, startY, endX, endY)) {
       throw new InvalidPlacementException("Your boat isn't on the grid. ");
     }
     
     //checking for any boat overlapping
-    if (doesBoatOverlap(indexStartX, indexStartY, indexEndX, indexEndY)) {
+    if (doesBoatOverlap((startX-1), (startY-1), (endX-1), (endY-1))) {
       throw new InvalidPlacementException("There is already a boat in the area you selected. ");
     }
     
+    //checking that the coordinates match boat's length
+    if (((startX==endX) && (endY-startY!=toPlace.getLength()-1)) || ((startY==endY) && (endX-startX!=toPlace.getLength()-1))) {
+      System.out.println(startX +" " + endX + "diff in Y: " + (endY-startY));
+      System.out.println(startY +" " + endY + "diff in X: " + (endX-startX));
+      throw new InvalidPlacementException("Your boat isn't the right length.");
+    }
+    
+    //ensures boat is vertical/horizontal
+    if ((startX != endX) && (startY != endY)) {
+      throw new InvalidPlacementException("You need to make your boat either vertical or horizontal.");
+    }
+    
     //setting boat's start and end coordinates
-    fleet.get(boatIndex).setStartX(startX);
-    fleet.get(boatIndex).setStartY(startY);
-    fleet.get(boatIndex).setEndX(endX);
-    fleet.get(boatIndex).setEndY(endY);
+    toPlace.setStartX(startX);
+    toPlace.setStartY(startY);
+    System.out.println("placeBoat(): StartX, Y = " + toPlace.getStartX()+" "+
+                       toPlace.getStartY());
+    toPlace.setEndX(endX);
+    toPlace.setEndY(endY);
+    System.out.println("placeBoat(): EndX, Y = " + toPlace.getEndX()+" "+
+                       toPlace.getEndY());
     
     //setting all checked coordinates of boat to have a boat
-    int gridStartX = Math.min(indexStartX, indexEndX);
-    int gridEndX = Math.max(indexStartX, indexEndX);
-    int gridStartY = Math.min(indexStartY, indexEndY);
-    int gridEndY = Math.max(indexStartY, indexEndY);
-    for (int i = gridStartX; i <= gridEndX; i++) {
+    int gridStartX = Math.min(startX, endX);
+    int gridEndX = Math.max(startX, endX);
+    int gridStartY = Math.min(startY, endY);
+    int gridEndY = Math.max(startY, endY);
+    if (gridStartX==gridEndX) {
       for (int j = gridStartY; j <= gridEndY; j++) {
-        grid[i][j].setHasBoat(true); //setting all of Boat's Cells
+        grid[gridStartX-1][j-1].setHasBoat(true); //0indexing
+        System.out.println("grid["+(gridStartX-1)+"]["+(j-1)+"] hasBoat: "+grid[gridStartX-1][j-1].getHasBoat());
+      }
+    } else if (gridStartY==gridEndY) {
+      for (int i = gridStartX; i <= gridEndX; i++) {
+        grid[i-1][gridStartY-1].setHasBoat(true); //o-indexing
+        System.out.println("grid["+(i-1)+"]["+(gridStartY-1)+"] hasBoat: "+grid[i-1][gridStartY-1].getHasBoat());
       }
     }
     System.out.println("Boat " + (boatIndex+1) + "'s coordinates have successfully been set!~*~!~*~!*~!~*~!");
@@ -96,7 +114,7 @@ public class Player {
   
   /*****************************************************************
     * Private, used in placeBoats(). Checking if coordinates are
-    * within grid dimensions
+    * within grid dimensions.
     * 
     * @param   startX      start x-coordinate of boat
     * @param   startY      start y-coordinate of boat
@@ -145,9 +163,10 @@ public class Player {
   }
   
   /*****************************************************************
-    * States the user's fleet by showing all of their boats, boat lengths and boat states (sunk or not sunk).
+    * States the user's fleet by showing all of their boats, boat lengths and 
+    * boat states (sunk or not sunk).
     * 
-    * @return   String   a String that specifices all of the user's boats, boat lengths and boat state (sunk or not sunk).
+    * @return   String   a String representation of user's fleet.
     *****************************************************************/
   public String findMyFleet() {
     String boatLocations = "Your fleet consists of " + NUM_BOATS + " boat(s):\n";
@@ -162,68 +181,42 @@ public class Player {
   
   /****************************************************************************
     * Removes the boat at the specified index. i.e. sets it's coordinates to INVALID,
-    * and makes relevant changes to the Player's grid.
+    * and makes relevant changes to the Player's grid cells.
     * 
     * @param     index     index of boat to be "removed"
     *******************************************************************************/
   public void removeBoat (int index) {
-    int startX = getBoatAt(index).getStartX();
-    System.out.println("removeBoat(): before resetting boat. startX = " + startX);
-    int startY = getBoatAt(index).getStartY();
-    int endX = getBoatAt(index).getEndX();
-    int endY = getBoatAt(index).getEndY();
-    
-    int gridStartX = Math.min(startX, endX);
-    int gridEndX = Math.max(startX, endX);
-    System.out.println("removeBoat(): gridStartX = " + gridStartX + "\tgridEndX = " + gridEndX +
-                       "\tstartX = " + startX + "\tendX = " + endX);
-    int gridStartY = Math.min(startY, endY);
-    int gridEndY = Math.max(startY, endY); 
-    System.out.println("removeBoat(): gridStartY = " + gridStartY + "\tgridEndY = " + gridEndY +
-                       "\tstartY = " + startY + "\tendY = " + endY);
-    
-    resetBoat(getBoatAt(index)); //coordinates set to invalid
+    Boat b = getBoatAt(index);
+    int startX = Math.min(b.getStartX(), b.getEndX());
+    System.out.println("removeBoat(): startX = " + startX);
+    int startY = Math.min(b.getStartY(), b.getEndY());
+    System.out.println("removeBoat(): startY = " + startY);
+    int endX = Math.max(b.getStartX(), b.getEndX());
+    System.out.println("removeBoat(): endX = " + endX);
+    int endY = Math.max(b.getStartY(), b.getEndY());
+    System.out.println("removeBoat(): endY = " + endY);
     
     //reset cells in grid.
-    if (gridStartX == gridEndX) { 
-      for (int a = gridStartY; a <= gridEndY; a++) {
-        System.out.println("removeBoat(): X constant. Changing coordinate: " + a);
-        grid[a][gridStartX].setHasBoat(false);
-        System.out.println("removeBoat(): Cell: " + grid[a][gridStartX]);
+    if (startX == endX) { 
+      for (int j = startY; j <= endY; j++) {
+        System.out.println("removeBoat(): X constant. Changing coordinate: " + j);
+        grid[startX-1][j-1].setHasBoat(false);
+        System.out.println("removeBoat(): Cell: " + grid[startX-1][j-1]);
       }   
-    } else if (gridStartY == gridEndY) {
-      for (int b = gridStartX; b <= gridEndX; b++) {
-        System.out.println("removeBoat(): Y constant. Changing coordinate: " + b);
-        grid[gridStartY][b].setHasBoat(false);
-        System.out.println("removeBoat(): Cell: " + grid[gridStartY][b]);
+    } else if (startY == endY) {
+      for (int i = startX; i <= endX; i++) {
+        System.out.println("removeBoat(): Y constant. Changing coordinate: " + i);
+        grid[i-1][startY-1].setHasBoat(false);
+        System.out.println("removeBoat(): Cell: " + grid[i-1][startY-1]);
       }
     }
     
-  }
-  
-  /******************************************************************
-    * Private, used in removeBoat(). Sets all of the boat's coordinates
-    * to -1 (invalid) and all the Cells within boat is set to not have
-    * a boat.
-    * 
-    * @param   b      Boat to reset
-    *****************************************************************/
-  private void resetBoat (Boat b) {
-    int smallerX = Math.min(b.getStartX(), b.getEndX());
-    int largerX = Math.max(b.getStartX(), b.getEndX());
-    int smallerY = Math.min(b.getStartY(), b.getEndY());
-    int largerY = Math.max(b.getStartY(), b.getEndY());
-    
-    for (int i = smallerX; i <= largerX; i++) {
-      for (int j = smallerY; j <= largerY; j++) {
-        grid[i-1][j-1].setHasBoat(false);
-      }
-    }
-    
+    //reset boat
     b.setStartX(INVALID); 
     b.setStartY(INVALID); 
     b.setEndX(INVALID); 
     b.setEndY(INVALID);
+    
   }
   
   /***********************************************************************
@@ -231,12 +224,10 @@ public class Player {
     * was a hit, then the necessary changes are made to the Cell that was
     * aimed at and the Boat that was hit.
     * 
-    * Assumptions/Notes:
-    * -gotShot() is one-sided, only applies to the user/Player.
-    * -Can only tell the other player (ComputerPlayer) where the user is
-    * guessing, and the user doesn't know if it was a miss/hit/sunk until
-    * the opponent (ComputerPlayer) notifies them.
-    * -To shoot the opponent, we call upon the other player's gotShot() method
+    * Note:
+    * gotShot() is one-sided: within the Player class, there is only one player;
+    * therefore, that player gets shot at, and does not do the shooting directly.
+    * In order for the "other" player for be shot, we will use other.gotShot(x,y).
     * 
     * @param     x     x-coordinate of opponent's guess
     * @param     y     y-coordinate of opponent's guess
@@ -344,6 +335,7 @@ public class Player {
     * @return    Boat     boat at specified index
     ***********************************************************************/
   public Boat getBoatAt (int index) {
+//    System.out.println("getBoatAt(): " + fleet.get(index));
     return fleet.get(index);
   }
   
@@ -536,21 +528,12 @@ public class Player {
 } //closes Player
 
  /***********************************************************************
-   * Exception used in gotShot() method for when the Cell currently being
-   * aimed at has already been shot at.
+   * Exception used in placeBoat() method for any conflicts arising:
+   * (i) Boat overlappinng
+   * (ii) Boat outside of grid limits
    ***********************************************************************/
 class InvalidShotException extends Exception {
   public InvalidShotException(String problem) {
     System.out.println(problem);
-  }
-}
-
-/***********************************************************************
-  * Exception used in gotShot() method for when the Cell currently being
-  * aimed at has already been shot at.
-  ***********************************************************************/
-class InvalidPlacementException extends Exception {
-  public InvalidPlacementException(String problem) {
-    System.out.println(problem + "Please place boat again.");
   }
 }
