@@ -82,7 +82,7 @@ public class GamePanel extends JPanel {
     JPanel moreEmpty = new JPanel();
     moreEmpty.setBackground(Color.black);
     JPanel playButton = new JPanel();
-    letsPlay.setText("Play game!");
+    letsPlay.setText(">>>>>>>>>>Play game!<<<<<<<<<<");
     letsPlay.addActionListener(new GridButtonListener());
     playButton.add(letsPlay);
     
