@@ -6,8 +6,9 @@ Player/ComputerPLayer + Javadocs - MEERA
 Testing Stats/AllStats + StatsPanel - PAM
 Images for Panels - PAM
 GamePanel - MEERA
-removeBoat() - PAM
-Player - MOST UPDATED VERSION - PAM
+  
+removeBoat() - DONE
+Player - MOST UPDATED VERSION - DONE
 
 Future implementation ideas (for technical report):
 -2 human users
