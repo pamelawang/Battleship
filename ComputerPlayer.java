@@ -354,6 +354,14 @@ public class ComputerPlayer extends Player {
     return (int)Math.round(Math.random() + 4);
   }
   
+  public int getAimAtX() {
+    return aimAtX;
+  }
+  
+  public int getAimAtY() {
+    return aimAtY;
+  }
+  
   public static void main (String[] args) {
     ComputerPlayer c = new ComputerPlayer();
     c.placeBoats();
