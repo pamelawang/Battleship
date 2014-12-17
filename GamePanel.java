@@ -24,7 +24,7 @@ public class GamePanel extends JPanel {
   private ComputerPlayer computer;
   private JPanel centerPiece; //will contain banner, humanGrid, and shootAtGrid
   private JLabel banner;
-  private JPanel humanGrid;
+//  private JPanel humanGrid;
   private JPanel shootAtGrid;
   private JPanel boatsLeft; //goes on the left of the center panel
   private int numBoatsLeftComp;
@@ -36,22 +36,26 @@ public class GamePanel extends JPanel {
   private final Color SEA = new Color (0, 0, 128);
 //  private static Border CELL_BORDER = BorderFactory.createBevelBorder(BevelBorder.RAISED);
   private Cell[][] humanRefGrid;
+  private Cell[][] compRefGrid;
+  private GridButton[][] humanGrid;
   private JButton letsPlay;
+  private JButton readyForComp;
   
   public GamePanel(Game battleship) {
     
     battle = battleship;
     human = battle.getHumanPlayer();
     computer = battle.getCompPlayer();
+    gridSize = battleship.getGridSize();
     
     setLayout(new BorderLayout());
     setBackground(Color.black);
     
     banner =  new JLabel("Welcome to Battleship! Press \"Play\" to begin!");
     banner.setForeground(Color.white);
-    humanGrid = new JPanel();
+    humanGrid = new GridButton[gridSize][gridSize];
     shootAtGrid = new JPanel();
-    gridSize = battleship.getGridSize();
+
     numBoatsLeftComp = computer.getNumBoats();
     numBoatsLeftHuman = human.getNumBoats();
 //    numBombsLeftComp = battleship.getCompPlayer().getNumBombs();
@@ -59,7 +63,9 @@ public class GamePanel extends JPanel {
     numBombsLeftComp = 0;
     numBombsLeftHuman = 0;
     humanRefGrid = human.getGrid();
+    compRefGrid = computer.getGrid();
     letsPlay = new JButton();
+    readyForComp = new JButton("Bring it on!");
     
     
     boatsLeft = createBoatsLeft();
@@ -82,27 +88,31 @@ public class GamePanel extends JPanel {
     center.setLayout(new GridLayout(4, 1));
     center.setBackground(Color.black);
     
+    JPanel top = new JPanel(new FlowLayout());
+    top.setBackground(Color.black);
     JPanel emptySpace = new JPanel();
-    
     emptySpace.setLayout(new GridLayout(3,6));
     emptySpace.setBackground(Color.black);
-    JPanel moreEmpty = new JPanel();
-    moreEmpty.setBackground(Color.black);
     JPanel playButton = new JPanel();
-    letsPlay.setText(">>>>>>>>>>Play game!<<<<<<<<<<");
+    playButton.setBackground(Color.black);
+    
+    letsPlay.setText(">>>>>>>>>> Play! <<<<<<<<<<");
     letsPlay.addActionListener(new GridButtonListener());
+    readyForComp.addActionListener(new GridButtonListener());
+    readyForComp.setVisible(false);
+    
+    top.add(banner);
+    top.add(readyForComp);
     playButton.add(letsPlay);
+    emptySpace.add(playButton);
     
-    emptySpace.add(letsPlay);
+    JPanel shootGrid = createShootAtGrid();
+    JPanel hGrid = createHGrid();
     
-    emptySpace.setBackground(Color.black);
-    shootAtGrid = createShootAtGrid();
-    humanGrid = createHumanGrid();
-    
-    center.add(banner);
-    center.add(shootAtGrid);
+    center.add(top);
+    center.add(shootGrid);
     center.add(emptySpace);
-    center.add(humanGrid);
+    center.add(hGrid);
     
     return center;
   }
@@ -182,23 +192,24 @@ public class GamePanel extends JPanel {
     * 
     * @return  JPanel  bottommost grid showing where the user has shot
     *****************************************************************/
-  public JPanel createHumanGrid() {
-    JPanel hGrid = new JPanel();
-    hGrid.setLayout(new GridLayout(10, 10));
+  public JPanel createHGrid() {
+    JPanel hagrid = new JPanel();
+    hagrid.setLayout(new GridLayout(10, 10));
     //grid.setPreferredSize(new Dimension(screenHeight/3, screenlength/2))
-    hGrid.setLayout(new GridLayout(gridSize, gridSize));
-    hGrid.setBackground(Color.black);
+    hagrid.setLayout(new GridLayout(gridSize, gridSize));
+    hagrid.setBackground(Color.black);
     
     for (int i = 0; i < gridSize; i++) {
       for (int j = 0; j < gridSize; j++) {
         GridButton temp = new GridButton(i, j);
         temp.setBackground(decideColor(temp));
+        humanGrid[i][j] = temp;
 //        System.out.println("humanGrid(): " + i + ", " + j + " is " + temp.getBackground());
-        hGrid.add(temp);        
+        hagrid.add(temp);        
       }      
     }
     
-    return hGrid;
+    return hagrid;
   }
   
   /******************************************************************
@@ -246,7 +257,7 @@ public class GamePanel extends JPanel {
       if (e.getSource() == letsPlay) {
         letsPlay.setVisible(false);
         humanRefGrid = human.getGrid();
-        banner.setText("It's your turn! Click on a square to shoot at it.");
+        banner.setText("It's your turn! Click on a square in the upper grid to shoot at the computer.");
         revalidate();
       } else {
         if (battle.getGameOver() < 0) {
@@ -256,18 +267,27 @@ public class GamePanel extends JPanel {
                                  + ", " + nextShot.getYCoord() + ")");
             try {
               int result = computer.gotShot(nextShot.getXCoord(), nextShot.getYCoord());
-              banner.setText(postShot(result));
+              changeSettings(result, nextShot);
+              banner.setText(postShot(result)+ " It's the computer's turn!");
+              readyForComp.setVisible(true);
               System.out.println("\n" + buttonToString(nextShot));
               battle.setIsHumanTurn(false);
-              banner.setText("It's the computer's turn!");
-              result = computer.takeAShot(human);
-              banner.setText("It shot at ("+computer.getAimAtX()+", "+computer.getAimAtY()+")");
-              banner.setText(postShot(result));
-              System.out.println("Computer shoots!");
+              System.out.println("After human's shot, computer's grid: \n" + computer.printGrid());
             } catch (InvalidShotException oops) {
               //do nothing for now - ask user to pick a diff coordinate.
             }
             
+          } else {
+            readyForComp.setVisible(false);
+            int result = computer.takeAShot(human);
+            int x = computer.getAimAtX();
+            int y = computer.getAimAtY();
+            banner.setText("It shot at ("+x+", "+y+")! "+ postShot(result) + " Your turn!");
+            changeSettings(result, humanGrid[x][y]);
+            System.out.println("\n" + buttonToString(nextShot));
+            System.out.println("After computer's shot, humans's grid: \n" + human.printGrid());
+            System.out.println("Computer shoots!");
+            battle.setIsHumanTurn(true);
           }
         }
       }
@@ -287,6 +307,20 @@ public class GamePanel extends JPanel {
           break;
       }
       return s;
+    }
+    
+    private void changeSettings (int resultOfShot, GridButton justShot) { //only when user goes
+      switch (resultOfShot) {
+        case 1: //hit 
+          justShot.setBackground(Color.red);
+          break;
+        case 2:
+          justShot.setBackground(Color.red);
+          break;
+        default:
+          justShot.setBackground(Color.white);
+          break;
+      }
     }
   }
 }
