@@ -38,6 +38,7 @@ public class Game {
     isHumanTurn = true; //human starts.
     score = 0;
     gameOver = NOT_OVER;
+    computer.placeBoats();
   }
   
   /*****************************************************************
