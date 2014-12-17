@@ -1,7 +1,7 @@
 Battleship Checklist
 (To mark as done, write "- DONE")
 
-Technical Report - PAM
+Technical Report - PAM (done so far)
 Player/ComputerPLayer + Javadocs - MEERA
 Testing Stats/AllStats + StatsPanel - PAM
 Images for Panels - PAM
