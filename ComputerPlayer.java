@@ -19,6 +19,7 @@ public class ComputerPlayer extends Player {
   private GridButton nextShot;
   private int aimAtX;
   private int aimAtY;
+  private final int INVALID = -1; //make Player's protected later
   private Cell[][] shotSoFarGrid;
   private final int VERTICAL = 0;
   private final int HORIZONTAL = 1;
@@ -95,7 +96,7 @@ public class ComputerPlayer extends Player {
         System.out.println("setNextShot(): aimAtY++ isn't valid. !wasRandomShot. direction=UP");
         direction = UP;
       }
-    } else if (direction == LEFT){ // y-coordinate is the same
+    } else if (direction == LEFT){ // y-coordinate is the same; LEFT == 4
         System.out.println(direction +"\t(should be 4/LEFT)");
         if (isValidCoord(aimAtX-1)) { //same y-coordinate
         aimAtX--;
@@ -148,9 +149,8 @@ public class ComputerPlayer extends Player {
       } catch (InvalidShotException oops) {
         //do nothing. The program should never have this problem, because of pickAPoint().
       } 
-    } else {  //lastShotResult == HIT_NOT_SUNK || HIT_AND_SUNK
+    } else { //lastShotResult == HIT_NOT_SUNK || HIT_AND_SUNK
       try {
-        shoot(other, aimAtX, aimAtY);
         if (goBack(other, aimAtX, aimAtY)) { findOtherBoatEnd(other); }
         shoot(other, aimAtX, aimAtY); //shooting at a specified (not random) point
         wasRandomShot = false;
@@ -210,7 +210,7 @@ public class ComputerPlayer extends Player {
   }
   
   public void shoot (Player p, int x, int y) throws InvalidShotException {
-        System.out.println("shoot(P, x, y): (" + aimAtX + ", " + aimAtY + ").");
+    System.out.println("shoot(P, x, y): (" + aimAtX + ", " + aimAtY + ").");
     try {
       lastShotResult = p.gotShot(x, y); //uses MISS (0), HIT_NOT_SUNK (1) and HIT_AND_SUNK (2)
     } catch (InvalidShotException e) {
