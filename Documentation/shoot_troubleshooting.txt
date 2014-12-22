@@ -1,0 +1,49 @@
+/*Troubleshooting ComputerPlayer.shoot(p, x, y)
+ * 
+ * EXAMPLE 1: (gets stuck when it reaches a wall)
+ * Turn complete
+Computer: 
+takeAShot(): lastShotResult = 0 wasRandomShot = true
+shoot(P):
+makeValidCoord: coordinate = 6 and valid = 6
+makeValidCoord: coordinate = 8 and valid = 8
+pickAPoint() used x = 6 and y = 8
+Point: (6, 8).
+shoot(P, x, y): (6, 8).
+Before: This cell has a boat and hasn't been shot at. 
+After: This cell has a boat and has been shot at. 
+hit: 1 Hit!
+lastShotResult = 1
+setNextShot(): aimAtX = 6, aimAtY = 8
+setNextShot(): direction = 2
+2 (should be 2/UP)
+setNextShot(): new x,y = 6, 7
+Human: 
+takeAShot(): lastShotResult = 1 wasRandomShot = false
+shoot(P, x, y): (1, 1).
+Before: This cell has a boat and has been shot at. 
+You've already shot this coordinate!
+shoot(p, x, y): Exception caught
+Old aimAtX: 1 aimAtY: 1
+lastShotResult = 1
+setNextShot(): aimAtX = 1, aimAtY = 1
+setNextShot(): direction = 3
+3 (should be 3/DOWN)
+setNextShot(): new x,y = 1, 2
+--------------COMPUTER findMyFleet(): KEY: 
+- (sea) = no boat not shot
+M (miss) = no boat SHOT  
+B (boat) = boat not shot
+H (hit) = boat SHOT
+***********************************************************
+H H H H B M - - - - 
+- - - - - - B - - - 
+- - - - - - B - - - 
+- - - - - - - - - - 
+- - - - B - - - - - 
+- - - - B - - - - - 
+- B - - B - - - - - 
+- B - B B B - - - - 
+- B - - - - - - - - 
+- B - - - - - - - -
+*/

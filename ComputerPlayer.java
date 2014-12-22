@@ -181,7 +181,7 @@ private void pickAPoint() { //randomiser
     } else { //lastShotResult == HIT_NOT_SUNK || HIT_AND_SUNK
       try {
         if (goBack(other, aimAtX, aimAtY)) { findOtherBoatEnd(other); }
-        shoot(other, aimAtX, aimAtY); //shooting at a specified (not random) point
+        shoot(other, aimAtX, aimAtY); //shooting at a specified (not random) point, set by findOtherBoatEnd if needed
         wasRandomShot = false;
         if (lastShotResult != HIT_AND_SUNK) {
           setNextShot(); //reset aimAtX and aimAtY
@@ -240,7 +240,7 @@ private void pickAPoint() { //randomiser
         line = aimAtX;
         direction = (direction == LEFT) ? direction++ : direction-- ; //sets LEFT to RIGHT, RIGHT to LEFT
         while (p.grid[line][aimAtY].getShotAt()) {
-          line++; //check the coordinate below
+          line++; //check the coordinate below or above
         }
         aimAtX = line;
       }
@@ -255,22 +255,43 @@ private void pickAPoint() { //randomiser
     * @param     y       y-coordinate to shoot at
     *********************************************************************************/
   public void shoot (Player p, int x, int y) throws InvalidShotException {
-    System.out.println("shoot(P, x, y): (" + aimAtX + ", " + aimAtY + ").");
+    System.out.println("\nshoot(P, x, y): (" + aimAtX + ", " + aimAtY + ").");
     try {
+      System.out.println("x: " + x + "\ty:" + y);
       lastShotResult = p.gotShot(x, y); //uses MISS (0), HIT_NOT_SUNK (1) and HIT_AND_SUNK (2)
       shotSoFarGrid[x-1][y-1].setShotAt(true);
-    } catch (InvalidShotException e) {
+    } catch (InvalidShotException e) { //case: already been shot
       System.out.println("shoot(p, x, y): Exception caught");
       System.out.println("Old aimAtX: " + aimAtX + "\taimAtY: " + aimAtY);
-      if (direction == UP || direction == DOWN) {
+      /*if (direction == UP || direction == DOWN) {
         aimAtY = (direction == UP) ? aimAtY-- : aimAtY++ ;
       } else { //direction LEFT || RIGHT
         aimAtX = (direction == LEFT) ? aimAtX-- : aimAtY++ ;
-      }
-      if (goBack(p, aimAtX, aimAtY)) {
-        System.out.println("@@@@@@@@@@@@@@@Re-doing shoot(p, x, y)");
-        shoot(p, aimAtX, aimAtY);
-        System.out.println("New aimAtX: " + aimAtX + "\taimAtY: " + aimAtY);
+      }*/
+      /*if (direction == UP || direction == DOWN) {
+        aimAtY = (direction == UP) ? aimAtY++ : aimAtY--;
+        //because goBack automatically checks the next coord, and since we've already incremented aimAtY
+        //we want to increment it back so it's able to reverse.
+      } else { //direction == LEFT || RIGHT
+        aimAtX = (direction == LEFT) ? aimAtX++ : aimAtY--;
+        //same reasoning as above, but with aimAtX
+      }*/
+      while (goBack(p, aimAtX, aimAtY)) {
+        //confirming whether we should go back, which should be true because an exception was caught 
+        System.out.println("@@@@@@@@@@@@@@@////////findOtherBOatEnd()");
+        findOtherBoatEnd(p);
+        System.out.println("\nDirection: " + direction + "\n\tChangeed aimAtX: " + aimAtX + "\taimAtY: " + aimAtY);
+        if (direction == UP) { aimAtY++;
+        } else if (direction == DOWN) { aimAtY--;
+        } else if (direction == LEFT) { aimAtX++; 
+        } else { aimAtX--; } //direction == RIGHT
+        if (aimAtX > GRID_DIMENSIONS || aimAtX < GRID_DIMENSIONS || aimAtY > GRID_DIMENSIONS || aimAtY < GRID_DIMENSIONS) { //out of bounds
+          System.out.println("did nothing");
+        } else {
+          System.out.println("@@@@@@@@@@@@@@@Re-doing shoot(p, x, y)");
+          shoot(p, aimAtX, aimAtY);
+          System.out.println("New aimAtX: " + aimAtX + "\taimAtY: " + aimAtY);
+        }
       }
     }
     System.out.println("lastShotResult = " + lastShotResult);
